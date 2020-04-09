@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30002.166
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyDay.Console", "MyDay\MyDay.Console.csproj", "{D6F1B003-9CED-41B4-843A-39B0364A33AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyDay.Console", "MyDay\MyDay.Console.csproj", "{D6F1B003-9CED-41B4-843A-39B0364A33AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyDay.Core", "MyDay.Core\MyDay.Core.csproj", "{F70CBAAB-7112-4401-B0DA-E5F1DB7A0555}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyDay.Core", "MyDay.Core\MyDay.Core.csproj", "{F70CBAAB-7112-4401-B0DA-E5F1DB7A0555}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5B62F8AC-C1C7-43BA-97E0-EE08F5108926}"
 	ProjectSection(SolutionItems) = preProject
@@ -17,7 +17,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyDay.Tests", "MyDay.Tests\MyDay.Tests.csproj", "{AF90312A-5A42-4B2E-B513-6DCE9BB869BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyDay.Tests", "MyDay.Tests\MyDay.Tests.csproj", "{AF90312A-5A42-4B2E-B513-6DCE9BB869BE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataProviders", "DataProviders", "{C22BC410-6608-4D05-83E3-8344CF9A32F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProvider.Weather", "DataProvider.Weather\DataProvider.Weather.csproj", "{2B8CC7A7-08EB-4030-98A4-937CBB3BD939}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,9 +69,24 @@ Global
 		{AF90312A-5A42-4B2E-B513-6DCE9BB869BE}.Release|x64.Build.0 = Release|Any CPU
 		{AF90312A-5A42-4B2E-B513-6DCE9BB869BE}.Release|x86.ActiveCfg = Release|Any CPU
 		{AF90312A-5A42-4B2E-B513-6DCE9BB869BE}.Release|x86.Build.0 = Release|Any CPU
+		{2B8CC7A7-08EB-4030-98A4-937CBB3BD939}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B8CC7A7-08EB-4030-98A4-937CBB3BD939}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B8CC7A7-08EB-4030-98A4-937CBB3BD939}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2B8CC7A7-08EB-4030-98A4-937CBB3BD939}.Debug|x64.Build.0 = Debug|Any CPU
+		{2B8CC7A7-08EB-4030-98A4-937CBB3BD939}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2B8CC7A7-08EB-4030-98A4-937CBB3BD939}.Debug|x86.Build.0 = Debug|Any CPU
+		{2B8CC7A7-08EB-4030-98A4-937CBB3BD939}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B8CC7A7-08EB-4030-98A4-937CBB3BD939}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B8CC7A7-08EB-4030-98A4-937CBB3BD939}.Release|x64.ActiveCfg = Release|Any CPU
+		{2B8CC7A7-08EB-4030-98A4-937CBB3BD939}.Release|x64.Build.0 = Release|Any CPU
+		{2B8CC7A7-08EB-4030-98A4-937CBB3BD939}.Release|x86.ActiveCfg = Release|Any CPU
+		{2B8CC7A7-08EB-4030-98A4-937CBB3BD939}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2B8CC7A7-08EB-4030-98A4-937CBB3BD939} = {C22BC410-6608-4D05-83E3-8344CF9A32F4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3594B806-A913-431A-AA3D-1E58D7578451}

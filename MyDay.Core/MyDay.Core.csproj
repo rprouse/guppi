@@ -8,4 +8,9 @@
     <Copyright>Copyright (c) 2020 Rob Prouse</Copyright>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="ColoredConsole" Version="1.0.0" />
+    <PackageReference Include="System.Text.Json" Version="4.7.1" />
+  </ItemGroup>
+
 </Project>

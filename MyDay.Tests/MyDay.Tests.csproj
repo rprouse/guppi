@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DataProvider.Weather\DataProvider.Weather.csproj" />
     <ProjectReference Include="..\MyDay.Core\MyDay.Core.csproj" />
     <ProjectReference Include="..\myday\MyDay.Console.csproj" />
   </ItemGroup>

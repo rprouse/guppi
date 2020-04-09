@@ -1,12 +1,20 @@
 using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using DataProvider.Weather;
 
 namespace Alteridem.MyDay
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var provider = new WeatherDataProvider();
+            if(!provider.Configured)
+                provider.Configure();
+
+            await provider.Execute();
         }
     }
 }

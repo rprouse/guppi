@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>MyDay.Console</RootNamespace>
+    <AssemblyName>myday</AssemblyName>
+    <Authors>Rob Prouse</Authors>
+    <Company>Alteridem Consulting</Company>
+    <Product>MyDay command line utility</Product>
+    <Copyright>Copyright (c) 2020 Rob Prouse</Copyright>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/rprouse/myday</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/rprouse/myday</RepositoryUrl>
+    <PackageId>alteridem.myday</PackageId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyDay.Core\MyDay.Core.csproj" />
+  </ItemGroup>
+
+</Project>

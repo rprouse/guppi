@@ -14,7 +14,8 @@ namespace Alteridem.MyDay
             if(!provider.Configured)
                 provider.Configure();
 
-            await provider.Execute();
+            await provider.Execute(false);
+            await provider.Execute(true);
         }
     }
 }

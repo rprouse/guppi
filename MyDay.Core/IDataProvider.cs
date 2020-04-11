@@ -38,6 +38,7 @@ namespace MyDay.Core
         /// <summary>
         /// Execute this data provider
         /// </summary>
-        Task Execute();
+        /// <param name="full">If true, displays full/long information</param>
+        Task Execute(bool full);
     }
 }

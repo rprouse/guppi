@@ -47,18 +47,40 @@ namespace DataProvider.Weather
             _configuration.RunConfiguration(Name, "Enter the OpenWeather API key and your location.");
         }
 
-        public async Task Execute()
+        public async Task Execute(bool full)
         {
             string json = await _client.GetStringAsync($"http://api.openweathermap.org/data/2.5/onecall?lat={_configuration.Latitude}&lon={_configuration.Longitude}&appid={_configuration.ApiKey}");
             var weather = JsonSerializer.Deserialize<WeatherResponse>(json);
 
             ColorConsole.WriteLine("Today's Weather".Yellow());
             Console.WriteLine();
-            ColorConsole.WriteLine($"Currently it is {weather.current.temp.KalvinToCelcius()} and feels like {weather.current.feels_like.KalvinToCelcius()}, {weather.current.weather.FirstOrDefault()?.description}".White());
+
+            if (full)
+                FullDisplay(weather);
+            else
+                ShortDisplay(weather);
+
+            Console.WriteLine();
+        }
+
+        void FullDisplay(WeatherResponse weather)
+        {
+            ColorConsole.WriteLine($"Current: {weather.current.temp.KalvinToCelcius()} feels like {weather.current.feels_like.KalvinToCelcius()}, {weather.current.weather.FirstOrDefault()?.description}".White());
+            Console.WriteLine();
+            foreach(var hour in weather.hourly)
+            {
+                DateTime dt = hour.dt.UnixTimeStampToDateTime();
+                ColorConsole.WriteLine($"{dt.ToString("ddd HH:mm")}: {hour.temp.KalvinToCelcius()} feels like {hour.feels_like.KalvinToCelcius()}, {hour.weather.FirstOrDefault()?.description}".White());
+            }
+        }
+
+        void ShortDisplay(WeatherResponse weather)
+        {
+            ColorConsole.WriteLine($"Current: {weather.current.temp.KalvinToCelcius()} feels like {weather.current.feels_like.KalvinToCelcius()}, {weather.current.weather.FirstOrDefault()?.description}".White());
 
             Daily today = weather.daily.FirstOrDefault();
 
-            ColorConsole.WriteLine($"Today's high will be {today.temp.max.KalvinToCelcius()} with a low of {today.temp.min.KalvinToCelcius()}, {today.weather.FirstOrDefault()?.description}".White());
+            ColorConsole.WriteLine($"Today: {today.temp.max.KalvinToCelcius()}".White(), $"/{today.temp.min.KalvinToCelcius()}".Gray(), $", {today.weather.FirstOrDefault()?.description}".White());
         }
     }
 }

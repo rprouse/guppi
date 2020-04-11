@@ -13,9 +13,9 @@ namespace DataProvider.Weather
 
     public class Current
     {
-        public int dt { get; set; }
-        public int sunrise { get; set; }
-        public int sunset { get; set; }
+        public long dt { get; set; }
+        public long sunrise { get; set; }
+        public long sunset { get; set; }
         public float temp { get; set; }
         public float feels_like { get; set; }
         public int pressure { get; set; }
@@ -40,7 +40,7 @@ namespace DataProvider.Weather
 
     public class Hourly
     {
-        public int dt { get; set; }
+        public long dt { get; set; }
         public float temp { get; set; }
         public float feels_like { get; set; }
         public int pressure { get; set; }
@@ -54,9 +54,9 @@ namespace DataProvider.Weather
 
     public class Daily
     {
-        public int dt { get; set; }
-        public int sunrise { get; set; }
-        public int sunset { get; set; }
+        public long dt { get; set; }
+        public long sunrise { get; set; }
+        public long sunset { get; set; }
         public Temp temp { get; set; }
         public Feels_Like feels_like { get; set; }
         public int pressure { get; set; }

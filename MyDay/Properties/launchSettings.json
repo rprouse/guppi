@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MyDay.Console": {
+      "commandName": "Project",
+      "commandLineArgs": "weather configure"
+    }
+  }
+}

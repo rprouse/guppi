@@ -1,8 +1,10 @@
 using System;
+using System.CommandLine;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using DataProvider.Weather;
+using MyDay.Core;
 
 namespace Alteridem.MyDay
 {
@@ -10,12 +12,25 @@ namespace Alteridem.MyDay
     {
         static async Task Main(string[] args)
         {
-            var provider = new WeatherDataProvider();
-            if(!provider.Configured)
-                provider.Configure();
+            var providers = new IDataProvider[]
+            {
+                new WeatherDataProvider()
+            };
 
-            await provider.Execute(false);
-            await provider.Execute(true);
+            var rootCommand = new RootCommand();
+            foreach(var provider in providers)
+            {
+                rootCommand.AddCommand(provider.GetCommand());
+            }
+
+            await rootCommand.InvokeAsync(args);
+
+            //var provider = new WeatherDataProvider();
+            //if(!provider.Configured)
+            //    provider.Configure();
+
+            //await provider.Execute(false);
+            //await provider.Execute(true);
         }
     }
 }

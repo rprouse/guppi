@@ -1,4 +1,6 @@
 using System;
+using System.CommandLine;
+using System.CommandLine.Invocation;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -12,6 +14,9 @@ namespace DataProvider.Weather
 {
     public class WeatherDataProvider : IDataProvider
     {
+        const string Command = "weather";
+        const string Name = "Weather";
+
         WeatherConfiguration _configuration;
         HttpClient _client;
 
@@ -24,58 +29,70 @@ namespace DataProvider.Weather
             _client.DefaultRequestHeaders.Add("User-Agent", "MyDay CLI (https://github.com/rprouse/myday)");
         }
 
-        public string Command => "weather";
-
-        public string Name => "Weather";
-
-        public string Description => "Displays today's weather";
-
-        public bool Enabled
+        public Command GetCommand()
         {
-            get => _configuration.Enabled;
-            set
+            var configure = new Command("configure", "Configures the weather provider");
+            configure.Handler = CommandHandler.Create(() => Configure());
+
+            var view = new Command("view", "Views the weather")
             {
-                _configuration.Enabled = value;
-                _configuration.Save();
-            }
+                new Option<bool>(new string[]{"--all", "-a" }, "Displays today's weather and the hourly forecast")
+            };
+
+            view.Handler = CommandHandler.Create(async (bool all) => await Execute(all));
+
+            return new Command("weather", "Displays today's weather")
+            {
+               configure,
+               view
+            };
         }
 
-        public bool Configured => _configuration.Configured;
+        private async Task Execute(bool all)
+        {
+            if (!Configured)
+            {
+                ColorConsole.WriteLine("Please configure the weather provider".Yellow());
+                return;
+            }
 
-        public void Configure()
+            WeatherResponse weather = await GetWeatherData();
+            if (all)
+                DisplayLong(weather);
+            else
+                DisplayShort(weather);
+        }
+
+        private bool Configured => _configuration.Configured;
+
+        private void Configure()
         {
             _configuration.RunConfiguration(Name, "Enter the OpenWeather API key and your location.");
         }
 
-        public async Task Execute(bool full)
+        private async Task<WeatherResponse> GetWeatherData()
         {
             string json = await _client.GetStringAsync($"http://api.openweathermap.org/data/2.5/onecall?lat={_configuration.Latitude}&lon={_configuration.Longitude}&appid={_configuration.ApiKey}");
             var weather = JsonSerializer.Deserialize<WeatherResponse>(json);
-
-            ColorConsole.WriteLine("Today's Weather".Yellow());
-            Console.WriteLine();
-
-            if (full)
-                FullDisplay(weather);
-            else
-                ShortDisplay(weather);
-
-            Console.WriteLine();
+            return weather;
         }
 
-        void FullDisplay(WeatherResponse weather)
+        private void DisplayLong(WeatherResponse weather)
         {
-            ColorConsole.WriteLine($"Current: {weather.current.temp.KalvinToCelcius()} feels like {weather.current.feels_like.KalvinToCelcius()}, {weather.current.weather.FirstOrDefault()?.description}".White());
+            DisplayShort(weather);
             Console.WriteLine();
-            foreach(var hour in weather.hourly)
+            foreach (var hour in weather.hourly)
             {
                 DateTime dt = hour.dt.UnixTimeStampToDateTime();
                 ColorConsole.WriteLine($"{dt.ToString("ddd HH:mm")}: {hour.temp.KalvinToCelcius()} feels like {hour.feels_like.KalvinToCelcius()}, {hour.weather.FirstOrDefault()?.description}".White());
             }
         }
 
-        void ShortDisplay(WeatherResponse weather)
+        private void DisplayShort(WeatherResponse weather)
         {
+            ColorConsole.WriteLine("Today's Weather".Yellow());
+            Console.WriteLine();
+
             ColorConsole.WriteLine($"Current: {weather.current.temp.KalvinToCelcius()} feels like {weather.current.feels_like.KalvinToCelcius()}, {weather.current.weather.FirstOrDefault()?.description}".White());
 
             Daily today = weather.daily.FirstOrDefault();

@@ -1,9 +1,9 @@
 using System;
 using NUnit.Framework;
 
-using MyDay.Core.Extensions;
+using Guppi.Core.Extensions;
 
-namespace MyDay.Tests.Extensions
+namespace Guppi.Tests.Extensions
 {
     public class LongExtensionsTests
     {

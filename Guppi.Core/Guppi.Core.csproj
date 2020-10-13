@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Rob Prouse</Authors>
     <Company>Alteridem Consulting</Company>
-    <Product>MyDay command line utility</Product>
+    <Product>Guppi command line utility</Product>
     <Copyright>Copyright (c) 2020 Rob Prouse</Copyright>
   </PropertyGroup>
 

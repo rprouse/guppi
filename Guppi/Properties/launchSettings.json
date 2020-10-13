@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Guppi.Console": {
+      "commandName": "Project",
+      "commandLineArgs": "weather view"
+    }
+  }
+}

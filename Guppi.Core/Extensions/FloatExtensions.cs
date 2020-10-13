@@ -1,4 +1,4 @@
-namespace MyDay.Core.Extensions
+namespace Guppi.Core.Extensions
 {
     public static class FloatExtensions
     {

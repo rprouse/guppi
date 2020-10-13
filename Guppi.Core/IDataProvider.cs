@@ -1,7 +1,7 @@
 using System.CommandLine;
 using System.Threading.Tasks;
 
-namespace MyDay.Core
+namespace Guppi.Core
 {
     public interface IDataProvider
     {

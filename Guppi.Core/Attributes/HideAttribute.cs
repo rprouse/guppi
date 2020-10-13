@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MyDay.Core.Attributes
+namespace Guppi.Core.Attributes
 {
     /// <summary>
     /// Causes a property to not be shown in the configuration process.

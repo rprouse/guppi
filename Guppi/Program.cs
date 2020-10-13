@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using DataProvider.Weather;
-using MyDay.Core;
+using Guppi.Core;
 
-namespace Alteridem.MyDay
+namespace Alteridem.Guppi
 {
     class Program
     {

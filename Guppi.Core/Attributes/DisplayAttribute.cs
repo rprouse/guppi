@@ -1,6 +1,6 @@
 using System;
 
-namespace MyDay.Core.Attributes
+namespace Guppi.Core.Attributes
 {
     /// <summary>
     /// Sets an alternate display name for a property in the configuration process.

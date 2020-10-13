@@ -7,8 +7,8 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ColoredConsole;
-using MyDay.Core;
-using MyDay.Core.Extensions;
+using Guppi.Core;
+using Guppi.Core.Extensions;
 
 namespace DataProvider.Weather
 {
@@ -26,14 +26,11 @@ namespace DataProvider.Weather
             _client = new HttpClient();
             _client.DefaultRequestHeaders.Accept.Clear();
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            _client.DefaultRequestHeaders.Add("User-Agent", "MyDay CLI (https://github.com/rprouse/myday)");
+            _client.DefaultRequestHeaders.Add("User-Agent", "Guppi CLI (https://github.com/rprouse/myday)");
         }
 
         public Command GetCommand()
         {
-            var configure = new Command("configure", "Configures the weather provider");
-            configure.Handler = CommandHandler.Create(() => Configure());
-
             var view = new Command("view", "Views the weather")
             {
                 new Option<bool>(new string[]{"--all", "-a" }, "Displays today's weather and the hourly forecast")
@@ -41,10 +38,13 @@ namespace DataProvider.Weather
 
             view.Handler = CommandHandler.Create(async (bool all) => await Execute(all));
 
+            var configure = new Command("configure", "Configures the weather provider");
+            configure.Handler = CommandHandler.Create(() => Configure());
+
             return new Command("weather", "Displays today's weather")
             {
-               configure,
-               view
+               view,
+               configure
             };
         }
 

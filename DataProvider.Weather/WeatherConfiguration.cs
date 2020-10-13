@@ -1,5 +1,5 @@
-﻿using MyDay.Core;
-using MyDay.Core.Attributes;
+﻿using Guppi.Core;
+using Guppi.Core.Attributes;
 
 namespace DataProvider.Weather
 {

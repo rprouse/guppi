@@ -4,9 +4,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using ColoredConsole;
-using MyDay.Core.Attributes;
+using Guppi.Core.Attributes;
 
-namespace MyDay.Core
+namespace Guppi.Core
 {
     public class Configuration
     {
@@ -22,7 +22,7 @@ namespace MyDay.Core
         public static T Load<T>(string name) where T : Configuration, new()
         {
 
-            var configurationDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData, Environment.SpecialFolderOption.Create), "MyDay");
+            var configurationDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData, Environment.SpecialFolderOption.Create), "Guppi");
             var configurationFile = Path.Combine(configurationDirectory, $"{name}.json");
 
             try

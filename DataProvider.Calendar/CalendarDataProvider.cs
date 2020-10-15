@@ -89,7 +89,8 @@ namespace DataProvider.Calendar
             EventsResource.ListRequest request = service.Events.List("primary");
             var now = DateTime.Now;
             request.TimeMin = now;
-            request.TimeMax = new DateTime(now.Year, now.Month, now.Day, 23, 59, 59);
+            if(!all) // Display next event, even if it is tomorrow
+                request.TimeMax = new DateTime(now.Year, now.Month, now.Day, 23, 59, 59);
             request.ShowHiddenInvitations = false;
             request.ShowDeleted = false;
             request.SingleEvents = true;
@@ -108,7 +109,7 @@ namespace DataProvider.Calendar
                 bool found = false;
                 foreach (var eventItem in events.Items)
                 {
-                    string when = eventItem.Start.DateTime?.ToString("t");
+                    string when = eventItem.Start.DateTime?.ToString(all ? "t" : "g");
                     if (string.IsNullOrEmpty(when))
                     {
                         continue;

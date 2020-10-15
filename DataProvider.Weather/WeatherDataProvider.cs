@@ -80,11 +80,14 @@ namespace DataProvider.Weather
         private void DisplayLong(WeatherResponse weather)
         {
             DisplayShort(weather);
-            Console.WriteLine();
+            DateTime last = DateTime.MinValue;
             foreach (var hour in weather.hourly)
             {
                 DateTime dt = hour.dt.UnixTimeStampToDateTime();
-                ColorConsole.WriteLine($"{dt.ToString("ddd HH:mm")}: {hour.temp.KalvinToCelcius()} feels like {hour.feels_like.KalvinToCelcius()}, {hour.weather.FirstOrDefault()?.description}".White());
+                if (dt.Date != last.Date)
+                    Console.WriteLine();
+                last = dt;
+                ColorConsole.WriteLine($"{dt:ddd HH:mm}: ".Cyan(), hour.temp.KalvinToCelcius().Green(), " feels like ".White(), hour.feels_like.KalvinToCelcius().Green(), $", {hour.weather.FirstOrDefault()?.description}".White());
             }
         }
 
@@ -93,11 +96,11 @@ namespace DataProvider.Weather
             ColorConsole.WriteLine("Today's Weather".Yellow());
             Console.WriteLine();
 
-            ColorConsole.WriteLine($"Current: {weather.current.temp.KalvinToCelcius()} feels like {weather.current.feels_like.KalvinToCelcius()}, {weather.current.weather.FirstOrDefault()?.description}".White());
+            ColorConsole.WriteLine("Current: ".Cyan(), weather.current.temp.KalvinToCelcius().Green(), " feels like ".White(), weather.current.feels_like.KalvinToCelcius().Green(), $", {weather.current.weather.FirstOrDefault()?.description}".White());
 
             Daily today = weather.daily.FirstOrDefault();
 
-            ColorConsole.WriteLine($"Today: {today.temp.max.KalvinToCelcius()}".White(), $"/{today.temp.min.KalvinToCelcius()}".Gray(), $", {today.weather.FirstOrDefault()?.description}".White());
+            ColorConsole.WriteLine("Today:   ".Cyan(), "High of ".White(), today.temp.max.KalvinToCelcius().Green(), ", low of ".White(), today.temp.min.KalvinToCelcius().Green(), $", {today.weather.FirstOrDefault()?.description}".White());
         }
     }
 }

@@ -1,5 +1,7 @@
 # GUPPI
 
+<img align="right" width="200" height="200" src="img/ackbar.png">
+
 GUPPI (or General Unit Primary Peripheral Interface) Is a semi-sentient software
 being that helps Replicants interact with the many systems they have at their
 disposal. This is an early implementation of the interface and as this is not
@@ -11,8 +13,8 @@ me with the information I need.
 
 Ideas of information that I would like to see every morning.
 
-- [x] Weather
-- [ ] Today's calendar events
+- [x] [Weather](DataProvider.Weather/Readme.md)
+- [x] [Today's calendar events](DataProvider.Calendar/Readme.md)
 - [ ] Turn on office lights (Hue)
 - [ ] Open PRs that I'm assigned to
 - [ ] Upcoming birthdays

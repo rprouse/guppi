@@ -14,7 +14,7 @@ me with the information I need.
 Ideas of information that I would like to see every morning.
 
 - [x] [Weather](DataProvider.Weather/Readme.md)
-- [ ] Today's calendar events
+- [x] [Today's calendar events](DataProvider.Calendar/Readme.md)
 - [ ] Turn on office lights (Hue)
 - [ ] Open PRs that I'm assigned to
 - [ ] Upcoming birthdays

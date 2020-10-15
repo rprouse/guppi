@@ -21,9 +21,7 @@ namespace Guppi.Core
 
         public static T Load<T>(string name) where T : Configuration, new()
         {
-
-            var configurationDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData, Environment.SpecialFolderOption.Create), "Guppi");
-            var configurationFile = Path.Combine(configurationDirectory, $"{name}.json");
+            var configurationFile = Path.Combine(ConfigurationDirectory, $"{name}.json");
 
             try
             {
@@ -91,5 +89,16 @@ namespace Guppi.Core
             if (!string.IsNullOrWhiteSpace(newValue))
                 prop.SetValue(this, newValue);
         }
+
+        public static string ConfigurationDirectory => 
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData, Environment.SpecialFolderOption.Create), "Guppi");
+
+        /// <summary>
+        /// The name of the configuration file without the extension
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static string GetConfigurationFile(string name) =>
+            Path.Combine(ConfigurationDirectory, $"{name}.json");
     }
 }

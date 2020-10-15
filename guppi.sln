@@ -21,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Guppi.Tests", "Guppi.Tests\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataProviders", "DataProviders", "{C22BC410-6608-4D05-83E3-8344CF9A32F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProvider.Weather", "DataProvider.Weather\DataProvider.Weather.csproj", "{2B8CC7A7-08EB-4030-98A4-937CBB3BD939}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataProvider.Weather", "DataProvider.Weather\DataProvider.Weather.csproj", "{2B8CC7A7-08EB-4030-98A4-937CBB3BD939}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProvider.Calendar", "DataProvider.Calendar\DataProvider.Calendar.csproj", "{F60D49BD-F2DF-421F-BA2A-0E90EBA32A17}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,12 +83,25 @@ Global
 		{2B8CC7A7-08EB-4030-98A4-937CBB3BD939}.Release|x64.Build.0 = Release|Any CPU
 		{2B8CC7A7-08EB-4030-98A4-937CBB3BD939}.Release|x86.ActiveCfg = Release|Any CPU
 		{2B8CC7A7-08EB-4030-98A4-937CBB3BD939}.Release|x86.Build.0 = Release|Any CPU
+		{F60D49BD-F2DF-421F-BA2A-0E90EBA32A17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F60D49BD-F2DF-421F-BA2A-0E90EBA32A17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F60D49BD-F2DF-421F-BA2A-0E90EBA32A17}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F60D49BD-F2DF-421F-BA2A-0E90EBA32A17}.Debug|x64.Build.0 = Debug|Any CPU
+		{F60D49BD-F2DF-421F-BA2A-0E90EBA32A17}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F60D49BD-F2DF-421F-BA2A-0E90EBA32A17}.Debug|x86.Build.0 = Debug|Any CPU
+		{F60D49BD-F2DF-421F-BA2A-0E90EBA32A17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F60D49BD-F2DF-421F-BA2A-0E90EBA32A17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F60D49BD-F2DF-421F-BA2A-0E90EBA32A17}.Release|x64.ActiveCfg = Release|Any CPU
+		{F60D49BD-F2DF-421F-BA2A-0E90EBA32A17}.Release|x64.Build.0 = Release|Any CPU
+		{F60D49BD-F2DF-421F-BA2A-0E90EBA32A17}.Release|x86.ActiveCfg = Release|Any CPU
+		{F60D49BD-F2DF-421F-BA2A-0E90EBA32A17}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{2B8CC7A7-08EB-4030-98A4-937CBB3BD939} = {C22BC410-6608-4D05-83E3-8344CF9A32F4}
+		{F60D49BD-F2DF-421F-BA2A-0E90EBA32A17} = {C22BC410-6608-4D05-83E3-8344CF9A32F4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3594B806-A913-431A-AA3D-1E58D7578451}

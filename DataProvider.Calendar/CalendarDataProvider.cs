@@ -89,8 +89,7 @@ namespace DataProvider.Calendar
             EventsResource.ListRequest request = service.Events.List("primary");
             var now = DateTime.Now;
             request.TimeMin = now;
-            if(!all) // Display next event, even if it is tomorrow
-                request.TimeMax = new DateTime(now.Year, now.Month, now.Day, 23, 59, 59);
+            if(all) request.TimeMax = new DateTime(now.Year, now.Month, now.Day, 23, 59, 59);
             request.ShowHiddenInvitations = false;
             request.ShowDeleted = false;
             request.SingleEvents = true;

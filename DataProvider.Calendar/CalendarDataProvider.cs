@@ -34,11 +34,12 @@ namespace DataProvider.Calendar
             var logout = new Command("logout", "Logs out of the current Google account");
             logout.Handler = CommandHandler.Create(Logout);
 
-            return new Command(Command, "Display's today's calendar events")
+            var cmd = new Command(Command, "Display's today's calendar events")
             {
                 view,
                 logout
             };
+            return cmd;
         }
 
         private void Logout()

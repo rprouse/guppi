@@ -36,11 +36,12 @@ Ideas of information that I would like to see every morning.
 - [x] [Weather](DataProvider.Weather/Readme.md)
 - [x] [Today's calendar events](DataProvider.Calendar/Readme.md)
 - [ ] Turn on office lights (Hue)
-- [ ] Open PRs that I'm assigned to
+- [x] Open PRs that I'm assigned to (Use the [GitHub CLI](https://github.com/cli/cli) `gh pr list`)
 - [ ] Upcoming birthdays
 - [ ] Monday.com inbox
 - [ ] Jira issues/epics
-- [ ] GitHub issues
+- [x] GitHub issues (Use the [GitHub CLI](https://github.com/cli/cli) `gh issue list -a rprouse`)
 - [ ] Car maintenance reminders?
 - [ ] Top news headlines
 - [ ] Open my browser to specific locations?
+- [ ] Todos (Use the [todo.txt CLI](http://todotxt.org/)?)

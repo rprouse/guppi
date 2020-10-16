@@ -9,7 +9,27 @@ the year 2133 in the fictional [Bobverse](https://bobiverse.fandom.com/wiki/We_A
 GUPPI is not actually semi-sentient and is only a command line utility to provide
 me with the information I need.
 
-## TODO
+## Installation
+
+This program is a [dotnet tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools). 
+Build it, then package it using the **Pack** command in Visual Studio or `dotnet pack` 
+on the command line. Until this package is published, install it using the following
+command line from the solution root;
+
+```sh
+dotnet tool install -g --add-source .\nupkg\ alteridem.guppi
+```
+
+## Enabling Tab Completion
+
+This program supports tab completion using `dotnet-suggest`. To enable, for each shell
+you must install the `dotnet-suggest` global tool and adding a shim to your profile. This 
+only needs to be done once and work for all applications built using `System.CommandLine`.
+
+Follow the [setup instructions](https://github.com/dotnet/command-line-api/blob/main/docs/dotnet-suggest.md)
+for your shell.
+
+## ToDo
 
 Ideas of information that I would like to see every morning.
 

@@ -34,11 +34,12 @@ namespace DataProvider.Calendar
             var logout = new Command("logout", "Logs out of the current Google account");
             logout.Handler = CommandHandler.Create(Logout);
 
-            return new Command(Command, "Display's today's calendar events")
+            var cmd = new Command(Command, "Display's today's calendar events")
             {
                 view,
                 logout
             };
+            return cmd;
         }
 
         private void Logout()
@@ -89,8 +90,7 @@ namespace DataProvider.Calendar
             EventsResource.ListRequest request = service.Events.List("primary");
             var now = DateTime.Now;
             request.TimeMin = now;
-            if(!all) // Display next event, even if it is tomorrow
-                request.TimeMax = new DateTime(now.Year, now.Month, now.Day, 23, 59, 59);
+            if(all) request.TimeMax = new DateTime(now.Year, now.Month, now.Day, 23, 59, 59);
             request.ShowHiddenInvitations = false;
             request.ShowDeleted = false;
             request.SingleEvents = true;

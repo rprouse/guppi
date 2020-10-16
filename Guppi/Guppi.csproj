@@ -12,8 +12,8 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/rprouse/guppi</PackageProjectUrl>
     <RepositoryUrl>https://github.com/rprouse/guppi</RepositoryUrl>
-    <PackageId>alteridem.guppi</PackageId>
-    <Version>1.2.0</Version>
+    <PackageId>dotnet-guppi</PackageId>
+    <Version>1.2.1</Version>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>guppi</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>

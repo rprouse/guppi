@@ -17,7 +17,7 @@ on the command line. Until this package is published, install it using the follo
 command line from the solution root;
 
 ```sh
-dotnet tool install -g --add-source .\nupkg\ dotnet-guppi
+dotnet tool install -g --add-source .\Guppi\nupkg\ dotnet-guppi
 ```
 
 ## Enabling Tab Completion

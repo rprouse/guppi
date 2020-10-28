@@ -1,6 +1,7 @@
 using System.CommandLine;
 using System.Threading.Tasks;
 using DataProvider.Calendar;
+using DataProvider.Hue;
 using DataProvider.Weather;
 using Guppi.Core;
 
@@ -13,7 +14,8 @@ namespace Alteridem.Guppi
             var providers = new IDataProvider[]
             {
                 new WeatherDataProvider(),
-                new CalendarDataProvider()
+                new CalendarDataProvider(),
+                new HueLightsDataProvider()
             };
 
             var rootCommand = new RootCommand();

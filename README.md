@@ -20,6 +20,12 @@ command line from the solution root;
 dotnet tool install -g --add-source .\Guppi\nupkg\ dotnet-guppi
 ```
 
+To update from a previous version,
+
+```sh
+dotnet tool update -g --add-source .\Guppi\nupkg\ dotnet-guppi
+```
+
 ## Enabling Tab Completion
 
 This program supports tab completion using `dotnet-suggest`. To enable, for each shell
@@ -37,6 +43,7 @@ Ideas of information that I would like to see every morning.
 - [x] [Today's calendar events](DataProvider.Calendar/Readme.md)
 - [x] Turn on office lights (Hue)
 - [x] Open PRs that I'm assigned to (Use the [GitHub CLI](https://github.com/cli/cli) `gh pr list`)
+- [ ] CPU temperature, load and other system statistics
 - [ ] Upcoming birthdays
 - [ ] Monday.com inbox
 - [ ] Jira issues/epics
@@ -44,4 +51,4 @@ Ideas of information that I would like to see every morning.
 - [ ] Car maintenance reminders?
 - [ ] Top news headlines
 - [ ] Open my browser to specific locations?
-- [ ] Todos (Use the [todo.txt CLI](http://todotxt.org/)?)
+- [x] Todos (Use my [.NET Implementation](https://github.com/rprouse/dotnet-todo) of [todo.txt CLI](http://todotxt.org/)?)

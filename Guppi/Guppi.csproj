@@ -13,7 +13,7 @@
     <PackageProjectUrl>https://github.com/rprouse/guppi</PackageProjectUrl>
     <RepositoryUrl>https://github.com/rprouse/guppi</RepositoryUrl>
     <PackageId>dotnet-guppi</PackageId>
-    <Version>1.2.1</Version>
+    <Version>1.3.0</Version>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>guppi</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
@@ -39,6 +39,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DataProvider.Calendar\DataProvider.Calendar.csproj" />
+    <ProjectReference Include="..\DataProvider.Hue\DataProvider.Hue.csproj" />
     <ProjectReference Include="..\DataProvider.Weather\DataProvider.Weather.csproj" />
     <ProjectReference Include="..\Guppi.Core\Guppi.Core.csproj" />
   </ItemGroup>

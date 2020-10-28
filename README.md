@@ -35,7 +35,7 @@ Ideas of information that I would like to see every morning.
 
 - [x] [Weather](DataProvider.Weather/Readme.md)
 - [x] [Today's calendar events](DataProvider.Calendar/Readme.md)
-- [ ] Turn on office lights (Hue)
+- [x] Turn on office lights (Hue)
 - [x] Open PRs that I'm assigned to (Use the [GitHub CLI](https://github.com/cli/cli) `gh pr list`)
 - [ ] Upcoming birthdays
 - [ ] Monday.com inbox

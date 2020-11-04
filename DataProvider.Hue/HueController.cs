@@ -53,7 +53,7 @@ namespace DataProvider.Hue
                 return false;
             }
 
-            var configuration = new HueConfiguration(bridge.IpAddress);
+            var configuration = new HueKey(bridge.IpAddress);
 
             if (loadKey)
                 _key = configuration.LoadKey();

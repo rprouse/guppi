@@ -2,7 +2,6 @@ using System;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ColoredConsole;
@@ -17,9 +16,6 @@ namespace DataProvider.Calendar
 {
     public class CalendarDataProvider : IDataProvider
     {
-        const string Command = "calendar";
-        const string Name = "Calendar";
-
         static string[] Scopes = { CalendarService.Scope.CalendarReadonly };
         static string ApplicationName = "Guppi DataProvider.Calendar";
 
@@ -34,11 +30,12 @@ namespace DataProvider.Calendar
             var logout = new Command("logout", "Logs out of the current Google account");
             logout.Handler = CommandHandler.Create(Logout);
 
-            var cmd = new Command(Command, "Display's today's calendar events")
+            var cmd = new Command("calendar", "Display's today's calendar events")
             {
                 view,
                 logout
             };
+            cmd.AddAlias("cal");
             return cmd;
         }
 

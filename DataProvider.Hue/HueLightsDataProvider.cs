@@ -59,6 +59,7 @@ namespace DataProvider.Hue
                alert,
                set
             };
+            command.AddAlias("lights");
 
             command.AddOption(new Option<string>(new string[] { "--ip", "-i" }, "IP Address of the Hue Bridge. Will default to the first bridge found."));
             return command;

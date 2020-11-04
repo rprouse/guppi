@@ -4,11 +4,11 @@ using ColoredConsole;
 
 namespace DataProvider.Hue
 {
-    class HueConfiguration
+    class HueKey
     {
         string _ip;
 
-        public HueConfiguration(string ip)
+        public HueKey(string ip)
         {
             _ip = ip;
         }

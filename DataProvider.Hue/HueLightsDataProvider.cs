@@ -7,15 +7,26 @@ namespace DataProvider.Hue
 {
     public class HueLightsDataProvider : IDataProvider
     {
+        HueConfiguration _configuration;
+
+        public HueLightsDataProvider()
+        {
+            _configuration = Configuration.Load<HueConfiguration>("hue");
+        }
+
         public Command GetCommand()
         {
             var bridges = new Command("bridges", "List bridges on the network");
             bridges.Handler = CommandHandler.Create(async () => await ListBridges());
 
+            var configure = new Command("configure", "Configures default lights");
+            configure.AddAlias("config");
+            configure.Handler = CommandHandler.Create(() => Configure());
+
             var register = new Command("register", "Register with a Hue Bridge. Registration usually happens automatically, you should only need to use to fix a broken registration");
             register.Handler = CommandHandler.Create(async (string ip) => await Register(ip));
 
-            var lights = new Command("lights", "List lights");
+            var lights = new Command("list", "List lights");
             lights.AddAlias("ls");
             lights.Handler = CommandHandler.Create(async (string ip) => await ListLights(ip));
 
@@ -23,13 +34,13 @@ namespace DataProvider.Hue
             {
                 new Option<byte?>(new string[]{ "--brightness", "-b" }, "Set the brightness of a light, from 0 to 100 percent"),
                 new Option<string>(new string[]{ "--color", "-c" }, "Color as a HEX color in the format FF0000 or #FF0000, or a common color name like red or blue"),
-                new Option<uint>(new string[]{ "--light", "-l" }, () => 0, "The light to perform an action on. If unset or 0, all lights"),
+                new Option<uint>(new string[]{ "--light", "-l" }, () => _configuration.GetDefaultLight(), "The light to perform an action on. If unset, your default light or if 0 all lights"),
             };
             on.Handler = CommandHandler.Create(async (string ip, byte? brightness, string color, uint light) => await Set(ip, true, false, false, brightness, color, light));
 
             var off = new Command("off", "Turn lights off")
             {
-                new Option<uint>(new string[]{ "--light", "-l" }, () => 0, "The light to perform an action on. If unset or 0, all lights"),
+                new Option<uint>(new string[]{ "--light", "-l" }, () => _configuration.GetDefaultLight(), "The light to perform an action on. If unset, your default light or if 0 all lights"),
             };
             off.Handler = CommandHandler.Create(async (string ip, uint light) => await Set(ip, false, true, false, null, null, light));
 
@@ -37,7 +48,7 @@ namespace DataProvider.Hue
             {
                 new Option<byte?>(new string[]{ "--brightness", "-b" }, "Set the brightness of a light, from 0 to 100 percent"),
                 new Option<string>(new string[]{ "--color", "-c" }, "Color as a HEX color in the format FF0000 or #FF0000, or a common color name like red or blue"),
-                new Option<uint>(new string[]{ "--light", "-l" }, () => 0, "The light to perform an action on. If unset or 0, all lights"),
+                new Option<uint>(new string[]{ "--light", "-l" }, () => _configuration.GetDefaultLight(), "The light to perform an action on. If unset, your default light or if 0 all lights"),
             };
             alert.Handler = CommandHandler.Create(async (string ip, byte? brightness, string color, uint light) => await Set(ip, false, false, true, brightness, color, light));
 
@@ -45,13 +56,14 @@ namespace DataProvider.Hue
             {
                 new Option<byte?>(new string[]{ "--brightness", "-b" }, "Set the brightness of a light, from 0 to 100 percent"),
                 new Option<string>(new string[]{ "--color", "-c" }, "Color as a HEX color in the format FF0000 or #FF0000, or a common color name like red or blue"),
-                new Option<uint>(new string[]{ "--light", "-l" }, () => 0, "The light to perform an action on. If unset or 0, all lights"),
+                new Option<uint>(new string[]{ "--light", "-l" }, () => _configuration.GetDefaultLight(), "The light to perform an action on. If unset, your default light or if 0 all lights"),
             };
             set.Handler = CommandHandler.Create(async (string ip, byte? brightness, string color, uint light) => await Set(ip, false, false, false, brightness, color, light));
 
             var command = new Command("hue", "Works with Philips Hue Lights")
             {
                bridges,
+               configure,
                register,
                lights,
                on,
@@ -95,6 +107,11 @@ namespace DataProvider.Hue
         {
             var controller = new HueController();
             await controller.Register(ip);
+        }
+
+        private void Configure()
+        {
+            _configuration.RunConfiguration("Hue Lights", "Enter your default light");
         }
     }
 }

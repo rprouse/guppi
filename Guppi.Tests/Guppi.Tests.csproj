@@ -16,6 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DataProvider.Calendar\DataProvider.Calendar.csproj" />
+    <ProjectReference Include="..\DataProvider.Hue\DataProvider.Hue.csproj" />
     <ProjectReference Include="..\DataProvider.Weather\DataProvider.Weather.csproj" />
     <ProjectReference Include="..\Guppi.Core\Guppi.Core.csproj" />
     <ProjectReference Include="..\Guppi\Guppi.csproj" />

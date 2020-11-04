@@ -39,6 +39,7 @@ namespace DataProvider.Weather
             view.Handler = CommandHandler.Create(async (bool all) => await Execute(all));
 
             var configure = new Command("configure", "Configures the weather provider");
+            configure.AddAlias("config");
             configure.Handler = CommandHandler.Create(() => Configure());
 
             return new Command(Command, "Displays today's weather")

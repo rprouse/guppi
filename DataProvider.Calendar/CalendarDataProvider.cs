@@ -23,7 +23,7 @@ namespace DataProvider.Calendar
         {
             var view = new Command("view", "Views upcoming calendar events")
             {
-                new Option<bool>(new string[]{"--all", "-a" }, "Displays today's agenda")
+                new Option<bool>(new string[]{"--agenda", "-a" }, "Displays today's agenda")
             };
             view.Handler = CommandHandler.Create(async (bool all) => await Execute(all));
 
@@ -106,7 +106,7 @@ namespace DataProvider.Calendar
                 bool found = false;
                 foreach (var eventItem in events.Items)
                 {
-                    string when = eventItem.Start.DateTime?.ToString(all ? "t" : "g");
+                    string when = eventItem.Start.DateTime?.ToString(all ? "HH:mm" : "yyyy-MM-dd HH:mm");
                     if (string.IsNullOrEmpty(when))
                     {
                         continue;

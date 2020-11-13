@@ -25,7 +25,7 @@ namespace DataProvider.Calendar
             {
                 new Option<bool>(new string[]{"--agenda", "-a" }, "Displays today's agenda")
             };
-            view.Handler = CommandHandler.Create(async (bool all) => await Execute(all));
+            view.Handler = CommandHandler.Create(async (bool agenda) => await Execute(agenda));
 
             var logout = new Command("logout", "Logs out of the current Google account");
             logout.Handler = CommandHandler.Create(Logout);
@@ -48,7 +48,7 @@ namespace DataProvider.Calendar
             ColorConsole.WriteLine("Logged out of Google".Yellow());
         }
 
-        private async Task Execute(bool all)
+        private async Task Execute(bool agenda)
         {
             string credentials = Configuration.GetConfigurationFile("calendar_credentials");
             if (!File.Exists(credentials))
@@ -87,7 +87,7 @@ namespace DataProvider.Calendar
             EventsResource.ListRequest request = service.Events.List("primary");
             var now = DateTime.Now;
             request.TimeMin = now;
-            if(all) request.TimeMax = new DateTime(now.Year, now.Month, now.Day, 23, 59, 59);
+            if(agenda) request.TimeMax = new DateTime(now.Year, now.Month, now.Day, 23, 59, 59);
             request.ShowHiddenInvitations = false;
             request.ShowDeleted = false;
             request.SingleEvents = true;
@@ -95,7 +95,7 @@ namespace DataProvider.Calendar
 
             // List events.
             Events events = await request.ExecuteAsync();
-            if(all)
+            if(agenda)
                 ColorConsole.WriteLine("Today's agenda:".Yellow());
             else
                 ColorConsole.WriteLine("Next event:".Yellow());
@@ -106,7 +106,7 @@ namespace DataProvider.Calendar
                 bool found = false;
                 foreach (var eventItem in events.Items)
                 {
-                    string when = eventItem.Start.DateTime?.ToString(all ? "HH:mm" : "yyyy-MM-dd HH:mm");
+                    string when = eventItem.Start.DateTime?.ToString(agenda ? "HH:mm" : "yyyy-MM-dd HH:mm");
                     if (string.IsNullOrEmpty(when))
                     {
                         continue;
@@ -114,7 +114,7 @@ namespace DataProvider.Calendar
                     ColorConsole.Write($"{when}\t".Cyan());
                     ColorConsole.WriteLine(eventItem.Summary.White());
                     found = true;
-                    if (!all) return;
+                    if (!agenda) return;
                 }
                 if (found) return;
             }

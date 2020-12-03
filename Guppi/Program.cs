@@ -14,10 +14,11 @@ namespace Alteridem.Guppi
         {
             var providers = new IDataProvider[]
             {
-                new WeatherDataProvider(),
+                // Keep these in alpha order of the commands
+                new AdventOfCodeDataProvider(),
                 new CalendarDataProvider(),
                 new HueLightsDataProvider(),
-                new AdventOfCodeDataProvider()
+                new WeatherDataProvider(),
             };
 
             var rootCommand = new RootCommand();

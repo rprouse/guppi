@@ -46,13 +46,15 @@ namespace DataProvider.AdventOfCode
             configure.AddAlias("config");
             configure.Handler = CommandHandler.Create(() => Configure());
 
-            return new Command("aoc", "Work with Advent of Code (AoC)")
+            var command = new Command("aoc", "Work with Advent of Code (AoC)")
             {
                 add,
                 test,
                 view,
                 configure
             };
+            command.AddAlias("advent");
+            return command;
         }
 
         private void Configure()

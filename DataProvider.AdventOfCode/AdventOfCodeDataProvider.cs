@@ -10,12 +10,14 @@ namespace DataProvider.AdventOfCode
         AdventOfCodeConfiguration _configuration;
         LeaderBoardService _leaderBoardService;
         SolutionService _solutionService;
+        TestService _testService;
 
         public AdventOfCodeDataProvider()
         {
             _configuration = Configuration.Load<AdventOfCodeConfiguration>("AdventOfCode");
             _leaderBoardService = new LeaderBoardService(_configuration);
             _solutionService = new SolutionService(_configuration);
+            _testService = new TestService(_configuration);
         }
 
         public Command GetCommand()
@@ -25,6 +27,13 @@ namespace DataProvider.AdventOfCode
                 new Option<int>(new string[]{"--year", "-y" }, () => DateTime.Now.Year, "Adds a day to the given year. Defaults to this year."),
             };
             add.Handler = CommandHandler.Create((int year) => _solutionService.AddDayTo(year));
+
+            var test = new Command("test", "Runs tests in my Advent of Code solution")
+            {
+                new Option<int>(new string[]{"--year", "-y" }, () => DateTime.Now.Year, "Runs tests for the given year. Defaults to this year."),
+                new Option<int>(new string[]{"--day", "-d" }, () => 0, "Runs tests for the given day. If not set, runs all tests for the year."),
+            };
+            test.Handler = CommandHandler.Create((int year, int day) => _testService.RunTests(year, day));
 
             var view = new Command("view", "Views the Advent of Code leaderboard")
             {
@@ -40,6 +49,7 @@ namespace DataProvider.AdventOfCode
             return new Command("aoc", "Work with Advent of Code (AoC)")
             {
                 add,
+                test,
                 view,
                 configure
             };

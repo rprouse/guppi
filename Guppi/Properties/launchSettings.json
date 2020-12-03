@@ -2,7 +2,7 @@
   "profiles": {
     "Guppi.Console": {
       "commandName": "Project",
-      "commandLineArgs": "aoc add -y 2020"
+      "commandLineArgs": "aoc test -y 2020 -d 3"
     }
   }
 }

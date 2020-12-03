@@ -2,7 +2,7 @@
   "profiles": {
     "Guppi.Console": {
       "commandName": "Project",
-      "commandLineArgs": "cal view -a"
+      "commandLineArgs": "aoc view -y 2019"
     }
   }
 }

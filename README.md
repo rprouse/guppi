@@ -52,3 +52,5 @@ Ideas of information that I would like to see every morning.
 - [ ] Top news headlines
 - [ ] Open my browser to specific locations?
 - [x] Todos (Use my [.NET Implementation](https://github.com/rprouse/dotnet-todo) of [todo.txt CLI](http://todotxt.org/)?)
+- [x] Advent of Code leaderboards
+- [ ] Add a new day to my Advent of Code solution

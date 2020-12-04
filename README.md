@@ -64,3 +64,5 @@ Ideas of information that I would like to see every morning.
 - [ ] Windows - Update with `start ms-settings:windowsupdate-action`
 - [ ] Utils - New Guid (with format?)
 - [ ] Docker?
+- [ ] 7-ZIP - Zip current directory
+- [ ] Run a Jupyter notebook server from a given directory

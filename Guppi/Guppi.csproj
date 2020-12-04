@@ -43,6 +43,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DataProvider.AdventOfCode\DataProvider.AdventOfCode.csproj" />
     <ProjectReference Include="..\DataProvider.Calendar\DataProvider.Calendar.csproj" />
+    <ProjectReference Include="..\DataProvider.Git\DataProvider.Git.csproj" />
     <ProjectReference Include="..\DataProvider.Hue\DataProvider.Hue.csproj" />
     <ProjectReference Include="..\DataProvider.Weather\DataProvider.Weather.csproj" />
     <ProjectReference Include="..\Guppi.Core\Guppi.Core.csproj" />

@@ -2,6 +2,7 @@ using System.CommandLine;
 using System.Threading.Tasks;
 using DataProvider.AdventOfCode;
 using DataProvider.Calendar;
+using DataProvider.Git;
 using DataProvider.Hue;
 using DataProvider.Weather;
 using Guppi.Core;
@@ -17,6 +18,7 @@ namespace Alteridem.Guppi
                 // Keep these in alpha order of the commands
                 new AdventOfCodeDataProvider(),
                 new CalendarDataProvider(),
+                new GitDataProvider(),
                 new HueLightsDataProvider(),
                 new WeatherDataProvider(),
             };

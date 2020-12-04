@@ -55,6 +55,6 @@ Ideas of information that I would like to see every morning.
 - [x] AoC - Advent of Code leaderboards
 - [x] AoC - Add a new day to my Advent of Code solution
 - [x] AoC - Run tests for a year/day
-- [ ] Git - Switch to master/main, fetch and pull
+- [x] Git - Switch to master/main, fetch and pull
 - [ ] Git - Undo last commit
 - [ ] Git - Ammend last commit

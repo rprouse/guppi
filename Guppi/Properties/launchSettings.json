@@ -2,7 +2,7 @@
   "profiles": {
     "Guppi.Console": {
       "commandName": "Project",
-      "commandLineArgs": "git update -b main"
+      "commandLineArgs": "git ammend"
     }
   }
 }

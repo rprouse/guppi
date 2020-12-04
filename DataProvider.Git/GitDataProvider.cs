@@ -14,6 +14,18 @@ namespace DataProvider.Git
 
         public Command GetCommand()
         {
+            var amend = new Command("ammend", "Adds any steged files to the last git commit using the same message");
+            amend.Handler = CommandHandler.Create(() => RunGit("commit --amend --no-edit"));
+
+            var undo = new Command("undo", "Undo the last git commit. By default, does a soft reset preserving changes.")
+            {
+                new Option<bool>(new string[]{"--hard", "-h"}, () => false, "Do a hard reset not preserving changes.")
+            };
+            undo.Handler = CommandHandler.Create((bool hard) => RunGit(string.Format("reset --{0} HEAD~1", hard ? "hard" : "soft")));
+
+            var unstage = new Command("unstage", "Unstages any staged files.");
+            unstage.Handler = CommandHandler.Create(() => RunGit("reset -q HEAD --"));
+
             var update = new Command("update", "Switches to the default git branch, fetches and pulls")
             {
                 new Option<string>(new string[]{"--branch", "-b" }, () => "master", "The branch to switch to. Defaults to master."),
@@ -22,6 +34,9 @@ namespace DataProvider.Git
 
             return new Command("git", "Helpful git extensions")
             {
+                amend,
+                undo,
+                unstage,
                 update,
             };
         }

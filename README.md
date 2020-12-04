@@ -56,5 +56,11 @@ Ideas of information that I would like to see every morning.
 - [x] AoC - Add a new day to my Advent of Code solution
 - [x] AoC - Run tests for a year/day
 - [x] Git - Switch to master/main, fetch and pull
-- [ ] Git - Undo last commit
-- [ ] Git - Ammend last commit
+- [x] Git - Undo last commit
+- [x] Git - Ammend last commit
+- [ ] Windows - Lock computer with `rundll32.exe user32.dll,LockWorkStation`
+- [ ] Windows - Reboot computer with `shutdown.exe /r /t 5`
+- [ ] Windows - Shutdown/halt with `shutdown.exe /s /t 5`
+- [ ] Windows - Update with `start ms-settings:windowsupdate-action`
+- [ ] Utils - New Guid (with format?)
+- [ ] Docker?

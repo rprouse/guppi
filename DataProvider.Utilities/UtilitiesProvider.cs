@@ -44,7 +44,7 @@ namespace DataProvider.Utilities
 
         void NewGuid()
         {
-            ColorConsole.WriteLine($"[{Guid.NewGuid().ToString("f")}]".Yellow());
+            ColorConsole.WriteLine($"[{Guid.NewGuid().ToString("D")}]".Yellow());
         }
     }
 }

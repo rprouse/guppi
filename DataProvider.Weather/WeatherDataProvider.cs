@@ -53,7 +53,7 @@ namespace DataProvider.Weather
         {
             if (!Configured)
             {
-                ColorConsole.WriteLine("Please configure the weather provider".Yellow());
+                ColorConsole.WriteLine("[Please configure the weather provider]".Yellow());
                 return;
             }
 
@@ -68,7 +68,7 @@ namespace DataProvider.Weather
 
         private void Configure()
         {
-            _configuration.RunConfiguration(Name, "Enter the OpenWeather API key and your location.");
+            _configuration.RunConfiguration(Name, "[Enter the OpenWeather API key and your location.]");
         }
 
         private async Task<WeatherResponse> GetWeatherData()
@@ -94,7 +94,7 @@ namespace DataProvider.Weather
 
         private void DisplayShort(WeatherResponse weather)
         {
-            ColorConsole.WriteLine("Today's Weather".Yellow());
+            ColorConsole.WriteLine("[Today's Weather]".Yellow());
             Console.WriteLine();
 
             ColorConsole.WriteLine("Current: ".Cyan(), weather.current.temp.KalvinToCelcius().Green(), " feels like ".White(), weather.current.feels_like.KalvinToCelcius().Green(), $", {weather.current.weather.FirstOrDefault()?.description}".White());

@@ -1,5 +1,6 @@
 using System.CommandLine;
 using System.Threading.Tasks;
+using ColoredConsole;
 using DataProvider.AdventOfCode;
 using DataProvider.Calendar;
 using DataProvider.Git;
@@ -28,6 +29,9 @@ namespace Alteridem.Guppi
             {
                 rootCommand.AddCommand(provider.GetCommand());
             }
+
+            ColorConsole.WriteLine(Sayings.Affirmative().Cyan());
+            ColorConsole.WriteLine();
 
             await rootCommand.InvokeAsync(args);
         }

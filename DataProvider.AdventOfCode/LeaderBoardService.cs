@@ -21,7 +21,7 @@ namespace DataProvider.AdventOfCode
         {
             if (!_configuration.Configured)
             {
-                ColorConsole.WriteLine("Please configure the Advent of Code provider".Yellow());
+                ColorConsole.WriteLine("[Please configure the Advent of Code provider]".Yellow());
                 return;
             }
 

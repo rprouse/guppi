@@ -51,6 +51,8 @@
     <ProjectReference Include="..\DataProvider.Calendar\DataProvider.Calendar.csproj" />
     <ProjectReference Include="..\DataProvider.Git\DataProvider.Git.csproj" />
     <ProjectReference Include="..\DataProvider.Hue\DataProvider.Hue.csproj" />
+    <ProjectReference Include="..\DataProvider.Notes\DataProvider.Notes.csproj" />
+    <ProjectReference Include="..\DataProvider.Utilities\DataProvider.Utilities.csproj" />
     <ProjectReference Include="..\DataProvider.Weather\DataProvider.Weather.csproj" />
     <ProjectReference Include="..\Guppi.Core\Guppi.Core.csproj" />
   </ItemGroup>

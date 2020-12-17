@@ -2,7 +2,7 @@
   "profiles": {
     "Guppi.Console": {
       "commandName": "Project",
-      "commandLineArgs": "aoc view"
+      "commandLineArgs": "notes"
     }
   }
 }

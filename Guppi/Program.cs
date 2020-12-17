@@ -5,6 +5,7 @@ using DataProvider.AdventOfCode;
 using DataProvider.Calendar;
 using DataProvider.Git;
 using DataProvider.Hue;
+using DataProvider.Notes;
 using DataProvider.Weather;
 using Guppi.Core;
 
@@ -21,6 +22,7 @@ namespace Alteridem.Guppi
                 new CalendarDataProvider(),
                 new GitDataProvider(),
                 new HueLightsDataProvider(),
+                new NotesProvider(),
                 new WeatherDataProvider(),
             };
 

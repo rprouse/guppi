@@ -22,7 +22,7 @@ namespace DataProvider.Hue
 
         public async Task ListBridges()
         {
-            ColorConsole.WriteLine("Found bridges...".White());
+            ColorConsole.WriteLine("[SUDAR Scan Complete. Found bridges...]".White());
 
             IBridgeLocator locator = new HttpBridgeLocator();
             IEnumerable<LocatedBridge> bridges = await locator.LocateBridgesAsync(TimeSpan.FromSeconds(5));
@@ -49,7 +49,7 @@ namespace DataProvider.Hue
 
             if (bridge == null)
             {
-                ColorConsole.WriteLine("Hue Bridge not found".Red());
+                ColorConsole.WriteLine("[Hue Bridge not found]".Red());
                 return false;
             }
 
@@ -74,7 +74,7 @@ namespace DataProvider.Hue
 
         async Task<string> Register(LocatedBridge bridge)
         {
-            ColorConsole.WriteLine("Press the button on your bridge then press ENTER".Green());
+            ColorConsole.WriteLine("[Press the button on your bridge then press ENTER]".Green());
             Console.ReadLine();
 
             try
@@ -84,7 +84,7 @@ namespace DataProvider.Hue
             }
             catch (Exception e)
             {
-                ColorConsole.WriteLine("Failed to register with the bridge.".Red());
+                ColorConsole.WriteLine("[Failed to register with the bridge.]".Red());
                 ColorConsole.WriteLine(e.Message.Red());
             }
             return null;

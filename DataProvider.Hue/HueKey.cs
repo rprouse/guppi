@@ -39,7 +39,7 @@ namespace DataProvider.Hue
             }
             catch (Exception e)
             {
-                ColorConsole.WriteLine("Failed to save bridge registration.".Red());
+                ColorConsole.WriteLine("[Failed to save bridge registration.]".Red());
                 ColorConsole.WriteLine(e.Message.Red());
                 return false;
             }

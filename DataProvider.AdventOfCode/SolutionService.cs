@@ -19,12 +19,12 @@ namespace DataProvider.AdventOfCode
             string dir = Path.Combine(_configuration.SolutionDirectory, $"AdventOfCode{year}");
             if (!Directory.Exists(dir))
             {
-                ColorConsole.WriteLine($"Project {dir} does not exist.".Red());
-                ColorConsole.WriteLine("Configure the data provider to set the solution directory.".Cyan());
+                ColorConsole.WriteLine($"[Project {dir} does not exist.]".Red());
+                ColorConsole.WriteLine("[Configure the data provider to set the solution directory.]".Cyan());
                 return;
             }
 
-            ColorConsole.WriteLine($"Adding new day to {dir}".Yellow());
+            ColorConsole.WriteLine($"[Adding new day to {dir}]".Yellow());
 
             var days = Directory.GetDirectories(dir, "Day*")
                                 .Select(s => int.TryParse(s.Substring(s.Length - 2), out int day) ? day : 0)
@@ -33,8 +33,8 @@ namespace DataProvider.AdventOfCode
 
             if(newDay > 25)
             {
-                ColorConsole.WriteLine($"{year} is completed.".Yellow());
-                ColorConsole.WriteLine("No day added.".Cyan());
+                ColorConsole.WriteLine($"[{year} is completed.]".Yellow());
+                ColorConsole.WriteLine("[No day added.]".Cyan());
                 return;
             }
 
@@ -52,7 +52,7 @@ namespace DataProvider.AdventOfCode
 
             UpdateProjectFile(dir, year, newDay);
 
-            ColorConsole.WriteLine($"Added Day{newDay:00}".Cyan());
+            ColorConsole.WriteLine($"[Added Day{newDay:00}]".Cyan());
         }
 
         static void UpdateDayInFile(string filename, int day)

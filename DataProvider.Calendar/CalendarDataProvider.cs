@@ -45,7 +45,7 @@ namespace DataProvider.Calendar
             if (Directory.Exists(token))
                 Directory.Delete(token, true);
 
-            ColorConsole.WriteLine("Logged out of Google".Yellow());
+            ColorConsole.WriteLine("[Logged out of Google]".Yellow());
         }
 
         private async Task Execute(bool agenda)
@@ -53,7 +53,7 @@ namespace DataProvider.Calendar
             string credentials = Configuration.GetConfigurationFile("calendar_credentials");
             if (!File.Exists(credentials))
             {
-                ColorConsole.WriteLine("Please download the credentials. See the Readme.".Yellow());
+                ColorConsole.WriteLine("[Please download the credentials. See the Readme.]".Yellow());
                 return;
             }
 
@@ -72,7 +72,7 @@ namespace DataProvider.Calendar
 
             if (credential is null)
             {
-                ColorConsole.WriteLine("Failed to login to Google Calendar".Red());
+                ColorConsole.WriteLine("[Failed to login to Google Calendar]".Red());
                 return;
             }
 
@@ -96,9 +96,9 @@ namespace DataProvider.Calendar
             // List events.
             Events events = await request.ExecuteAsync();
             if(agenda)
-                ColorConsole.WriteLine("Today's agenda:".Yellow());
+                ColorConsole.WriteLine("[Today's agenda:]".Yellow());
             else
-                ColorConsole.WriteLine("Next event:".Yellow());
+                ColorConsole.WriteLine("[Next event:]".Yellow());
             Console.WriteLine();
 
             if (events?.Items.Count > 0)
@@ -106,19 +106,20 @@ namespace DataProvider.Calendar
                 bool found = false;
                 foreach (var eventItem in events.Items)
                 {
-                    string when = eventItem.Start.DateTime?.ToString(agenda ? "HH:mm" : "yyyy-MM-dd HH:mm");
-                    if (string.IsNullOrEmpty(when))
+                    string start = eventItem.Start.DateTime?.ToString(agenda ? "HH:mm" : "yyyy-MM-dd HH:mm");
+                    if (string.IsNullOrEmpty(start))
                     {
                         continue;
                     }
-                    ColorConsole.Write($"{when}\t".Cyan());
+                    string end = eventItem.End.DateTime?.ToString("-HH:mm") ?? "";
+                    ColorConsole.Write($"{start}{end}\t".Cyan());
                     ColorConsole.WriteLine(eventItem.Summary.White());
                     found = true;
                     if (!agenda) return;
                 }
                 if (found) return;
             }
-            ColorConsole.WriteLine("No upcoming events found.".White());
+            ColorConsole.WriteLine("[No upcoming events found.]".White());
         }
     }
 }

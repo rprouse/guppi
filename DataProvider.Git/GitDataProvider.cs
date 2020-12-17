@@ -50,12 +50,12 @@ namespace DataProvider.Git
                     var branch = repo.Branches[branchName];
                     if(branch == null)
                     {
-                        ColorConsole.WriteLine($"The branch {branchName} does not exist.".Yellow());
+                        ColorConsole.WriteLine($"[The branch {branchName} does not exist.]".Yellow());
                         return;
                     }
 
                     Branch currentBranch = Commands.Checkout(repo, branch);
-                    ColorConsole.WriteLine($"Switched to branch {currentBranch.FriendlyName}");
+                    ColorConsole.WriteLine($"[Switched to branch {currentBranch.FriendlyName}]");
                 }
 
                 RunGit("fetch -p");
@@ -63,8 +63,8 @@ namespace DataProvider.Git
             }
             catch(RepositoryNotFoundException)
             {
-                ColorConsole.WriteLine("The current directory is not a git repository.".Yellow());
-                ColorConsole.WriteLine("Make sure you are in the root of the repository.".Cyan());
+                ColorConsole.WriteLine("[The current directory is not a git repository.]".Yellow());
+                ColorConsole.WriteLine("[Make sure you are in the root of the repository.]".Cyan());
             }
         }
 

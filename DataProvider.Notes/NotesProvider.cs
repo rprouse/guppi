@@ -3,6 +3,7 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using Guppi.Core;
 
 namespace DataProvider.Notes
@@ -42,7 +43,11 @@ namespace DataProvider.Notes
                 File.WriteAllText(todayFile, $"# {today}\n\n");
             }
 
-            string cmd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Programs\Microsoft VS Code\Code.exe");
+            bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+
+            string cmd = isWindows ? 
+                         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Programs\Microsoft VS Code\Code.exe") :
+                         "/usr/bin/code";
             string args = nocreate ?
                 $"\"{_configuration.NotesDirectory}\"" :
                 $"-g \"{todayFile}:3\" \"{_configuration.NotesDirectory}\"";

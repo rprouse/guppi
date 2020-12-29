@@ -111,7 +111,7 @@ namespace DataProvider.Weather
 
             Daily today = weather.daily.FirstOrDefault();
 
-            AnsiConsole.MarkupLine($"[white]Today:    [/] [silver]High/Low[/] [white]{today.temp.max.KalvinToCelcius()}/{today.temp.min.KalvinToCelcius()}[/] [silver]{today.weather.FirstOrDefault()?.description}[/]");
+            AnsiConsole.MarkupLine($"[white]Today:    [/][silver]High/Low[/] [white]{today.temp.max.KalvinToCelcius()}/{today.temp.min.KalvinToCelcius()}[/] [silver]{today.weather.FirstOrDefault()?.description}[/]");
         }
     }
 }

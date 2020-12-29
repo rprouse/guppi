@@ -13,6 +13,8 @@ namespace Alteridem.Guppi
 
         public Application(IEnumerable<IDataProvider> providers, IEnumerable<IMultipleDataProvider> multiProviders)
         {
+            System.Console.OutputEncoding = System.Text.Encoding.UTF8;
+
             var commands = providers
                 .Select(p => p.GetCommand())
                 .Union(multiProviders.SelectMany(m => m.GetCommands()))

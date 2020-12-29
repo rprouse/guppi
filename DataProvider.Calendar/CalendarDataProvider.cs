@@ -45,7 +45,7 @@ namespace DataProvider.Calendar
             if (Directory.Exists(token))
                 Directory.Delete(token, true);
 
-            AnsiConsole.MarkupLine("[yellow][[Logged out of Google]][/]");
+            AnsiConsole.MarkupLine("[green][[:check_mark_button: Logged out of Google]][/]");
         }
 
         private async Task Execute(bool agenda)
@@ -53,7 +53,7 @@ namespace DataProvider.Calendar
             string credentials = Configuration.GetConfigurationFile("calendar_credentials");
             if (!File.Exists(credentials))
             {
-                AnsiConsole.MarkupLine("[yellow][[Please download the credentials. See the Readme.]][/]");
+                AnsiConsole.MarkupLine("[yellow][[:yellow_circle: Please download the credentials. See the Readme.]][/]");
                 return;
             }
 
@@ -72,7 +72,7 @@ namespace DataProvider.Calendar
 
             if (credential is null)
             {
-                AnsiConsole.MarkupLine("[red][[Failed to login to Google Calendar]][/]");
+                AnsiConsole.MarkupLine("[red][[:cross_mark: Failed to login to Google Calendar]][/]");
                 return;
             }
 
@@ -95,7 +95,7 @@ namespace DataProvider.Calendar
 
             // List events.
             Events events = await request.ExecuteAsync();
-            string title = agenda ? "Today's agenda" : "Next event";
+            string title = agenda ? ":calendar: Today's agenda" : ":tear_off_calendar: Next event";
 
             AnsiConsoleHelper.TitleRule(title);
 

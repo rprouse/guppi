@@ -39,7 +39,7 @@ namespace DataProvider.Hue
             }
             catch (Exception ex)
             {
-                AnsiConsole.MarkupLine("[red][[Failed to save bridge registration.]][/]");
+                AnsiConsole.MarkupLine("[red][[:cross_mark: Failed to save bridge registration.]][/]");
                 AnsiConsole.WriteException(ex,
                     ExceptionFormats.ShortenPaths | ExceptionFormats.ShortenTypes |
                     ExceptionFormats.ShortenMethods | ExceptionFormats.ShowLinks);

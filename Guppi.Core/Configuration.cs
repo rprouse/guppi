@@ -36,7 +36,7 @@ namespace Guppi.Core
             }
             catch (Exception ex)
             {
-                AnsiConsole.MarkupLine($"[red]Failed to load the configuration file for {name}[/]");
+                AnsiConsole.MarkupLine($"[red][[:cross_mark: Failed to load the configuration file for {name}]][/]");
                 AnsiConsole.WriteException(ex,
                     ExceptionFormats.ShortenPaths | ExceptionFormats.ShortenTypes |
                     ExceptionFormats.ShortenMethods | ExceptionFormats.ShowLinks);
@@ -57,7 +57,7 @@ namespace Guppi.Core
             }
             catch (Exception ex)
             {
-                AnsiConsole.MarkupLine($"[red]Failed to save the configuration file for {Name}[/]");
+                AnsiConsole.MarkupLine($"[red][[:cross_mark: Failed to save the configuration file for {Name}]][/]");
                 AnsiConsole.WriteException(ex,
                     ExceptionFormats.ShortenPaths | ExceptionFormats.ShortenTypes |
                     ExceptionFormats.ShortenMethods | ExceptionFormats.ShowLinks);
@@ -66,10 +66,8 @@ namespace Guppi.Core
 
         public void RunConfiguration(string name, string description)
         {
-            Console.Clear();
-            AnsiConsole.MarkupLine($"[yellow]Configure {name}[/]");
-            AnsiConsole.WriteLine();
-            AnsiConsole.MarkupLine($"[white][[{description}]][/]");
+            AnsiConsoleHelper.TitleRule($":wrench: Configure {name}");
+            AnsiConsole.MarkupLine($"[silver][[{description}]][/]");
             AnsiConsole.WriteLine();
 
             foreach (PropertyInfo prop in GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.PropertyType == typeof(string) && p.GetCustomAttribute<HideAttribute>() == null))
@@ -80,6 +78,7 @@ namespace Guppi.Core
             Enabled = true;
             Configured = true;
             Save();
+            AnsiConsoleHelper.Rule("white");
         }
 
         private void ConfigureProperty(PropertyInfo prop)
@@ -89,7 +88,7 @@ namespace Guppi.Core
             string value = prop.GetValue(this) as string ?? "";
 
             string newValue = AnsiConsole.Prompt(
-                new TextPrompt<string>($"[green]{name}[/] [dim grey][[{value}]]:[/]")
+                new TextPrompt<string>($"[green]{name}[/] [silver][[{value}]][/]")
                     .AllowEmpty()
                 );
             if (!string.IsNullOrWhiteSpace(newValue))

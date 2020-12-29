@@ -22,7 +22,7 @@ namespace DataProvider.Hue
 
         public async Task ListBridges()
         {
-            AnsiConsoleHelper.TitleRule("SUDAR Scan Complete. Found bridges...");
+            AnsiConsoleHelper.TitleRule(":desktop_computer: SUDAR Scan Complete. Found bridges...");
 
             IBridgeLocator locator = new HttpBridgeLocator();
             IEnumerable<LocatedBridge> bridges = await locator.LocateBridgesAsync(TimeSpan.FromSeconds(5));
@@ -50,7 +50,7 @@ namespace DataProvider.Hue
 
             if (bridge == null)
             {
-                AnsiConsole.MarkupLine("[red][[Hue Bridge not found]][/]");
+                AnsiConsole.MarkupLine("[red][[:cross_mark: Hue Bridge not found]][/]");
                 return false;
             }
 
@@ -75,7 +75,7 @@ namespace DataProvider.Hue
 
         async Task<string> Register(LocatedBridge bridge)
         {
-            AnsiConsole.MarkupLine("[green][[Press the button on your bridge then press ENTER]][/]");
+            AnsiConsole.MarkupLine("[green][[:check_mark_button: Press the button on your bridge then press ENTER]][/]");
             Console.ReadLine();
 
             try
@@ -85,7 +85,7 @@ namespace DataProvider.Hue
             }
             catch (Exception ex)
             {
-                AnsiConsole.MarkupLine("[red][[Failed to register with the bridge.]][/]");
+                AnsiConsole.MarkupLine("[red][[:cross_mark: Failed to register with the bridge.]][/]");
                 AnsiConsole.WriteException(ex,
                     ExceptionFormats.ShortenPaths | ExceptionFormats.ShortenTypes |
                     ExceptionFormats.ShortenMethods | ExceptionFormats.ShowLinks);
@@ -103,12 +103,12 @@ namespace DataProvider.Hue
 
         public async Task ListLights()
         {
-            AnsiConsoleHelper.TitleRule("Scans are complete. Found lights...");
+            AnsiConsoleHelper.TitleRule(":light_bulb: Scans are complete. Found lights...");
 
             var lights = await _client.GetLightsAsync();
             foreach (var light in lights)
             {
-                AnsiConsole.MarkupLine($"[white]{light.Id,2}: {light.Name,-40}[/] [silver]({(light.State.On ? $"On {(light.State.Brightness * 100 / 255)}%" : "Off")})[/]");
+                AnsiConsole.MarkupLine($"[white]{light.Id,2}: {light.Name,-40}[/] [silver]({(light.State.On ? $":yellow_circle: {(light.State.Brightness * 100 / 255)}%" : ":black_circle:")})[/]");
             }
             AnsiConsoleHelper.Rule("white");
         }

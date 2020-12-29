@@ -28,7 +28,7 @@ namespace Alteridem.Guppi
         {
             AnsiConsole.MarkupLine("[cyan2 bold]{0}[/]", Sayings.Affirmative().EscapeMarkup());
             AnsiConsole.WriteLine();
-
+            
             await _rootCommand.InvokeAsync(args);
         }
     }

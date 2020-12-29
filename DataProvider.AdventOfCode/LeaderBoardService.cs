@@ -22,7 +22,7 @@ namespace DataProvider.AdventOfCode
         {
             if (!_configuration.Configured)
             {
-                AnsiConsole.MarkupLine("[yellow][[Please configure the Advent of Code provider]][/]");
+                AnsiConsole.MarkupLine("[yellow][[:yellow_circle: Please configure the Advent of Code provider]][/]");
                 return;
             }
 
@@ -36,7 +36,7 @@ namespace DataProvider.AdventOfCode
             var leaders = JsonSerializer.Deserialize<Leaderboard>(json);
 
             AnsiConsole.WriteLine();
-            AnsiConsoleHelper.TitleRule($"Advent of Code Leaderboard {year}");
+            AnsiConsoleHelper.TitleRule($":christmas_tree: Advent of Code Leaderboard {year}");
 
             int place = 1;
             foreach (var member in leaders.members.Values.OrderByDescending(m => m.local_score).ThenByDescending(m => m.stars))

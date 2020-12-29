@@ -19,12 +19,12 @@ namespace DataProvider.AdventOfCode
             string dir = Path.Combine(_configuration.SolutionDirectory, $"AdventOfCode{year}");
             if (!Directory.Exists(dir))
             {
-                AnsiConsole.MarkupLine($"[red][[Project {dir} does not exist.]][/]");
-                AnsiConsole.MarkupLine("[cyan2][[Configure the data provider to set the solution directory.]][/]");
+                AnsiConsole.MarkupLine($"[red][[:cross_mark: Project {dir} does not exist.]][/]");
+                AnsiConsole.MarkupLine("[silver][[Configure the data provider to set the solution directory.]][/]");
                 return;
             }
 
-            AnsiConsole.MarkupLine($"[yellow][[Adding new day to {dir}]][/]");
+            AnsiConsole.MarkupLine($"[green][[:check_mark_button: Adding new day to {dir}]][/]");
 
             var days = Directory.GetDirectories(dir, "Day*")
                                 .Select(s => int.TryParse(s.Substring(s.Length - 2), out int day) ? day : 0)
@@ -33,8 +33,8 @@ namespace DataProvider.AdventOfCode
 
             if(newDay > 25)
             {
-                AnsiConsole.MarkupLine($"[yellow][[{year} is completed.]][/]");
-                AnsiConsole.MarkupLine("[cyan2][[No day added.]][/]");
+                AnsiConsole.MarkupLine($"[yellow][[:yellow_circle: {year} is completed.]][/]");
+                AnsiConsole.MarkupLine("[silver][[No day added.]][/]");
                 return;
             }
 
@@ -52,7 +52,7 @@ namespace DataProvider.AdventOfCode
 
             UpdateProjectFile(dir, year, newDay);
 
-            AnsiConsole.MarkupLine($"[cyan2][[Added Day{newDay:00}]][/]");
+            AnsiConsole.MarkupLine($"[green][[:check_mark_button: Added Day{newDay:00}]][/]");
         }
 
         static void UpdateDayInFile(string filename, int day)

@@ -18,8 +18,8 @@ namespace DataProvider.AdventOfCode
             string dir = Path.Combine(_configuration.SolutionDirectory, $"AdventOfCode{year}");
             if (!Directory.Exists(dir))
             {
-                AnsiConsole.MarkupLine($"[red][[Project {dir} does not exist.]][/]");
-                AnsiConsole.MarkupLine("[cyan2][[Configure the data provider to set the solution directory.]][/]");
+                AnsiConsole.MarkupLine($"[red][[:cross_mark: Project {dir} does not exist.]][/]");
+                AnsiConsole.MarkupLine("[silver][[Configure the data provider to set the solution directory.]][/]");
                 return;
             }
 

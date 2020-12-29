@@ -50,12 +50,12 @@ namespace DataProvider.Git
                     var branch = repo.Branches[branchName];
                     if(branch == null)
                     {
-                        AnsiConsole.MarkupLine($"[yellow][[The branch {branchName} does not exist.]][/]");
+                        AnsiConsole.MarkupLine($"[yellow][[:yellow_circle: The branch {branchName} does not exist.]][/]");
                         return;
                     }
 
                     Branch currentBranch = Commands.Checkout(repo, branch);
-                    AnsiConsole.MarkupLine($"[cyan2][[Switched to branch {currentBranch.FriendlyName}]][/]");
+                    AnsiConsole.MarkupLine($"[green][[:check_mark_button: Switched to branch {currentBranch.FriendlyName}]][/]");
                 }
 
                 RunGit("fetch -p");
@@ -63,8 +63,8 @@ namespace DataProvider.Git
             }
             catch(RepositoryNotFoundException)
             {
-                AnsiConsole.MarkupLine("[yellow][[The current directory is not a git repository.]][/]");
-                AnsiConsole.MarkupLine("[cyan2][[Make sure you are in the root of the repository.]][/]");
+                AnsiConsole.MarkupLine("[yellow][[:yellow_circle: The current directory is not a git repository.]][/]");
+                AnsiConsole.MarkupLine("[silver][[Make sure you are in the root of the repository.]][/]");
             }
         }
 

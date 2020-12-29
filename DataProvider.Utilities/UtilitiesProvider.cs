@@ -33,18 +33,21 @@ namespace DataProvider.Utilities
         void DisplayTime(bool utc)
         {
             var now = utc ? DateTime.UtcNow : DateTime.Now;
-            AnsiConsole.MarkupLine($"[yellow][[{now:yyyy-MM-dd.HH:mm:ss.fff}]][/]");
+            AnsiConsole.MarkupLine($":two_o_clock: [silver][[{now:yyyy-MM-dd.}[/][white]{now:HH:mm:ss.fffK}]][/]");
+            AnsiConsole.WriteLine();
         }
 
         void DisplayDate(bool utc)
         {
             var now = utc ? DateTime.UtcNow : DateTime.Now;
-            AnsiConsole.MarkupLine(now.ToString($"[yellow][[{now:yyyy-MM-dd}]][/]"));
+            AnsiConsole.MarkupLine($":tear_off_calendar: [silver][[{now:yyyy-MM-dd}]][/]");
+            AnsiConsole.WriteLine();
         }
 
         void NewGuid()
         {
-            AnsiConsole.MarkupLine($"[yellow][[{Guid.NewGuid():D}]][/]");
+            AnsiConsole.MarkupLine($"[silver][[{Guid.NewGuid():D}]][/]");
+            AnsiConsole.WriteLine();
         }
     }
 }

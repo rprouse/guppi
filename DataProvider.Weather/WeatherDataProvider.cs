@@ -53,7 +53,7 @@ namespace DataProvider.Weather
         {
             if (!Configured)
             {
-                AnsiConsole.MarkupLine("[yellow][[Please configure the weather provider]][/]");
+                AnsiConsole.MarkupLine("[yellow][[:yellow_circle: Please configure the weather provider]][/]");
                 return;
             }
 
@@ -69,7 +69,7 @@ namespace DataProvider.Weather
 
         private void Configure()
         {
-            _configuration.RunConfiguration(Name, "Enter the OpenWeather API key and your location.");
+            _configuration.RunConfiguration(Name, "Enter the OpenWeather API key and your location");
         }
 
         private async Task<WeatherResponse> GetWeatherData()
@@ -100,7 +100,6 @@ namespace DataProvider.Weather
                 AnsiConsole.MarkupLine(
                     $"[silver]{dt:HH:mm}  {WeatherIcon.Icons[icon]} {desc} {hour.temp.KalvinToCelcius(),5} FeelsLike {hour.feels_like.KalvinToCelcius(),5} {(int)(hour.pop*100),3}%:droplet:[/]"
                 );
-                //AnsiConsole.MarkupLine($"[cyan1]{dt:ddd HH:mm}:[/] [green1]{hour.temp.KalvinToCelcius()}[/][grey93], feels like[/] [green1]{hour.feels_like.KalvinToCelcius()}[/] [grey93]{hour.weather.FirstOrDefault()?.description}[/]");
             }
         }
 

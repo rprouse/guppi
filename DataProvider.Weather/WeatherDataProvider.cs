@@ -62,6 +62,7 @@ namespace DataProvider.Weather
                 DisplayLong(weather);
             else
                 DisplayShort(weather);
+            AnsiConsoleHelper.Rule("white");
         }
 
         private bool Configured => _configuration.Configured;
@@ -81,30 +82,37 @@ namespace DataProvider.Weather
         private void DisplayLong(WeatherResponse weather)
         {
             DisplayShort(weather);
+
             DateTime last = DateTime.MinValue;
+            int maxDesc = weather.hourly.Select(h => h.weather.FirstOrDefault()?.description ?? "").Max(d => d.Length);
             foreach (var hour in weather.hourly)
             {
                 DateTime dt = hour.dt.UnixTimeStampToDateTime();
                 if (dt.Date != last.Date)
-                    Console.WriteLine();
+                {
+                    AnsiConsoleHelper.Rule("white");
+                    AnsiConsole.MarkupLine($"[white bold]{dt:ddd MMM dd}[/]");
+                    AnsiConsoleHelper.Rule("silver");
+                }
                 last = dt;
-                AnsiConsole.MarkupLine($"[cyan1]{dt:ddd HH:mm}:[/] [green1]{hour.temp.KalvinToCelcius()}[/][grey93], feels like[/] [green1]{hour.feels_like.KalvinToCelcius()}[/] [grey93]{hour.weather.FirstOrDefault()?.description}[/]");
+                string icon = hour.weather.FirstOrDefault()?.icon ?? "";
+                string desc = (hour.weather.FirstOrDefault()?.description ?? "").PadRight(maxDesc);
+                AnsiConsole.MarkupLine(
+                    $"[silver]{dt:HH:mm}  {WeatherIcon.Icons[icon]} {desc} {hour.temp.KalvinToCelcius(),5} FeelsLike {hour.feels_like.KalvinToCelcius(),5} {(int)(hour.pop*100),3}%:droplet:[/]"
+                );
+                //AnsiConsole.MarkupLine($"[cyan1]{dt:ddd HH:mm}:[/] [green1]{hour.temp.KalvinToCelcius()}[/][grey93], feels like[/] [green1]{hour.feels_like.KalvinToCelcius()}[/] [grey93]{hour.weather.FirstOrDefault()?.description}[/]");
             }
         }
 
         private void DisplayShort(WeatherResponse weather)
         {
-            var rule = new Rule("[yellow][[Satellite scans complete. Today's weather...]][/]");
-            rule.Alignment = Justify.Left;
-            rule.RuleStyle("yellow dim");
-            AnsiConsole.Render(rule);
-            AnsiConsole.WriteLine();
+            AnsiConsoleHelper.TitleRule("Satellite scans complete. Today's weather is...");
 
-            AnsiConsole.MarkupLine($"[cyan1]Current:  [/] [green1]{weather.current.temp.KalvinToCelcius()}[/][grey93], feels like[/] [green1]{weather.current.feels_like.KalvinToCelcius()}[/] [grey93]{weather.current.weather.FirstOrDefault()?.description}[/]");
+            AnsiConsole.MarkupLine($"[white]Current:  {weather.current.temp.KalvinToCelcius()}[/][silver], FeelsLike[/] [white]{weather.current.feels_like.KalvinToCelcius()}[/] [silver]{weather.current.weather.FirstOrDefault()?.description}[/]");
 
             Daily today = weather.daily.FirstOrDefault();
 
-            AnsiConsole.MarkupLine($"[cyan1]Today:    [/] [grey93]High of[/] [green1]{today.temp.max.KalvinToCelcius()}[/][grey93], low of [/] [green1]{today.temp.min.KalvinToCelcius()}[/] [grey93]{today.weather.FirstOrDefault()?.description}[/]");
+            AnsiConsole.MarkupLine($"[white]Today:    [/] [silver]High/Low[/] [white]{today.temp.max.KalvinToCelcius()}/{today.temp.min.KalvinToCelcius()}[/] [silver]{today.weather.FirstOrDefault()?.description}[/]");
         }
     }
 }

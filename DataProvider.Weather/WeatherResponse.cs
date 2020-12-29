@@ -50,6 +50,7 @@ namespace DataProvider.Weather
         public float wind_speed { get; set; }
         public int wind_deg { get; set; }
         public Weather[] weather { get; set; }
+        public float pop { get; set; }
     }
 
     public class Daily

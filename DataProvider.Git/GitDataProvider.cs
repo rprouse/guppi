@@ -1,7 +1,7 @@
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Diagnostics;
-using ColoredConsole;
+using Spectre.Console;
 using Guppi.Core;
 using LibGit2Sharp;
 
@@ -50,12 +50,12 @@ namespace DataProvider.Git
                     var branch = repo.Branches[branchName];
                     if(branch == null)
                     {
-                        ColorConsole.WriteLine($"[The branch {branchName} does not exist.]".Yellow());
+                        AnsiConsole.MarkupLine($"[yellow][[The branch {branchName} does not exist.]][/]");
                         return;
                     }
 
                     Branch currentBranch = Commands.Checkout(repo, branch);
-                    ColorConsole.WriteLine($"[Switched to branch {currentBranch.FriendlyName}]");
+                    AnsiConsole.MarkupLine($"[cyan2][[Switched to branch {currentBranch.FriendlyName}]][/]");
                 }
 
                 RunGit("fetch -p");
@@ -63,8 +63,8 @@ namespace DataProvider.Git
             }
             catch(RepositoryNotFoundException)
             {
-                ColorConsole.WriteLine("[The current directory is not a git repository.]".Yellow());
-                ColorConsole.WriteLine("[Make sure you are in the root of the repository.]".Cyan());
+                AnsiConsole.MarkupLine("[yellow][[The current directory is not a git repository.]][/]");
+                AnsiConsole.MarkupLine("[cyan2][[Make sure you are in the root of the repository.]][/]");
             }
         }
 

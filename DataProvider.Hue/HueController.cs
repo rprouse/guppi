@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using ColoredConsole;
+using Spectre.Console;
 using Q42.HueApi;
 using Q42.HueApi.ColorConverters;
 using Q42.HueApi.ColorConverters.Original;
@@ -22,13 +22,17 @@ namespace DataProvider.Hue
 
         public async Task ListBridges()
         {
-            ColorConsole.WriteLine("[SUDAR Scan Complete. Found bridges...]".White());
+            var rule = new Rule("[yellow][[SUDAR Scan Complete. Found bridges...]][/]");
+            rule.Alignment = Justify.Left;
+            rule.RuleStyle("yellow dim");
+            AnsiConsole.Render(rule);
+            AnsiConsole.WriteLine();
 
             IBridgeLocator locator = new HttpBridgeLocator();
             IEnumerable<LocatedBridge> bridges = await locator.LocateBridgesAsync(TimeSpan.FromSeconds(5));
             foreach (var bridge in bridges)
             {
-                ColorConsole.WriteLine($"{bridge.BridgeId} - {bridge.IpAddress}".Gray());
+                AnsiConsole.MarkupLine($"[silver]{bridge.BridgeId} - {bridge.IpAddress}[/]");
             }
         }
 
@@ -49,7 +53,7 @@ namespace DataProvider.Hue
 
             if (bridge == null)
             {
-                ColorConsole.WriteLine("[Hue Bridge not found]".Red());
+                AnsiConsole.MarkupLine("[red][[Hue Bridge not found]][/]");
                 return false;
             }
 
@@ -74,7 +78,7 @@ namespace DataProvider.Hue
 
         async Task<string> Register(LocatedBridge bridge)
         {
-            ColorConsole.WriteLine("[Press the button on your bridge then press ENTER]".Green());
+            AnsiConsole.MarkupLine("[green][[Press the button on your bridge then press ENTER]][/]");
             Console.ReadLine();
 
             try
@@ -82,10 +86,12 @@ namespace DataProvider.Hue
                 ILocalHueClient client = new LocalHueClient(bridge.IpAddress);
                 return await client.RegisterAsync("Alteridem.Hue.CLI", Environment.MachineName);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                ColorConsole.WriteLine("[Failed to register with the bridge.]".Red());
-                ColorConsole.WriteLine(e.Message.Red());
+                AnsiConsole.MarkupLine("[red][[Failed to register with the bridge.]][/]");
+                AnsiConsole.WriteException(ex,
+                    ExceptionFormats.ShortenPaths | ExceptionFormats.ShortenTypes |
+                    ExceptionFormats.ShortenMethods | ExceptionFormats.ShowLinks);
             }
             return null;
         }
@@ -100,11 +106,16 @@ namespace DataProvider.Hue
 
         public async Task ListLights()
         {
-            ColorConsole.WriteLine("Found lights...".White());
+            var rule = new Rule("[yellow][[Scans are complete. Found lights...]][/]");
+            rule.Alignment = Justify.Left;
+            rule.RuleStyle("yellow dim");
+            AnsiConsole.Render(rule);
+            AnsiConsole.WriteLine();
+
             var lights = await _client.GetLightsAsync();
             foreach (var light in lights)
             {
-                ColorConsole.WriteLine($"{light.Id} - {light.Name} ({(light.State.On ? $"On {(light.State.Brightness * 100 / 255)}%" : "Off")})".Gray());
+                AnsiConsole.MarkupLine($"[silver]{light.Id} - {light.Name}[/] [dim silver]({(light.State.On ? $"On {(light.State.Brightness * 100 / 255)}%" : "Off")})[/]");
             }
         }
 
@@ -155,7 +166,7 @@ namespace DataProvider.Hue
                 return new RGBColor(color);
 
             // Maybe it is a named color
-            Color c = Color.FromName(color);
+            var c = System.Drawing.Color.FromName(color);
             return new RGBColor(c.R, c.G, c.B);
         }
     }

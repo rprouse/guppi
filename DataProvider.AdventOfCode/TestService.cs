@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using System.IO;
-using ColoredConsole;
+using Spectre.Console;
 
 namespace DataProvider.AdventOfCode
 {
@@ -18,8 +18,8 @@ namespace DataProvider.AdventOfCode
             string dir = Path.Combine(_configuration.SolutionDirectory, $"AdventOfCode{year}");
             if (!Directory.Exists(dir))
             {
-                ColorConsole.WriteLine($"[Project {dir} does not exist.]".Red());
-                ColorConsole.WriteLine("[Configure the data provider to set the solution directory.]".Cyan());
+                AnsiConsole.MarkupLine($"[red][[Project {dir} does not exist.]][/]");
+                AnsiConsole.MarkupLine("[cyan2][[Configure the data provider to set the solution directory.]][/]");
                 return;
             }
 

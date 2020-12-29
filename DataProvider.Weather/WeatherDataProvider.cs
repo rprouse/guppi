@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
-using ColoredConsole;
+using Spectre.Console;
 using Guppi.Core;
 using Guppi.Core.Extensions;
 
@@ -53,7 +53,7 @@ namespace DataProvider.Weather
         {
             if (!Configured)
             {
-                ColorConsole.WriteLine("[Please configure the weather provider]".Yellow());
+                AnsiConsole.MarkupLine("[yellow][[Please configure the weather provider]][/]");
                 return;
             }
 
@@ -68,7 +68,7 @@ namespace DataProvider.Weather
 
         private void Configure()
         {
-            _configuration.RunConfiguration(Name, "[Enter the OpenWeather API key and your location.]");
+            _configuration.RunConfiguration(Name, "Enter the OpenWeather API key and your location.");
         }
 
         private async Task<WeatherResponse> GetWeatherData()
@@ -88,20 +88,23 @@ namespace DataProvider.Weather
                 if (dt.Date != last.Date)
                     Console.WriteLine();
                 last = dt;
-                ColorConsole.WriteLine($"{dt:ddd HH:mm}: ".Cyan(), hour.temp.KalvinToCelcius().Green(), " feels like ".White(), hour.feels_like.KalvinToCelcius().Green(), $", {hour.weather.FirstOrDefault()?.description}".White());
+                AnsiConsole.MarkupLine($"[cyan1]{dt:ddd HH:mm}:[/] [green1]{hour.temp.KalvinToCelcius()}[/][grey93], feels like[/] [green1]{hour.feels_like.KalvinToCelcius()}[/] [grey93]{hour.weather.FirstOrDefault()?.description}[/]");
             }
         }
 
         private void DisplayShort(WeatherResponse weather)
         {
-            ColorConsole.WriteLine("[Today's Weather]".Yellow());
-            Console.WriteLine();
+            var rule = new Rule("[yellow][[Satellite scans complete. Today's weather...]][/]");
+            rule.Alignment = Justify.Left;
+            rule.RuleStyle("yellow dim");
+            AnsiConsole.Render(rule);
+            AnsiConsole.WriteLine();
 
-            ColorConsole.WriteLine("Current: ".Cyan(), weather.current.temp.KalvinToCelcius().Green(), " feels like ".White(), weather.current.feels_like.KalvinToCelcius().Green(), $", {weather.current.weather.FirstOrDefault()?.description}".White());
+            AnsiConsole.MarkupLine($"[cyan1]Current:  [/] [green1]{weather.current.temp.KalvinToCelcius()}[/][grey93], feels like[/] [green1]{weather.current.feels_like.KalvinToCelcius()}[/] [grey93]{weather.current.weather.FirstOrDefault()?.description}[/]");
 
             Daily today = weather.daily.FirstOrDefault();
 
-            ColorConsole.WriteLine("Today:   ".Cyan(), "High of ".White(), today.temp.max.KalvinToCelcius().Green(), ", low of ".White(), today.temp.min.KalvinToCelcius().Green(), $", {today.weather.FirstOrDefault()?.description}".White());
+            AnsiConsole.MarkupLine($"[cyan1]Today:    [/] [grey93]High of[/] [green1]{today.temp.max.KalvinToCelcius()}[/][grey93], low of [/] [green1]{today.temp.min.KalvinToCelcius()}[/] [grey93]{today.weather.FirstOrDefault()?.description}[/]");
         }
     }
 }

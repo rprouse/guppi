@@ -1,7 +1,7 @@
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-using ColoredConsole;
+using Spectre.Console;
 
 namespace DataProvider.AdventOfCode
 {
@@ -19,12 +19,12 @@ namespace DataProvider.AdventOfCode
             string dir = Path.Combine(_configuration.SolutionDirectory, $"AdventOfCode{year}");
             if (!Directory.Exists(dir))
             {
-                ColorConsole.WriteLine($"[Project {dir} does not exist.]".Red());
-                ColorConsole.WriteLine("[Configure the data provider to set the solution directory.]".Cyan());
+                AnsiConsole.MarkupLine($"[red][[Project {dir} does not exist.]][/]");
+                AnsiConsole.MarkupLine("[cyan2][[Configure the data provider to set the solution directory.]][/]");
                 return;
             }
 
-            ColorConsole.WriteLine($"[Adding new day to {dir}]".Yellow());
+            AnsiConsole.MarkupLine($"[yellow][[Adding new day to {dir}]][/]");
 
             var days = Directory.GetDirectories(dir, "Day*")
                                 .Select(s => int.TryParse(s.Substring(s.Length - 2), out int day) ? day : 0)
@@ -33,8 +33,8 @@ namespace DataProvider.AdventOfCode
 
             if(newDay > 25)
             {
-                ColorConsole.WriteLine($"[{year} is completed.]".Yellow());
-                ColorConsole.WriteLine("[No day added.]".Cyan());
+                AnsiConsole.MarkupLine($"[yellow][[{year} is completed.]][/]");
+                AnsiConsole.MarkupLine("[cyan2][[No day added.]][/]");
                 return;
             }
 
@@ -52,7 +52,7 @@ namespace DataProvider.AdventOfCode
 
             UpdateProjectFile(dir, year, newDay);
 
-            ColorConsole.WriteLine($"[Added Day{newDay:00}]".Cyan());
+            AnsiConsole.MarkupLine($"[cyan2][[Added Day{newDay:00}]][/]");
         }
 
         static void UpdateDayInFile(string filename, int day)

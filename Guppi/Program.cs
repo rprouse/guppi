@@ -1,7 +1,5 @@
-using System.CommandLine;
-using System.Linq;
+using System;
 using System.Threading.Tasks;
-using ColoredConsole;
 using DataProvider.AdventOfCode;
 using DataProvider.Calendar;
 using DataProvider.Git;
@@ -10,41 +8,27 @@ using DataProvider.Notes;
 using DataProvider.Utilities;
 using DataProvider.Weather;
 using Guppi.Core;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Alteridem.Guppi
 {
     class Program
     {
-        static async Task Main(string[] args)
-        {
-            var providers = new IDataProvider[]
-            {
-                new AdventOfCodeDataProvider(),
-                new CalendarDataProvider(),
-                new GitDataProvider(),
-                new HueLightsDataProvider(),
-                new NotesProvider(),
-                new WeatherDataProvider(),
-            };
+        static async Task Main(string[] args) =>
+            await ConfigureServices()
+                    .GetRequiredService<IApplication>()
+                    .Run(args);
 
-            var multiProviders = new IMultipleDataProvider[]
-            {
-                new UtilitiesProvider(),
-            };
-
-            var multicommands = multiProviders.SelectMany(m => m.GetCommands());
-            var commands = providers.Select(p => p.GetCommand()).Union(multicommands).OrderBy(c => c.Name);
-
-            var rootCommand = new RootCommand();
-            foreach(var command in commands)
-            {
-                rootCommand.AddCommand(command);
-            }
-
-            ColorConsole.WriteLine(Sayings.Affirmative().Cyan());
-            ColorConsole.WriteLine();
-
-            await rootCommand.InvokeAsync(args);
-        }
+        static private IServiceProvider ConfigureServices() =>
+            new ServiceCollection()
+                .AddTransient<IApplication, Application>()
+                .AddTransient<IDataProvider, AdventOfCodeDataProvider>()
+                .AddTransient<IDataProvider, CalendarDataProvider>()
+                .AddTransient<IDataProvider, GitDataProvider>()
+                .AddTransient<IDataProvider, HueLightsDataProvider>()
+                .AddTransient<IDataProvider, NotesProvider>()
+                .AddTransient<IDataProvider, WeatherDataProvider>()
+                .AddTransient<IMultipleDataProvider, UtilitiesProvider>()
+                .BuildServiceProvider();
     }
 }

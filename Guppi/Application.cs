@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.CommandLine;
 using System.Linq;
 using System.Threading.Tasks;
-using ColoredConsole;
 using Guppi.Core;
+using Spectre.Console;
 
 namespace Alteridem.Guppi
 {
@@ -24,8 +24,8 @@ namespace Alteridem.Guppi
 
         public async Task Run(string[] args)
         {
-            ColorConsole.WriteLine(Sayings.Affirmative().Cyan());
-            ColorConsole.WriteLine();
+            AnsiConsole.MarkupLine("[cyan2 bold]{0}[/]", Sayings.Affirmative().EscapeMarkup());
+            AnsiConsole.WriteLine();
 
             await _rootCommand.InvokeAsync(args);
         }

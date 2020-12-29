@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
-using ColoredConsole;
+using Spectre.Console;
 
 namespace DataProvider.AdventOfCode
 {
@@ -21,7 +21,7 @@ namespace DataProvider.AdventOfCode
         {
             if (!_configuration.Configured)
             {
-                ColorConsole.WriteLine("[Please configure the Advent of Code provider]".Yellow());
+                AnsiConsole.MarkupLine("[yellow][[Please configure the Advent of Code provider]][/]");
                 return;
             }
 
@@ -34,40 +34,43 @@ namespace DataProvider.AdventOfCode
 
             var leaders = JsonSerializer.Deserialize<Leaderboard>(json);
 
-            ColorConsole.WriteLine();
-            ColorConsole.WriteLine($"=== Advent of Code Leaderboard {year} ===".Yellow());
-            ColorConsole.WriteLine();
+            AnsiConsole.WriteLine();
+            var rule = new Rule($"[yellow]Advent of Code Leaderboard {year}[/]");
+            rule.Alignment = Justify.Left;
+            rule.RuleStyle("yellow dim");
+            AnsiConsole.Render(rule);
+            AnsiConsole.WriteLine();
 
             int place = 1;
             foreach (var member in leaders.members.Values.OrderByDescending(m => m.local_score).ThenByDescending(m => m.stars))
             {
-                ColorConsole.Write(string.Format("{0,3}) {1,3}  ", place++, member.local_score).White());
+                AnsiConsole.Markup(string.Format("[white]{0,3}) {1,3}[/]  ", place++, member.local_score));
 
                 for (int d = 1; d <= 25; d++)
                 {
                     if (DateTime.Now.Date < new DateTime(year, 12, d))
                     {
-                        ColorConsole.Write("·".DarkGray());
+                        AnsiConsole.Markup("[grey]·[/]");
                         continue;
                     }
 
                     string day = d.ToString();
-                    ColorToken star;
+                    string star;
                     if (member.completion_day_level.ContainsKey(day))
                     {
                         Day completed = member.completion_day_level[day];
                         if (completed.PartOne != null && completed.PartTwo != null)
-                            star = "*".Yellow();
+                            star = "[yellow]*[/]";
                         else
-                            star = "*".White();
+                            star = "[white]*[/]";
                     }
                     else
                     {
-                        star = "*".DarkGray();
+                        star = "[grey]*[/]";
                     }
-                    ColorConsole.Write(star);
+                    AnsiConsole.Markup(star);
                 }
-                ColorConsole.WriteLine($"  {member.name}".Green());
+                AnsiConsole.MarkupLine($"[green]  {member.name}[/]");
             }
         }
     }

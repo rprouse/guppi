@@ -62,7 +62,7 @@ namespace DataProvider.Notes
 
         private void Configure()
         {
-            _configuration.RunConfiguration("Notes", "[Set the Notes Directory.]");
+            _configuration.RunConfiguration("Notes", "Set the Notes Directory.");
         }
     }
 }

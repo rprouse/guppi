@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.Invocation;
-using ColoredConsole;
+using Spectre.Console;
 using Guppi.Core;
 
 namespace DataProvider.Utilities
@@ -33,18 +33,18 @@ namespace DataProvider.Utilities
         void DisplayTime(bool utc)
         {
             var now = utc ? DateTime.UtcNow : DateTime.Now;
-            ColorConsole.WriteLine(now.ToString("[yyyy-MM-dd.HH:mm:ss.fff]").Yellow());
+            AnsiConsole.MarkupLine($"[yellow][[{now:yyyy-MM-dd.HH:mm:ss.fff}]][/]");
         }
 
         void DisplayDate(bool utc)
         {
             var now = utc ? DateTime.UtcNow : DateTime.Now;
-            ColorConsole.WriteLine(now.ToString("[yyyy-MM-dd]").Yellow());
+            AnsiConsole.MarkupLine(now.ToString($"[yellow][[{now:yyyy-MM-dd}]][/]"));
         }
 
         void NewGuid()
         {
-            ColorConsole.WriteLine($"[{Guid.NewGuid().ToString("D")}]".Yellow());
+            AnsiConsole.MarkupLine($"[yellow][[{Guid.NewGuid():D}]][/]");
         }
     }
 }

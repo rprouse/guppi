@@ -69,7 +69,7 @@ namespace Guppi.Core
             Console.Clear();
             AnsiConsole.MarkupLine($"[yellow]Configure {name}[/]");
             AnsiConsole.WriteLine();
-            AnsiConsole.MarkupLine($"[white]{description}[/]");
+            AnsiConsole.MarkupLine($"[white][[{description}]][/]");
             AnsiConsole.WriteLine();
 
             foreach (PropertyInfo prop in GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.PropertyType == typeof(string) && p.GetCustomAttribute<HideAttribute>() == null))

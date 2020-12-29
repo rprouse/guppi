@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using ColoredConsole;
+using Spectre.Console;
 
 namespace DataProvider.Hue
 {
@@ -37,10 +37,12 @@ namespace DataProvider.Hue
             {
                 File.WriteAllText(KeyFilename, key);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                ColorConsole.WriteLine("[Failed to save bridge registration.]".Red());
-                ColorConsole.WriteLine(e.Message.Red());
+                AnsiConsole.MarkupLine("[red][[Failed to save bridge registration.]][/]");
+                AnsiConsole.WriteException(ex,
+                    ExceptionFormats.ShortenPaths | ExceptionFormats.ShortenTypes |
+                    ExceptionFormats.ShortenMethods | ExceptionFormats.ShowLinks);
                 return false;
             }
             return true;

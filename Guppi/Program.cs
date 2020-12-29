@@ -5,6 +5,7 @@ using DataProvider.Calendar;
 using DataProvider.Git;
 using DataProvider.Hue;
 using DataProvider.Notes;
+using DataProvider.Tracking;
 using DataProvider.Utilities;
 using DataProvider.Weather;
 using Guppi.Core;
@@ -28,6 +29,7 @@ namespace Alteridem.Guppi
                 .AddTransient<IDataProvider, HueLightsDataProvider>()
                 .AddTransient<IDataProvider, NotesProvider>()
                 .AddTransient<IDataProvider, WeatherDataProvider>()
+                .AddTransient<IDataProvider, TrackingDataProvider>()
                 .AddTransient<IMultipleDataProvider, UtilitiesProvider>()
                 .BuildServiceProvider();
     }

@@ -3,8 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
-using ColoredConsole;
 using Guppi.Core.Attributes;
+using Spectre.Console;
 
 namespace Guppi.Core
 {
@@ -36,8 +36,10 @@ namespace Guppi.Core
             }
             catch (Exception ex)
             {
-                ColorConsole.WriteLine($"Failed to load the configuration file for {name}".Red());
-                ColorConsole.WriteLine(ex.Message.Gray());
+                AnsiConsole.MarkupLine($"[red]Failed to load the configuration file for {name}[/]");
+                AnsiConsole.WriteException(ex,
+                    ExceptionFormats.ShortenPaths | ExceptionFormats.ShortenTypes |
+                    ExceptionFormats.ShortenMethods | ExceptionFormats.ShowLinks);
             }
             return new T()
             {
@@ -55,18 +57,20 @@ namespace Guppi.Core
             }
             catch (Exception ex)
             {
-                ColorConsole.WriteLine($"Failed to save the configuration file for {Name}".Red());
-                ColorConsole.WriteLine(ex.Message.Gray());
+                AnsiConsole.MarkupLine($"[red]Failed to save the configuration file for {Name}[/]");
+                AnsiConsole.WriteException(ex,
+                    ExceptionFormats.ShortenPaths | ExceptionFormats.ShortenTypes |
+                    ExceptionFormats.ShortenMethods | ExceptionFormats.ShowLinks);
             }
         }
 
         public void RunConfiguration(string name, string description)
         {
             Console.Clear();
-            ColorConsole.WriteLine($"Configure {name}".Yellow());
-            Console.WriteLine();
-            ColorConsole.WriteLine(description.White());
-            Console.WriteLine();
+            AnsiConsole.MarkupLine($"[yellow]Configure {name}[/]");
+            AnsiConsole.WriteLine();
+            AnsiConsole.MarkupLine($"[white]{description}[/]");
+            AnsiConsole.WriteLine();
 
             foreach (PropertyInfo prop in GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.PropertyType == typeof(string) && p.GetCustomAttribute<HideAttribute>() == null))
             {
@@ -84,8 +88,10 @@ namespace Guppi.Core
             string name = attr != null ? attr.Description : prop.Name;
             string value = prop.GetValue(this) as string ?? "";
 
-            ColorConsole.Write($"{name} ".Green(), $"[{value}]: ");
-            string newValue = Console.ReadLine();
+            string newValue = AnsiConsole.Prompt(
+                new TextPrompt<string>($"[green]{name}[/] [dim grey][[{value}]]:[/]")
+                    .AllowEmpty()
+                );
             if (!string.IsNullOrWhiteSpace(newValue))
                 prop.SetValue(this, newValue);
         }

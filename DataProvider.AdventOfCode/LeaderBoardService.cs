@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Guppi.Core;
 using Spectre.Console;
 
 namespace DataProvider.AdventOfCode
@@ -35,11 +36,7 @@ namespace DataProvider.AdventOfCode
             var leaders = JsonSerializer.Deserialize<Leaderboard>(json);
 
             AnsiConsole.WriteLine();
-            var rule = new Rule($"[yellow]Advent of Code Leaderboard {year}[/]");
-            rule.Alignment = Justify.Left;
-            rule.RuleStyle("yellow dim");
-            AnsiConsole.Render(rule);
-            AnsiConsole.WriteLine();
+            AnsiConsoleHelper.TitleRule($"Advent of Code Leaderboard {year}");
 
             int place = 1;
             foreach (var member in leaders.members.Values.OrderByDescending(m => m.local_score).ThenByDescending(m => m.stars))
@@ -72,6 +69,7 @@ namespace DataProvider.AdventOfCode
                 }
                 AnsiConsole.MarkupLine($"[green]  {member.name}[/]");
             }
+            AnsiConsoleHelper.Rule("white");
         }
     }
 }

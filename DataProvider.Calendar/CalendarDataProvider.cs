@@ -95,32 +95,35 @@ namespace DataProvider.Calendar
 
             // List events.
             Events events = await request.ExecuteAsync();
-            string title = agenda ? "Today's agenda:" : "Next event:";
+            string title = agenda ? "Today's agenda" : "Next event";
 
-            var rule = new Rule($"[yellow]{title}[/]");
-            rule.Alignment = Justify.Left;
-            rule.RuleStyle("yellow dim");
-            AnsiConsole.Render(rule);
-            AnsiConsole.WriteLine();
+            AnsiConsoleHelper.TitleRule(title);
 
-            if (events?.Items.Count > 0)
+            try
             {
-                bool found = false;
-                foreach (var eventItem in events.Items)
+                if (events?.Items.Count > 0)
                 {
-                    string start = eventItem.Start.DateTime?.ToString(agenda ? "HH:mm" : "yyyy-MM-dd HH:mm");
-                    if (string.IsNullOrEmpty(start))
+                    bool found = false;
+                    foreach (var eventItem in events.Items)
                     {
-                        continue;
+                        string start = eventItem.Start.DateTime?.ToString(agenda ? "HH:mm" : "MMM dd HH:mm");
+                        if (string.IsNullOrEmpty(start))
+                        {
+                            continue;
+                        }
+                        string end = eventItem.End.DateTime?.ToString("-HH:mm") ?? "";
+                        AnsiConsole.MarkupLine($"[white]{start}{end}\t[/][silver]{eventItem.Summary}[/]");
+                        found = true;
+                        if (!agenda) return;
                     }
-                    string end = eventItem.End.DateTime?.ToString("-HH:mm") ?? "";
-                    AnsiConsole.MarkupLine($"[cyan2]{start}{end}\t[/][white]{eventItem.Summary}[/]");
-                    found = true;
-                    if (!agenda) return;
+                    if (found) return;
                 }
-                if (found) return;
+                AnsiConsole.MarkupLine("[white][[No upcoming events found.]][/]");
             }
-            AnsiConsole.MarkupLine("[white][[No upcoming events found.]][/]");
+            finally
+            {
+                AnsiConsoleHelper.Rule("white");
+            }
         }
     }
 }

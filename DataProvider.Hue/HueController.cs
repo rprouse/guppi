@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Spectre.Console;
+using Guppi.Core;
 using Q42.HueApi;
 using Q42.HueApi.ColorConverters;
 using Q42.HueApi.ColorConverters.Original;
 using Q42.HueApi.Interfaces;
 using Q42.HueApi.Models.Bridge;
 using Q42.HueApi.Models.Groups;
+using Spectre.Console;
 
 namespace DataProvider.Hue
 {
@@ -22,11 +22,7 @@ namespace DataProvider.Hue
 
         public async Task ListBridges()
         {
-            var rule = new Rule("[yellow][[SUDAR Scan Complete. Found bridges...]][/]");
-            rule.Alignment = Justify.Left;
-            rule.RuleStyle("yellow dim");
-            AnsiConsole.Render(rule);
-            AnsiConsole.WriteLine();
+            AnsiConsoleHelper.TitleRule("SUDAR Scan Complete. Found bridges...");
 
             IBridgeLocator locator = new HttpBridgeLocator();
             IEnumerable<LocatedBridge> bridges = await locator.LocateBridgesAsync(TimeSpan.FromSeconds(5));
@@ -34,6 +30,7 @@ namespace DataProvider.Hue
             {
                 AnsiConsole.MarkupLine($"[silver]{bridge.BridgeId} - {bridge.IpAddress}[/]");
             }
+            AnsiConsoleHelper.Rule("white");
         }
 
         public async Task<bool> Register(string ip = null)
@@ -106,17 +103,14 @@ namespace DataProvider.Hue
 
         public async Task ListLights()
         {
-            var rule = new Rule("[yellow][[Scans are complete. Found lights...]][/]");
-            rule.Alignment = Justify.Left;
-            rule.RuleStyle("yellow dim");
-            AnsiConsole.Render(rule);
-            AnsiConsole.WriteLine();
+            AnsiConsoleHelper.TitleRule("Scans are complete. Found lights...");
 
             var lights = await _client.GetLightsAsync();
             foreach (var light in lights)
             {
-                AnsiConsole.MarkupLine($"[silver]{light.Id} - {light.Name}[/] [dim silver]({(light.State.On ? $"On {(light.State.Brightness * 100 / 255)}%" : "Off")})[/]");
+                AnsiConsole.MarkupLine($"[white]{light.Id,2}: {light.Name,-40}[/] [silver]({(light.State.On ? $"On {(light.State.Brightness * 100 / 255)}%" : "Off")})[/]");
             }
+            AnsiConsoleHelper.Rule("white");
         }
 
         public LightCommand GetCommand(bool on, bool off, bool alert, byte? brightness, string color)

@@ -1,8 +1,14 @@
-﻿using System;
+using System;
+using System.CommandLine;
+using Guppi.Core;
 
 namespace DataProvider.Tracking
 {
-    public class Class1
+    public class TrackingDataProvider : IDataProvider
     {
+        public Command GetCommand()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

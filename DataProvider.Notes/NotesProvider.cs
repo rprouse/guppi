@@ -24,11 +24,12 @@ namespace DataProvider.Notes
                 new Option<bool>(new string[]{"--nocreate", "-n"}, "Do not create today's note."),
                 new Option<bool>(new string[]{"--configure", "-c"}, "Set the notes directory.")
             };
-            notes.Handler = CommandHandler.Create((bool nocreate, bool configure) => OpenNotes(nocreate, configure));
+            notes.AddArgument(new Argument<string>("filename", () => DateTime.Now.ToString("yyyy-MM-dd")));
+            notes.Handler = CommandHandler.Create((bool nocreate, bool configure, string filename) => OpenNotes(nocreate, configure, filename));
             return notes;
         }
 
-        void OpenNotes(bool nocreate, bool configure)
+        void OpenNotes(bool nocreate, bool configure, string filename)
         {
             if (!_configuration.Configured || configure)
                 Configure();
@@ -36,11 +37,10 @@ namespace DataProvider.Notes
             if (!Directory.Exists(_configuration.NotesDirectory))
                 Directory.CreateDirectory(_configuration.NotesDirectory);
 
-            string today = DateTime.Now.ToString("yyyy-MM-dd");
-            string todayFile = Path.Combine(_configuration.NotesDirectory, $"{today}.md");
+            string todayFile = Path.Combine(_configuration.NotesDirectory, $"{filename}.md");
             if(!nocreate && !File.Exists(todayFile))
             {
-                File.WriteAllText(todayFile, $"# {today}\n\n");
+                File.WriteAllText(todayFile, $"# {filename}\n\n");
             }
 
             bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);

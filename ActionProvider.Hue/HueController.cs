@@ -12,7 +12,7 @@ using Q42.HueApi.Models.Bridge;
 using Q42.HueApi.Models.Groups;
 using Spectre.Console;
 
-namespace DataProvider.Hue
+namespace ActionProvider.Hue
 {
     internal class HueController
     {

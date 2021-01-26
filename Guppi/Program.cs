@@ -1,12 +1,12 @@
 using System;
 using System.Threading.Tasks;
-using DataProvider.AdventOfCode;
-using DataProvider.Calendar;
-using DataProvider.Git;
-using DataProvider.Hue;
-using DataProvider.Notes;
-using DataProvider.Utilities;
-using DataProvider.Weather;
+using ActionProvider.AdventOfCode;
+using ActionProvider.Calendar;
+using ActionProvider.Git;
+using ActionProvider.Hue;
+using ActionProvider.Notes;
+using ActionProvider.Utilities;
+using ActionProvider.Weather;
 using Guppi.Core;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,13 +22,13 @@ namespace Alteridem.Guppi
         static private IServiceProvider ConfigureServices() =>
             new ServiceCollection()
                 .AddTransient<IApplication, Application>()
-                .AddTransient<IDataProvider, AdventOfCodeDataProvider>()
-                .AddTransient<IDataProvider, CalendarDataProvider>()
-                .AddTransient<IDataProvider, GitDataProvider>()
-                .AddTransient<IDataProvider, HueLightsDataProvider>()
-                .AddTransient<IDataProvider, NotesProvider>()
-                .AddTransient<IDataProvider, WeatherDataProvider>()
-                .AddTransient<IMultipleDataProvider, UtilitiesProvider>()
+                .AddTransient<IActionProvider, AdventOfCodeDataProvider>()
+                .AddTransient<IActionProvider, CalendarDataProvider>()
+                .AddTransient<IActionProvider, GitDataProvider>()
+                .AddTransient<IActionProvider, HueLightsDataProvider>()
+                .AddTransient<IActionProvider, NotesProvider>()
+                .AddTransient<IActionProvider, WeatherDataProvider>()
+                .AddTransient<IMultipleActionProvider, UtilitiesProvider>()
                 .BuildServiceProvider();
     }
 }

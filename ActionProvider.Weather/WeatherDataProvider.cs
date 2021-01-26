@@ -10,9 +10,9 @@ using Spectre.Console;
 using Guppi.Core;
 using Guppi.Core.Extensions;
 
-namespace DataProvider.Weather
+namespace ActionProvider.Weather
 {
-    public class WeatherDataProvider : IDataProvider
+    public class WeatherDataProvider : IActionProvider
     {
         const string Command = "weather";
         const string Name = "Weather";

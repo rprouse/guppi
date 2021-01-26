@@ -1,14 +1,14 @@
 using Guppi.Core;
 using Guppi.Core.Attributes;
 
-namespace DataProvider.Hue
+namespace ActionProvider.Hue
 {
     public class HueConfiguration : Configuration
     {
         uint _defaultLight = 0;
 
         [Display("Default Light")]
-        public string DefaultLight 
+        public string DefaultLight
         {
             get => _defaultLight.ToString();
             set

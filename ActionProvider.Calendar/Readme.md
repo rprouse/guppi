@@ -1,4 +1,4 @@
-# DataProvider.Calendar
+# ActionProvider.Calendar
 
 Displays your next calendar event or today's agenda.
 

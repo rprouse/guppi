@@ -19,21 +19,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Guppi.Tests", "Guppi.Tests\Guppi.Tests.csproj", "{AF90312A-5A42-4B2E-B513-6DCE9BB869BE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataProviders", "DataProviders", "{C22BC410-6608-4D05-83E3-8344CF9A32F4}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{C22BC410-6608-4D05-83E3-8344CF9A32F4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataProvider.Weather", "DataProvider.Weather\DataProvider.Weather.csproj", "{2B8CC7A7-08EB-4030-98A4-937CBB3BD939}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActionProvider.Weather", "ActionProvider.Weather\ActionProvider.Weather.csproj", "{2B8CC7A7-08EB-4030-98A4-937CBB3BD939}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataProvider.Calendar", "DataProvider.Calendar\DataProvider.Calendar.csproj", "{F60D49BD-F2DF-421F-BA2A-0E90EBA32A17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActionProvider.Calendar", "ActionProvider.Calendar\ActionProvider.Calendar.csproj", "{F60D49BD-F2DF-421F-BA2A-0E90EBA32A17}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataProvider.Hue", "DataProvider.Hue\DataProvider.Hue.csproj", "{65746B67-9343-4271-9399-5CCE9108B74D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActionProvider.Hue", "ActionProvider.Hue\ActionProvider.Hue.csproj", "{65746B67-9343-4271-9399-5CCE9108B74D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataProvider.AdventOfCode", "DataProvider.AdventOfCode\DataProvider.AdventOfCode.csproj", "{F5F93563-26BB-4BFB-B309-4BA4DAD2CEAD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActionProvider.AdventOfCode", "ActionProvider.AdventOfCode\ActionProvider.AdventOfCode.csproj", "{F5F93563-26BB-4BFB-B309-4BA4DAD2CEAD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataProvider.Git", "DataProvider.Git\DataProvider.Git.csproj", "{2D47B5BC-05E4-49B7-B0F3-26A5852E5421}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActionProvider.Git", "ActionProvider.Git\ActionProvider.Git.csproj", "{2D47B5BC-05E4-49B7-B0F3-26A5852E5421}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProvider.Notes", "DataProvider.Notes\DataProvider.Notes.csproj", "{564F6264-D9FE-484F-8825-0B9FA2BE75C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActionProvider.Notes", "ActionProvider.Notes\ActionProvider.Notes.csproj", "{564F6264-D9FE-484F-8825-0B9FA2BE75C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProvider.Utilities", "DataProvider.Utilities\DataProvider.Utilities.csproj", "{7047D785-440C-48C1-AE7B-65E24A75C260}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActionProvider.Utilities", "ActionProvider.Utilities\ActionProvider.Utilities.csproj", "{7047D785-440C-48C1-AE7B-65E24A75C260}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

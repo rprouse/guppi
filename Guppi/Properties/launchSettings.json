@@ -2,7 +2,7 @@
   "profiles": {
     "Guppi.Console": {
       "commandName": "Project",
-      "commandLineArgs": "notes tracking"
+      "commandLineArgs": "cal view"
     }
   }
 }

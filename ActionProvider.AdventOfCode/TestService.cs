@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.IO;
 using Spectre.Console;
 
-namespace DataProvider.AdventOfCode
+namespace ActionProvider.AdventOfCode
 {
     internal class TestService
     {

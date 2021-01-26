@@ -3,7 +3,7 @@ using System.Linq;
 using System.Xml.Linq;
 using Spectre.Console;
 
-namespace DataProvider.AdventOfCode
+namespace ActionProvider.AdventOfCode
 {
     internal class SolutionService
     {

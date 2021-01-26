@@ -1,7 +1,7 @@
 using Guppi.Core;
 using Guppi.Core.Attributes;
 
-namespace DataProvider.Notes
+namespace ActionProvider.Notes
 {
     public class NotesConfiguration : Configuration
     {

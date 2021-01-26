@@ -1,7 +1,7 @@
 using Guppi.Core;
 using Guppi.Core.Attributes;
 
-namespace DataProvider.AdventOfCode
+namespace ActionProvider.AdventOfCode
 {
     class AdventOfCodeConfiguration : Configuration
     {

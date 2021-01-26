@@ -1,7 +1,7 @@
-using DataProvider.Hue;
+using ActionProvider.Hue;
 using NUnit.Framework;
 
-namespace Guppi.Tests.DataProvider.Hue
+namespace Guppi.Tests.ActionProvider.Hue
 {
     public class HueConfigurationTests
     {

@@ -12,7 +12,7 @@ namespace Alteridem.Guppi
     {
         private readonly RootCommand _rootCommand = new RootCommand();
 
-        public Application(IEnumerable<IDataProvider> providers, IEnumerable<IMultipleDataProvider> multiProviders)
+        public Application(IEnumerable<IActionProvider> providers, IEnumerable<IMultipleActionProvider> multiProviders)
         {
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
             _rootCommand.Description = AssemblyDescription;

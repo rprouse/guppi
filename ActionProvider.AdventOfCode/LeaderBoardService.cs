@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Guppi.Core;
 using Spectre.Console;
 
-namespace DataProvider.AdventOfCode
+namespace ActionProvider.AdventOfCode
 {
     internal class LeaderBoardService
     {

@@ -3,9 +3,9 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using Guppi.Core;
 
-namespace DataProvider.AdventOfCode
+namespace ActionProvider.AdventOfCode
 {
-    public class AdventOfCodeDataProvider : IDataProvider
+    public class AdventOfCodeDataProvider : IActionProvider
     {
         AdventOfCodeConfiguration _configuration;
         LeaderBoardService _leaderBoardService;

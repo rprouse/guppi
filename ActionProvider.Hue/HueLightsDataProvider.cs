@@ -3,9 +3,9 @@ using System.CommandLine.Invocation;
 using System.Threading.Tasks;
 using Guppi.Core;
 
-namespace DataProvider.Hue
+namespace ActionProvider.Hue
 {
-    public class HueLightsDataProvider : IDataProvider
+    public class HueLightsDataProvider : IActionProvider
     {
         HueConfiguration _configuration;
 

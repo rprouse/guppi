@@ -5,9 +5,9 @@ using System.CommandLine.Invocation;
 using Spectre.Console;
 using Guppi.Core;
 
-namespace DataProvider.Utilities
+namespace ActionProvider.Utilities
 {
-    public class UtilitiesProvider : IMultipleDataProvider
+    public class UtilitiesProvider : IMultipleActionProvider
     {
         public IEnumerable<Command> GetCommands()
         {

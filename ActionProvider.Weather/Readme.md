@@ -1,4 +1,4 @@
-# DataProvider.Weather
+# ActionProvider.Weather
 
 Displays today's weather information.
 

@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using Spectre.Console;
 
-namespace DataProvider.Hue
+namespace ActionProvider.Hue
 {
     class HueKey
     {

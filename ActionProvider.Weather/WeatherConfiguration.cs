@@ -1,7 +1,7 @@
 ﻿using Guppi.Core;
 using Guppi.Core.Attributes;
 
-namespace DataProvider.Weather
+namespace ActionProvider.Weather
 {
     class WeatherConfiguration : Configuration
     {

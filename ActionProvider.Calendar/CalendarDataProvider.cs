@@ -12,12 +12,12 @@ using Google.Apis.Services;
 using Google.Apis.Util.Store;
 using Guppi.Core;
 
-namespace DataProvider.Calendar
+namespace ActionProvider.Calendar
 {
-    public class CalendarDataProvider : IDataProvider
+    public class CalendarDataProvider : IActionProvider
     {
         static string[] Scopes = { CalendarService.Scope.CalendarReadonly };
-        static string ApplicationName = "Guppi DataProvider.Calendar";
+        static string ApplicationName = "Guppi ActionProvider.Calendar";
 
         public Command GetCommand()
         {

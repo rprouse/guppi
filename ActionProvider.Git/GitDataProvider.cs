@@ -5,9 +5,9 @@ using Spectre.Console;
 using Guppi.Core;
 using LibGit2Sharp;
 
-namespace DataProvider.Git
+namespace ActionProvider.Git
 {
-    public class GitDataProvider : IDataProvider
+    public class GitDataProvider : IActionProvider
     {
         const string WorkingDirectory = ".";
         //const string WorkingDirectory = @"C:\Src\Reliq\aws-cli-s3-deploy";

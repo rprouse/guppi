@@ -11,8 +11,8 @@ me with the information I need.
 
 ## Installation
 
-This program is a [dotnet tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools). 
-Build it, then package it using the **Pack** command in Visual Studio or `dotnet pack` 
+This program is a [dotnet tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools).
+Build it, then package it using the **Pack** command in Visual Studio or `dotnet pack`
 on the command line. Until this package is published, install it using the following
 command line from the solution root;
 
@@ -29,7 +29,7 @@ dotnet tool update -g --add-source ./Guppi/nupkg dotnet-guppi
 ## Enabling Tab Completion
 
 This program supports tab completion using `dotnet-suggest`. To enable, for each shell
-you must install the `dotnet-suggest` global tool and adding a shim to your profile. This 
+you must install the `dotnet-suggest` global tool and adding a shim to your profile. This
 only needs to be done once and work for all applications built using `System.CommandLine`.
 
 Follow the [setup instructions](https://github.com/dotnet/command-line-api/blob/main/docs/dotnet-suggest.md)
@@ -39,8 +39,8 @@ for your shell.
 
 Ideas of information that I would like to see every morning.
 
-- [x] [Weather](DataProvider.Weather/Readme.md)
-- [x] [Today's calendar events](DataProvider.Calendar/Readme.md)
+- [x] [Weather](ActionProvider.Weather/Readme.md)
+- [x] [Today's calendar events](ActionProvider.Calendar/Readme.md)
 - [x] Turn on office lights (Hue)
 - [x] Open PRs that I'm assigned to (Use the [GitHub CLI](https://github.com/cli/cli) `gh pr list`)
 - [ ] CPU temperature, load and other system statistics

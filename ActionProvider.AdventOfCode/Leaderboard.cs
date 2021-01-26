@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace DataProvider.AdventOfCode
+namespace ActionProvider.AdventOfCode
 {
 #pragma warning disable IDE1006 // Naming Styles
     internal class Leaderboard

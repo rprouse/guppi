@@ -6,9 +6,9 @@ using System.IO;
 using System.Runtime.InteropServices;
 using Guppi.Core;
 
-namespace DataProvider.Notes
+namespace ActionProvider.Notes
 {
-    public class NotesProvider : IDataProvider
+    public class NotesProvider : IActionProvider
     {
         NotesConfiguration _configuration;
 
@@ -49,7 +49,7 @@ namespace DataProvider.Notes
 
             bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
-            string cmd = isWindows ? 
+            string cmd = isWindows ?
                          Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Programs\Microsoft VS Code\Code.exe") :
                          "/usr/bin/code";
             string args = nocreate ?

@@ -37,10 +37,14 @@ namespace DataProvider.Notes
             if (!Directory.Exists(_configuration.NotesDirectory))
                 Directory.CreateDirectory(_configuration.NotesDirectory);
 
-            string todayFile = Path.Combine(_configuration.NotesDirectory, $"{filename}.md");
-            if(!nocreate && !File.Exists(todayFile))
+            string fullname = Path.Combine(_configuration.NotesDirectory, filename);
+            var fi = new FileInfo(fullname);
+            if (string.IsNullOrWhiteSpace(fi.Extension))
+                fullname += ".md";
+
+            if(!nocreate && !File.Exists(fullname))
             {
-                File.WriteAllText(todayFile, $"# {filename}\n\n");
+                File.WriteAllText(fullname, $"# {filename}\n\n");
             }
 
             bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
@@ -50,7 +54,7 @@ namespace DataProvider.Notes
                          "/usr/bin/code";
             string args = nocreate ?
                 $"\"{_configuration.NotesDirectory}\"" :
-                $"-g \"{todayFile}:3\" \"{_configuration.NotesDirectory}\"";
+                $"-g \"{fullname}:3\" \"{_configuration.NotesDirectory}\"";
 
             var psi = new ProcessStartInfo
             {

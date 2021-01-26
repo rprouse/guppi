@@ -2,7 +2,7 @@
   "profiles": {
     "Guppi.Console": {
       "commandName": "Project",
-      "commandLineArgs": "cal view"
+      "commandLineArgs": "weather view -a"
     }
   }
 }

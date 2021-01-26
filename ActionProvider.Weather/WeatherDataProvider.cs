@@ -91,14 +91,14 @@ namespace ActionProvider.Weather
                 if (dt.Date != last.Date)
                 {
                     AnsiConsoleHelper.Rule("white");
-                    AnsiConsole.MarkupLine($"[white bold]{dt:ddd MMM dd}[/]");
+                    AnsiConsole.MarkupLine($":calendar: [white bold]{dt:ddd MMM dd}[/]");
                     AnsiConsoleHelper.Rule("silver");
                 }
                 last = dt;
                 string icon = hour.weather.FirstOrDefault()?.icon ?? "";
                 string desc = (hour.weather.FirstOrDefault()?.description ?? "").PadRight(maxDesc);
                 AnsiConsole.MarkupLine(
-                    $"[silver]{dt:HH:mm}  {WeatherIcon.Icons[icon]} {desc} {hour.temp.KalvinToCelcius(),5} FeelsLike {hour.feels_like.KalvinToCelcius(),5} {(int)(hour.pop*100),3}%:droplet:[/]"
+                    $"{dt.GetEmoji()} [silver]{dt:HH:mm}  {WeatherIcon.Icons[icon]} {desc} {hour.temp.KalvinToCelcius(),5} FeelsLike {hour.feels_like.KalvinToCelcius(),5} {(int)(hour.pop*100),3}%:droplet:[/]"
                 );
             }
         }
@@ -107,11 +107,16 @@ namespace ActionProvider.Weather
         {
             AnsiConsoleHelper.TitleRule("Satellite scans complete. Today's weather is...");
 
-            AnsiConsole.MarkupLine($"[white]Current:  {weather.current.temp.KalvinToCelcius()}[/][silver], FeelsLike[/] [white]{weather.current.feels_like.KalvinToCelcius()}[/] [silver]{weather.current.weather.FirstOrDefault()?.description}[/]");
+            int maxDesc = weather.hourly.Select(h => h.weather.FirstOrDefault()?.description ?? "").Max(d => d.Length);
+
+            string icon = weather.current.weather.FirstOrDefault()?.icon ?? "";
+            string desc = (weather.current.weather.FirstOrDefault()?.description).PadRight(maxDesc);
+            AnsiConsole.MarkupLine($"[white]Current:[/][silver]  {WeatherIcon.Icons[icon]} {desc} {weather.current.temp.KalvinToCelcius(),5} FeelsLike {weather.current.feels_like.KalvinToCelcius(),5}[/]");
 
             Daily today = weather.daily.FirstOrDefault();
-
-            AnsiConsole.MarkupLine($"[white]Today:    [/][silver]High/Low[/] [white]{today.temp.max.KalvinToCelcius()}/{today.temp.min.KalvinToCelcius()}[/] [silver]{today.weather.FirstOrDefault()?.description}[/]");
+            icon = today.weather.FirstOrDefault()?.icon ?? "";
+            desc = (today.weather.FirstOrDefault()?.description).PadRight(maxDesc);
+            AnsiConsole.MarkupLine($"[white]Today:[/][silver]    {WeatherIcon.Icons[icon]} {desc} {today.temp.max.KalvinToCelcius(),5}/{today.temp.min.KalvinToCelcius()}[/][silver] High/Low[/]");
         }
     }
 }

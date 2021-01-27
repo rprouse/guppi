@@ -1,7 +1,7 @@
-name: Continuous Integration
+name: Package and Deploy
 
 on:
-  pull_request:
+  push:
     branches: [ master ]
 
 jobs:
@@ -19,8 +19,5 @@ jobs:
       run: dotnet test --no-restore --verbosity normal
     - name: Package NuGet
       run: dotnet pack --no-build --configuration Release
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: nupkg
-        path: Guppi/nupkg/dotnet-guppi.*.nupkg
+    - name: Publish NuGet to GitHub Packages
+      run: dotnet nuget push "Guppi/nupkg/dotnet-guppi.*.nupkg" -k ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/rprouse/index.json --skip-duplicate --no-symbols true

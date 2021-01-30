@@ -108,7 +108,7 @@ namespace ActionProvider.Hue
             var lights = await _client.GetLightsAsync();
             foreach (var light in lights)
             {
-                AnsiConsole.MarkupLine($"[white]{light.Id,2}: {light.Name,-40}[/] [silver]({(light.State.On ? $":yellow_circle: {(light.State.Brightness * 100 / 255)}%" : ":black_circle:")})[/]");
+                AnsiConsole.MarkupLine($"[white]{light.Id,2}: {light.Name,-40}[/] [silver]{(light.State.On ? $":yellow_circle: {(light.State.Brightness * 100 / 255)}%" : ":black_circle:")}[/]");
             }
             AnsiConsoleHelper.Rule("white");
         }

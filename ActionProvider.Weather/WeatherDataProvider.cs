@@ -105,7 +105,7 @@ namespace ActionProvider.Weather
 
         private void DisplayShort(WeatherResponse weather)
         {
-            AnsiConsoleHelper.TitleRule("Satellite scans complete. Today's weather is...");
+            AnsiConsoleHelper.TitleRule(":satellite_antenna: Satellite scans complete. Today's weather is...");
 
             int maxDesc = weather.hourly.Select(h => h.weather.FirstOrDefault()?.description ?? "").Max(d => d.Length);
 

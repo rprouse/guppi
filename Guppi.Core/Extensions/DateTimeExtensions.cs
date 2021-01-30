@@ -21,6 +21,22 @@ namespace Guppi.Core.Extensions
             Emoji.Known.ElevenOClock,
         };
 
+        private static string[] HalfClocks = new[]
+        {
+            Emoji.Known.TwelveThirty,
+            Emoji.Known.OneThirty,
+            Emoji.Known.TwoThirty,
+            Emoji.Known.ThreeThirty,
+            Emoji.Known.FourThirty,
+            Emoji.Known.FiveThirty,
+            Emoji.Known.SixThirty,
+            Emoji.Known.SevenThirty,
+            Emoji.Known.EightThirty,
+            Emoji.Known.NineThirty,
+            Emoji.Known.TenThirty,
+            Emoji.Known.ElevenThirty,
+        };
+
         /// <summary>
         /// Gets the clock emoji that matches the given time
         /// </summary>
@@ -29,7 +45,14 @@ namespace Guppi.Core.Extensions
         public static string GetEmoji(this DateTime time)
         {
             int hour = time.Hour % 12;
-            return Clocks[hour];
+            return time.Minute < 30 ? Clocks[hour] : HalfClocks[hour];
         }
+
+        /// Gets the clock emoji that matches the given time
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public static string GetEmoji(this DateTime? time) =>
+            time is null ? Emoji.Known.TwelveOClock : time.Value.GetEmoji();
     }
 }

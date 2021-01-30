@@ -31,5 +31,12 @@ namespace Guppi.Core.Extensions
             int hour = time.Hour % 12;
             return Clocks[hour];
         }
+
+        /// Gets the clock emoji that matches the given time
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public static string GetEmoji(this DateTime? time) =>
+            time is null ? Emoji.Known.TwelveOClock : time.Value.GetEmoji();
     }
 }

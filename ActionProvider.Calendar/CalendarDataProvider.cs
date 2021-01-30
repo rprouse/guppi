@@ -11,6 +11,7 @@ using Google.Apis.Calendar.v3.Data;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
 using Guppi.Core;
+using Guppi.Core.Extensions;
 
 namespace ActionProvider.Calendar
 {
@@ -112,7 +113,7 @@ namespace ActionProvider.Calendar
                             continue;
                         }
                         string end = eventItem.End.DateTime?.ToString("-HH:mm") ?? "";
-                        AnsiConsole.MarkupLine($"[white]{start}{end}\t[/][silver]{eventItem.Summary}[/]");
+                        AnsiConsole.MarkupLine($"{eventItem.Start.DateTime.GetEmoji()} [white]{start}{end}\t[/][silver]{eventItem.Summary}[/]");
                         found = true;
                         if (!agenda) return;
                     }

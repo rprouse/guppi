@@ -1,26 +1,46 @@
 name: Continuous Integration
 
 on:
+  push:
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: dotnet restore
+
     - name: Build
       run: dotnet build --configuration Release --no-restore
+
     - name: Test
       run: dotnet test --no-restore --verbosity normal
+
     - name: Package NuGet
       run: dotnet pack --no-build --configuration Release
+
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
       with:
         name: nupkg
-        path: Guppi/nupkg/dotnet-guppi.*.nupkg
+        path: Guppi/nupkg/*.nupkg
+        
+  publish:
+    runs-on: ubuntu-latest
+    needs: build
+
+    # only push nuget package for PRs merged to master
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: nupkg
+
+      - name: Publish NuGet to GitHub Packages
+        run: dotnet nuget push "Guppi/nupkg/dotnet-guppi.*.nupkg" -k ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/rprouse/index.json --skip-duplicate --no-symbols true

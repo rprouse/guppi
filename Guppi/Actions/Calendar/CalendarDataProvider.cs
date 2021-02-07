@@ -2,16 +2,15 @@ using System;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.IO;
-using System.Threading;
+using System.Linq;
 using System.Threading.Tasks;
-using Spectre.Console;
-using Google.Apis.Auth.OAuth2;
 using Google.Apis.Calendar.v3;
-using Google.Apis.Calendar.v3.Data;
-using Google.Apis.Services;
-using Google.Apis.Util.Store;
 using Guppi.Application;
+using Guppi.Application.Exceptions;
 using Guppi.Application.Extensions;
+using Guppi.Application.Queries.Calendar;
+using MediatR;
+using Spectre.Console;
 
 namespace ActionProvider.Calendar
 {
@@ -19,6 +18,12 @@ namespace ActionProvider.Calendar
     {
         static string[] Scopes = { CalendarService.Scope.CalendarReadonly };
         static string ApplicationName = "Guppi ActionProvider.Calendar";
+        private readonly IMediator _mediator;
+
+        public CalendarDataProvider(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
 
         public Command GetCommand()
         {
@@ -51,79 +56,56 @@ namespace ActionProvider.Calendar
 
         private async Task Execute(bool agenda)
         {
-            string credentials = Configuration.GetConfigurationFile("calendar_credentials");
-            if (!File.Exists(credentials))
-            {
-                AnsiConsole.MarkupLine("[yellow][[:yellow_circle: Please download the credentials. See the Readme.]][/]");
-                return;
-            }
-
-            UserCredential credential = null;
-
-            using (var stream = new FileStream(credentials, FileMode.Open, FileAccess.Read))
-            {
-                string token = Configuration.GetConfigurationFile("calendar_token");
-                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    GoogleClientSecrets.Load(stream).Secrets,
-                    Scopes,
-                    "user",
-                    CancellationToken.None,
-                    new FileDataStore(token, true)).Result;
-            }
-
-            if (credential is null)
-            {
-                AnsiConsole.MarkupLine("[red][[:cross_mark: Failed to login to Google Calendar]][/]");
-                return;
-            }
-
-            // Create Google Calendar API service.
-            var service = new CalendarService(new BaseClientService.Initializer()
-            {
-                HttpClientInitializer = credential,
-                ApplicationName = ApplicationName,
-            });
-
-            // Define parameters of request.
-            EventsResource.ListRequest request = service.Events.List("primary");
             var now = DateTime.Now;
-            request.TimeMin = now;
-            if(agenda) request.TimeMax = new DateTime(now.Year, now.Month, now.Day, 23, 59, 59);
-            request.ShowHiddenInvitations = false;
-            request.ShowDeleted = false;
-            request.SingleEvents = true;
-            request.OrderBy = EventsResource.ListRequest.OrderByEnum.StartTime;
 
-            // List events.
-            Events events = await request.ExecuteAsync();
-            string title = agenda ? ":calendar: Today's agenda" : ":tear_off_calendar: Next event";
-
-            AnsiConsoleHelper.TitleRule(title);
+            var query = new CalendarEventsQuery
+            {
+                MinDate = now,
+                MaxDate = agenda ? new DateTime(now.Year, now.Month, now.Day, 23, 59, 59) : null
+            };
 
             try
             {
-                if (events?.Items.Count > 0)
+                var events = await _mediator.Send(query);
+
+                string title = agenda ? ":calendar: Today's agenda" : ":tear_off_calendar: Next event";
+
+                AnsiConsoleHelper.TitleRule(title);
+
+                try
                 {
-                    bool found = false;
-                    foreach (var eventItem in events.Items)
+                    if (events.Count() > 0)
                     {
-                        string start = eventItem.Start.DateTime?.ToString(agenda ? "HH:mm" : "MMM dd HH:mm");
-                        if (string.IsNullOrEmpty(start))
+                        bool found = false;
+                        foreach (var eventItem in events)
                         {
-                            continue;
+                            string start = eventItem.Start?.ToString(agenda ? "HH:mm" : "MMM dd HH:mm");
+                            if (string.IsNullOrEmpty(start))
+                            {
+                                continue;
+                            }
+                            string end = eventItem.End?.ToString("-HH:mm") ?? "";
+                            AnsiConsole.MarkupLine($"{eventItem.Start.GetEmoji()} [white]{start}{end}\t[/][silver]{eventItem.Summary}[/]");
+                            found = true;
+                            if (!agenda) return;
                         }
-                        string end = eventItem.End.DateTime?.ToString("-HH:mm") ?? "";
-                        AnsiConsole.MarkupLine($"{eventItem.Start.DateTime.GetEmoji()} [white]{start}{end}\t[/][silver]{eventItem.Summary}[/]");
-                        found = true;
-                        if (!agenda) return;
+                        if (found) return;
                     }
-                    if (found) return;
+                    AnsiConsole.MarkupLine("[white][[No upcoming events found.]][/]");
                 }
-                AnsiConsole.MarkupLine("[white][[No upcoming events found.]][/]");
+                finally
+                {
+                    AnsiConsoleHelper.Rule("white");
+                }
             }
-            finally
+            catch(UnauthorizedException ue)
             {
-                AnsiConsoleHelper.Rule("white");
+                AnsiConsole.MarkupLine($"[red][[:cross_mark: ${ue.Message}]][/]");
+                return;
+            }
+            catch(UnconfiguredException ue)
+            {
+                AnsiConsole.MarkupLine($"[yellow][[:yellow_circle: ${ue.Message}]][/]");
             }
         }
     }

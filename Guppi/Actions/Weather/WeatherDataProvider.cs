@@ -2,31 +2,26 @@ using System;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text.Json;
 using System.Threading.Tasks;
-using Spectre.Console;
 using Guppi.Application;
+using Guppi.Application.Commands.Weather;
+using Guppi.Application.Exceptions;
 using Guppi.Application.Extensions;
+using Guppi.Application.Queryies.Weather;
+using Guppi.Domain.Entities.Weather;
+using MediatR;
+using Spectre.Console;
 
 namespace ActionProvider.Weather
 {
     public class WeatherDataProvider : IActionProvider
     {
         const string Command = "weather";
-        const string Name = "Weather";
+        private readonly IMediator _mediator;
 
-        WeatherConfiguration _configuration;
-        HttpClient _client;
-
-        public WeatherDataProvider()
+        public WeatherDataProvider(IMediator mediator)
         {
-            _configuration = Configuration.Load<WeatherConfiguration>(Command);
-            _client = new HttpClient();
-            _client.DefaultRequestHeaders.Accept.Clear();
-            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            _client.DefaultRequestHeaders.Add("User-Agent", "Guppi CLI (https://github.com/rprouse/myday)");
+            _mediator = mediator;
         }
 
         public Command GetCommand()
@@ -40,7 +35,7 @@ namespace ActionProvider.Weather
 
             var configure = new Command("configure", "Configures the weather provider");
             configure.AddAlias("config");
-            configure.Handler = CommandHandler.Create(() => Configure());
+            configure.Handler = CommandHandler.Create(async () => await Configure());
 
             return new Command(Command, "Displays today's weather")
             {
@@ -51,43 +46,36 @@ namespace ActionProvider.Weather
 
         private async Task Execute(bool all)
         {
-            if (!Configured)
+            try
             {
-                AnsiConsole.MarkupLine("[yellow][[:yellow_circle: Please configure the weather provider]][/]");
-                return;
+                WeatherForecast weather = await _mediator.Send(new WeatherQuery());
+
+                if (all)
+                    DisplayLong(weather);
+                else
+                    DisplayShort(weather);
+                AnsiConsoleHelper.Rule("white");
             }
-
-            WeatherResponse weather = await GetWeatherData();
-            if (all)
-                DisplayLong(weather);
-            else
-                DisplayShort(weather);
-            AnsiConsoleHelper.Rule("white");
+            catch (UnconfiguredException ue)
+            {
+                AnsiConsole.MarkupLine($"[yellow][[:yellow_circle: {ue.Message}]][/]");
+            }
         }
 
-        private bool Configured => _configuration.Configured;
-
-        private void Configure()
+        private async Task Configure()
         {
-            _configuration.RunConfiguration(Name, "Enter the OpenWeather API key and your location");
+            await _mediator.Send(new ConfigureWeatherCommand());
         }
 
-        private async Task<WeatherResponse> GetWeatherData()
-        {
-            string json = await _client.GetStringAsync($"http://api.openweathermap.org/data/2.5/onecall?lat={_configuration.Latitude}&lon={_configuration.Longitude}&appid={_configuration.ApiKey}");
-            var weather = JsonSerializer.Deserialize<WeatherResponse>(json);
-            return weather;
-        }
-
-        private void DisplayLong(WeatherResponse weather)
+        private void DisplayLong(WeatherForecast weather)
         {
             DisplayShort(weather);
 
             DateTime last = DateTime.MinValue;
-            int maxDesc = weather.hourly.Select(h => h.weather.FirstOrDefault()?.description ?? "").Max(d => d.Length);
-            foreach (var hour in weather.hourly)
+            int maxDesc = weather.Hourly.Select(h => h.Description).Max(d => d.Length);
+            foreach (var hour in weather.Hourly)
             {
-                DateTime dt = hour.dt.UnixTimeStampToDateTime();
+                DateTime dt = hour.DateTime;
                 if (dt.Date != last.Date)
                 {
                     AnsiConsoleHelper.Rule("white");
@@ -95,28 +83,28 @@ namespace ActionProvider.Weather
                     AnsiConsoleHelper.Rule("silver");
                 }
                 last = dt;
-                string icon = hour.weather.FirstOrDefault()?.icon ?? "";
-                string desc = (hour.weather.FirstOrDefault()?.description ?? "").PadRight(maxDesc);
+                string icon = hour.Icon;
+                string desc = (hour.Description).PadRight(maxDesc);
                 AnsiConsole.MarkupLine(
-                    $"{dt.GetEmoji()} [silver]{dt:HH:mm}  {WeatherIcon.Icons[icon]} {desc} {hour.temp.KalvinToCelcius(),5} FeelsLike {hour.feels_like.KalvinToCelcius(),5} {(int)(hour.pop*100),3}%:droplet:[/]"
+                    $"{dt.GetEmoji()} [silver]{dt:HH:mm}  {WeatherIcon.Icons[icon]} {desc} {hour.Temperature,3}°C FeelsLike {hour.FeelsLike,3}°C {(int)(hour.ProbabilityOfPrecipitation),3}%:droplet:[/]"
                 );
             }
         }
 
-        private void DisplayShort(WeatherResponse weather)
+        private void DisplayShort(WeatherForecast weather)
         {
             AnsiConsoleHelper.TitleRule(":satellite_antenna: Satellite scans complete. Today's weather is...");
 
-            int maxDesc = weather.hourly.Select(h => h.weather.FirstOrDefault()?.description ?? "").Max(d => d.Length);
+            int maxDesc = weather.Hourly.Select(h => h.Description).Max(d => d.Length);
 
-            string icon = weather.current.weather.FirstOrDefault()?.icon ?? "";
-            string desc = (weather.current.weather.FirstOrDefault()?.description).PadRight(maxDesc);
-            AnsiConsole.MarkupLine($"[white]Current:[/][silver]  {WeatherIcon.Icons[icon]} {desc} {weather.current.temp.KalvinToCelcius(),5} FeelsLike {weather.current.feels_like.KalvinToCelcius(),5}[/]");
+            string icon = weather.Current.Icon;
+            string desc = (weather.Current.Description).PadRight(maxDesc);
+            AnsiConsole.MarkupLine($"[white]Current:[/][silver]  {WeatherIcon.Icons[icon]} {desc} {weather.Current.Temperature,3}°C FeelsLike {weather.Current.FeelsLike,3}°C[/]");
 
-            Daily today = weather.daily.FirstOrDefault();
-            icon = today.weather.FirstOrDefault()?.icon ?? "";
-            desc = (today.weather.FirstOrDefault()?.description).PadRight(maxDesc);
-            AnsiConsole.MarkupLine($"[white]Today:[/][silver]    {WeatherIcon.Icons[icon]} {desc} {today.temp.max.KalvinToCelcius(),5}/{today.temp.min.KalvinToCelcius()}[/][silver] High/Low[/]");
+            DailyWeather today = weather.Daily.FirstOrDefault();
+            icon = today.Icon;
+            desc = (today.Description).PadRight(maxDesc);
+            AnsiConsole.MarkupLine($"[white]Today:[/][silver]    {WeatherIcon.Icons[icon]} {desc} {today.Temperature.Max,3}°C/{today.Temperature.Min,3}°C[/][silver] High/Low[/]");
         }
     }
 }

@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Guppi.Domain.Entities.Calendar;
 using Guppi.Domain.Interfaces;
 using MediatR;
 
 namespace Guppi.Application.Queries.Calendar
 {
-    public sealed class CalendarEventsQuery : IRequest<IEnumerable<EventDto>>
+    public sealed class CalendarEventsQuery : IRequest<IEnumerable<Event>>
     {
         public DateTime? MinDate { get; set; }
         public DateTime? MaxDate { get; set; }
     }
 
-    internal sealed class CalendarEventsQueryHandler : IRequestHandler<CalendarEventsQuery, IEnumerable<EventDto>>
+    internal sealed class CalendarEventsQueryHandler : IRequestHandler<CalendarEventsQuery, IEnumerable<Event>>
     {
         private readonly ICalendarService _calendarService;
 
@@ -23,10 +24,9 @@ namespace Guppi.Application.Queries.Calendar
             _calendarService = calendarService;
         }
 
-        public async Task<IEnumerable<EventDto>> Handle(CalendarEventsQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Event>> Handle(CalendarEventsQuery request, CancellationToken cancellationToken)
         {
-            var events = await _calendarService.GetCalendarEvents(request.MinDate, request.MaxDate);
-            return events.Select(e => new EventDto { Start = e.Start, End = e.End, Summary = e.Summary });
+            return await _calendarService.GetCalendarEvents(request.MinDate, request.MaxDate);
         }
     }
 }

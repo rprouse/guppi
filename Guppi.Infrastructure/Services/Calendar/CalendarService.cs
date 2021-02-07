@@ -1,30 +1,27 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using Guppi.Domain.Entities;
-using Guppi.Domain.Interfaces;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
-
-using GoogleCalendarService = Google.Apis.Calendar.v3.CalendarService;
-using System.IO;
-using System.Threading;
-using Guppi.Application.Exceptions;
 using Guppi.Application;
+using Guppi.Application.Exceptions;
+using Guppi.Domain.Interfaces;
+using GoogleCalendarService = Google.Apis.Calendar.v3.CalendarService;
 
-namespace Guppi.Infrastructure.Services
+namespace Guppi.Infrastructure.Services.Calendar
 {
-    internal class CalendarService : ICalendarService
+    internal sealed class CalendarService : ICalendarService
     {
         static string[] Scopes = { GoogleCalendarService.Scope.CalendarReadonly };
         static string ApplicationName = "Guppi ActionProvider.Calendar";
 
-        public async Task<IEnumerable<CalendarEvent>> GetCalendarEvents(DateTime? minDate, DateTime? maxDate)
+        public async Task<IEnumerable<Domain.Entities.Calendar.Event>> GetCalendarEvents(DateTime? minDate, DateTime? maxDate)
         {
             string credentials = Configuration.GetConfigurationFile("calendar_credentials");
             if (!File.Exists(credentials))
@@ -70,7 +67,7 @@ namespace Guppi.Infrastructure.Services
             // List events.
             Events events = await request.ExecuteAsync();
 
-            return events.Items.Select(e => new CalendarEvent { Start = e.Start.DateTime, End = e.End.DateTime, Summary = e.Summary });
+            return events.Items.Select(e => new Domain.Entities.Calendar.Event { Start = e.Start.DateTime, End = e.End.DateTime, Summary = e.Summary });
         }
 
         public void Logout()

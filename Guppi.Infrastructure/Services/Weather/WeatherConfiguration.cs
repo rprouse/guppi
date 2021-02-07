@@ -1,7 +1,7 @@
-﻿using Guppi.Application;
+using Guppi.Application;
 using Guppi.Application.Attributes;
 
-namespace ActionProvider.Weather
+namespace Guppi.Infrastructure.Services.Weather
 {
     class WeatherConfiguration : Configuration
     {

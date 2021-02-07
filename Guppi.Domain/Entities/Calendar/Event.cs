@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 
-namespace Guppi.Application.Queries.Calendar
+namespace Guppi.Domain.Entities.Calendar
 {
-    public class EventDto
+    public class Event
     {
         public DateTime? Start { get; set; }
         public DateTime? End { get; set; }

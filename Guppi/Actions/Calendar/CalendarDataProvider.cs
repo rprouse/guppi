@@ -3,7 +3,6 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Linq;
 using System.Threading.Tasks;
-using Google.Apis.Calendar.v3;
 using Guppi.Application;
 using Guppi.Application.Commands.Calendar;
 using Guppi.Application.Exceptions;
@@ -16,8 +15,6 @@ namespace ActionProvider.Calendar
 {
     public class CalendarDataProvider : IActionProvider
     {
-        static string[] Scopes = { CalendarService.Scope.CalendarReadonly };
-        static string ApplicationName = "Guppi ActionProvider.Calendar";
         private readonly IMediator _mediator;
 
         public CalendarDataProvider(IMediator mediator)

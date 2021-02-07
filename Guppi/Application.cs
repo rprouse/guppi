@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Guppi.Application;
+using Guppi.Domain.Common;
 using Spectre.Console;
 
 namespace Alteridem.Guppi

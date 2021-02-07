@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Guppi.Application;
+using Guppi.Application.Extensions;
 using Spectre.Console;
 
 namespace ActionProvider.AdventOfCode

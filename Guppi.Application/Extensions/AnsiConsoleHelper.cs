@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Spectre.Console;
 
-namespace Guppi.Application
+namespace Guppi.Application.Extensions
 {
     public static class AnsiConsoleHelper
     {

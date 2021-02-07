@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using Guppi.Application.Attributes;
+using Guppi.Application.Extensions;
 using Spectre.Console;
 
 namespace Guppi.Application

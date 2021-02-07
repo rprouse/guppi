@@ -7,7 +7,7 @@ using ActionProvider.Hue;
 using ActionProvider.Notes;
 using ActionProvider.Utilities;
 using ActionProvider.Weather;
-using Guppi.Core;
+using Guppi.Application;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Alteridem.Guppi

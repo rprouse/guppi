@@ -15,7 +15,6 @@
     <PackageReference Include="MediatR" Version="9.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
 
-    <PackageReference Include="Google.Apis.Calendar.v3" Version="1.49.0.2087" />
     <PackageReference Include="LibGit2Sharp" Version="0.26.2" />
     <PackageReference Include="Q42.HueApi" Version="3.15.8" />
     <PackageReference Include="Q42.HueApi.ColorConverters" Version="3.14.0" />
@@ -23,10 +22,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Guppi.Domain\Guppi.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Commands\" />
   </ItemGroup>
 
 </Project>

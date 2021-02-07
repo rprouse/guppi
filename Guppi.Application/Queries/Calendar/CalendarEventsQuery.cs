@@ -14,7 +14,7 @@ namespace Guppi.Application.Queries.Calendar
         public DateTime? MaxDate { get; set; }
     }
 
-    public sealed class CalendarEventsQueryHandler : IRequestHandler<CalendarEventsQuery, IEnumerable<EventDto>>
+    internal sealed class CalendarEventsQueryHandler : IRequestHandler<CalendarEventsQuery, IEnumerable<EventDto>>
     {
         private readonly ICalendarService _calendarService;
 

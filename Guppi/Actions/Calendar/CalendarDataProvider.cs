@@ -1,11 +1,11 @@
 using System;
 using System.CommandLine;
 using System.CommandLine.Invocation;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Google.Apis.Calendar.v3;
 using Guppi.Application;
+using Guppi.Application.Commands.Calendar;
 using Guppi.Application.Exceptions;
 using Guppi.Application.Extensions;
 using Guppi.Application.Queries.Calendar;
@@ -34,7 +34,7 @@ namespace ActionProvider.Calendar
             view.Handler = CommandHandler.Create(async (bool agenda) => await Execute(agenda));
 
             var logout = new Command("logout", "Logs out of the current Google account");
-            logout.Handler = CommandHandler.Create(Logout);
+            logout.Handler = CommandHandler.Create(async () => await Logout());
 
             var cmd = new Command("calendar", "Display's today's calendar events")
             {
@@ -45,12 +45,9 @@ namespace ActionProvider.Calendar
             return cmd;
         }
 
-        private void Logout()
+        private async Task Logout()
         {
-            string token = Configuration.GetConfigurationFile("calendar_token");
-            if (Directory.Exists(token))
-                Directory.Delete(token, true);
-
+            await _mediator.Send(new CalendarLogoutCommand());
             AnsiConsole.MarkupLine("[green][[:check_mark_button: Logged out of Google]][/]");
         }
 

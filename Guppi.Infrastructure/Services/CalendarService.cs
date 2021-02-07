@@ -72,5 +72,12 @@ namespace Guppi.Infrastructure.Services
 
             return events.Items.Select(e => new CalendarEvent { Start = e.Start.DateTime, End = e.End.DateTime, Summary = e.Summary });
         }
+
+        public void Logout()
+        {
+            string token = Configuration.GetConfigurationFile("calendar_token");
+            if (Directory.Exists(token))
+                Directory.Delete(token, true);
+        }
     }
 }

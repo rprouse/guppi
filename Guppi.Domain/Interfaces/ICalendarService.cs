@@ -8,5 +8,7 @@ namespace Guppi.Domain.Interfaces
     public interface ICalendarService
     {
         Task<IEnumerable<CalendarEvent>> GetCalendarEvents(DateTime? minDate, DateTime? maxDate);
+
+        void Logout();
     }
 }

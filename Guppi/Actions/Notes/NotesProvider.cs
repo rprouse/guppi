@@ -1,20 +1,20 @@
 using System;
 using System.CommandLine;
 using System.CommandLine.Invocation;
-using System.Diagnostics;
-using System.IO;
-using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using Guppi.Application;
+using Guppi.Application.Commands.Notes;
+using MediatR;
 
 namespace ActionProvider.Notes
 {
     public class NotesProvider : IActionProvider
     {
-        NotesConfiguration _configuration;
+        private readonly IMediator _mediator;
 
-        public NotesProvider()
+        public NotesProvider(IMediator mediator)
         {
-            _configuration = Configuration.Load<NotesConfiguration>("notes");
+            _mediator = mediator;
         }
 
         public Command GetCommand()
@@ -25,48 +25,16 @@ namespace ActionProvider.Notes
                 new Option<bool>(new string[]{"--configure", "-c"}, "Set the notes directory.")
             };
             notes.AddArgument(new Argument<string>("filename", () => DateTime.Now.ToString("yyyy-MM-dd")));
-            notes.Handler = CommandHandler.Create((bool nocreate, bool configure, string filename) => OpenNotes(nocreate, configure, filename));
+            notes.Handler = CommandHandler.Create(async (bool nocreate, bool configure, string filename) => await OpenNotes(nocreate, configure, filename));
             return notes;
         }
 
-        void OpenNotes(bool nocreate, bool configure, string filename)
+        private async Task OpenNotes(bool nocreate, bool configure, string filename)
         {
-            if (!_configuration.Configured || configure)
-                Configure();
+            if (configure)
+                await _mediator.Send(new ConfigureNotesCommand());
 
-            if (!Directory.Exists(_configuration.NotesDirectory))
-                Directory.CreateDirectory(_configuration.NotesDirectory);
-
-            string fullname = Path.Combine(_configuration.NotesDirectory, filename);
-            var fi = new FileInfo(fullname);
-            if (string.IsNullOrWhiteSpace(fi.Extension))
-                fullname += ".md";
-
-            if(!nocreate && !File.Exists(fullname))
-            {
-                File.WriteAllText(fullname, $"# {filename}\n\n");
-            }
-
-            bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-
-            string cmd = isWindows ?
-                         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Programs\Microsoft VS Code\Code.exe") :
-                         "/usr/bin/code";
-            string args = nocreate ?
-                $"\"{_configuration.NotesDirectory}\"" :
-                $"-g \"{fullname}:3\" \"{_configuration.NotesDirectory}\"";
-
-            var psi = new ProcessStartInfo
-            {
-                FileName = cmd,
-                Arguments = args
-            };
-            System.Diagnostics.Process.Start(psi);
-        }
-
-        private void Configure()
-        {
-            _configuration.RunConfiguration("Notes", "Set the Notes Directory.");
+            await _mediator.Send(new OpenNotesCommand());
         }
     }
 }

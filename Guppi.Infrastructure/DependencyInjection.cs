@@ -1,5 +1,6 @@
 using Guppi.Domain.Interfaces;
 using Guppi.Infrastructure.Services.Calendar;
+using Guppi.Infrastructure.Services.Notes;
 using Guppi.Infrastructure.Services.Weather;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +11,7 @@ namespace Guppi.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services) =>
             services
                 .AddTransient<ICalendarService, CalendarService>()
+                .AddTransient<INotesService, NotesService>()
                 .AddTransient<IWeatherService, WeatherService>();
     }
 }

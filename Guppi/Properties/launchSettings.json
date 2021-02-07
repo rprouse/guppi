@@ -2,7 +2,7 @@
   "profiles": {
     "Guppi.Console": {
       "commandName": "Project",
-      "commandLineArgs": "weather view -a"
+      "commandLineArgs": "notes --nocreate"
     }
   }
 }

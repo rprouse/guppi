@@ -3,7 +3,8 @@ using System.CommandLine;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Guppi.Core;
+using Guppi.Console.Actions;
+using Guppi.Domain.Common;
 using Spectre.Console;
 
 namespace Alteridem.Guppi
@@ -30,7 +31,7 @@ namespace Alteridem.Guppi
         {
             AnsiConsole.MarkupLine("[gold3_1]{0}[/]", Sayings.Affirmative().EscapeMarkup());
             AnsiConsole.WriteLine();
-            
+
             await _rootCommand.InvokeAsync(args);
         }
 

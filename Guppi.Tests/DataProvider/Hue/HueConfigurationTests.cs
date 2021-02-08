@@ -1,4 +1,4 @@
-using ActionProvider.Hue;
+using Guppi.Infrastructure.Services.Hue;
 using NUnit.Framework;
 
 namespace Guppi.Tests.ActionProvider.Hue

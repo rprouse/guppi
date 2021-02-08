@@ -1,5 +1,5 @@
 using System;
-using Guppi.Core.Extensions;
+using Guppi.Application.Extensions;
 using NUnit.Framework;
 using Spectre.Console;
 

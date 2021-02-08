@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>Guppi.Console</RootNamespace>
     <AssemblyName>guppi</AssemblyName>
     <Authors>Rob Prouse</Authors>
@@ -13,7 +13,7 @@
     <PackageProjectUrl>https://github.com/rprouse/guppi</PackageProjectUrl>
     <RepositoryUrl>https://github.com/rprouse/guppi</RepositoryUrl>
     <PackageId>dotnet-guppi</PackageId>
-    <Version>1.8.2</Version>
+    <Version>2.0.0</Version>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>guppi</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
@@ -49,14 +49,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ActionProvider.AdventOfCode\ActionProvider.AdventOfCode.csproj" />
-    <ProjectReference Include="..\ActionProvider.Calendar\ActionProvider.Calendar.csproj" />
-    <ProjectReference Include="..\ActionProvider.Git\ActionProvider.Git.csproj" />
-    <ProjectReference Include="..\ActionProvider.Hue\ActionProvider.Hue.csproj" />
-    <ProjectReference Include="..\ActionProvider.Notes\ActionProvider.Notes.csproj" />
-    <ProjectReference Include="..\ActionProvider.Utilities\ActionProvider.Utilities.csproj" />
-    <ProjectReference Include="..\ActionProvider.Weather\ActionProvider.Weather.csproj" />
-    <ProjectReference Include="..\Guppi.Core\Guppi.Core.csproj" />
+    <ProjectReference Include="..\Guppi.Application\Guppi.Application.csproj" />
+    <ProjectReference Include="..\Guppi.Domain\Guppi.Domain.csproj" />
+    <ProjectReference Include="..\Guppi.Infrastructure\Guppi.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

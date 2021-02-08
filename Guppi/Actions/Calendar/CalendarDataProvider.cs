@@ -3,7 +3,6 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Linq;
 using System.Threading.Tasks;
-using Guppi.Application;
 using Guppi.Application.Commands.Calendar;
 using Guppi.Application.Exceptions;
 using Guppi.Application.Extensions;
@@ -11,7 +10,7 @@ using Guppi.Application.Queries.Calendar;
 using MediatR;
 using Spectre.Console;
 
-namespace ActionProvider.Calendar
+namespace Guppi.Console.Actions
 {
     public class CalendarDataProvider : IActionProvider
     {

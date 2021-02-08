@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.CommandLine;
 
-namespace Guppi.Application
+namespace Guppi.Console.Actions
 {
     public interface IMultipleActionProvider
     {

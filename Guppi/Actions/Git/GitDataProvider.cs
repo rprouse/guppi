@@ -1,11 +1,10 @@
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Diagnostics;
-using Spectre.Console;
-using Guppi.Application;
 using LibGit2Sharp;
+using Spectre.Console;
 
-namespace ActionProvider.Git
+namespace Guppi.Console.Actions
 {
     public class GitDataProvider : IActionProvider
     {

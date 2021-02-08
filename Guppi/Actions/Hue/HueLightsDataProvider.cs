@@ -3,14 +3,13 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Linq;
 using System.Threading.Tasks;
-using Guppi.Application;
 using Guppi.Application.Commands.Hue;
 using Guppi.Application.Extensions;
 using Guppi.Application.Queries.Hue;
 using MediatR;
 using Spectre.Console;
 
-namespace ActionProvider.Hue
+namespace Guppi.Console.Actions
 {
     internal class HueLightsDataProvider : IActionProvider
     {
@@ -165,7 +164,7 @@ namespace ActionProvider.Hue
         private void WaitForUserInput(string message)
         {
             AnsiConsole.MarkupLine($"[green][[:check_mark_button: {message}]][/]");
-            Console.ReadLine();
+            System.Console.ReadLine();
         }
 
         private async Task Configure()

@@ -3,7 +3,6 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Linq;
 using System.Threading.Tasks;
-using Guppi.Application;
 using Guppi.Application.Commands.Weather;
 using Guppi.Application.Exceptions;
 using Guppi.Application.Extensions;
@@ -12,7 +11,7 @@ using Guppi.Domain.Entities.Weather;
 using MediatR;
 using Spectre.Console;
 
-namespace ActionProvider.Weather
+namespace Guppi.Console.Actions
 {
     public class WeatherDataProvider : IActionProvider
     {

@@ -2,11 +2,10 @@ using System;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Threading.Tasks;
-using Guppi.Application;
 using Guppi.Application.Commands.Notes;
 using MediatR;
 
-namespace ActionProvider.Notes
+namespace Guppi.Console.Actions
 {
     public class NotesProvider : IActionProvider
     {

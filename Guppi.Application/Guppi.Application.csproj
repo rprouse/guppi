@@ -16,8 +16,6 @@
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
 
     <PackageReference Include="LibGit2Sharp" Version="0.26.2" />
-    <PackageReference Include="Q42.HueApi" Version="3.15.8" />
-    <PackageReference Include="Q42.HueApi.ColorConverters" Version="3.14.0" />
   </ItemGroup>
 
   <ItemGroup>

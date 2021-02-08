@@ -1,7 +1,7 @@
 using System.CommandLine;
 using System.Threading.Tasks;
 
-namespace Guppi.Application
+namespace Guppi.Console.Actions
 {
     public interface IActionProvider
     {

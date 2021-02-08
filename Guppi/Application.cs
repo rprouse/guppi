@@ -3,7 +3,7 @@ using System.CommandLine;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Guppi.Application;
+using Guppi.Console.Actions;
 using Guppi.Domain.Common;
 using Spectre.Console;
 

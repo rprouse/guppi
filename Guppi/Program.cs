@@ -1,11 +1,5 @@
 using System;
-using ActionProvider.AdventOfCode;
-using ActionProvider.Calendar;
-using ActionProvider.Git;
-using ActionProvider.Hue;
-using ActionProvider.Notes;
-using ActionProvider.Utilities;
-using ActionProvider.Weather;
+using Guppi.Console.Actions;
 using Alteridem.Guppi;
 using Guppi.Application;
 using Guppi.Infrastructure;

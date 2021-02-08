@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using Spectre.Console;
-using Guppi.Application;
 
-namespace ActionProvider.Utilities
+namespace Guppi.Console.Actions
 {
     public class UtilitiesProvider : IMultipleActionProvider
     {

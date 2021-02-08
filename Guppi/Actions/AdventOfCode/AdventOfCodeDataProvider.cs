@@ -1,9 +1,10 @@
 using System;
 using System.CommandLine;
 using System.CommandLine.Invocation;
+using ActionProvider.AdventOfCode;
 using Guppi.Application;
 
-namespace ActionProvider.AdventOfCode
+namespace Guppi.Console.Actions
 {
     public class AdventOfCodeDataProvider : IActionProvider
     {

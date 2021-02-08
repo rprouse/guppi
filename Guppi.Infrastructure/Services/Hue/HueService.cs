@@ -3,34 +3,56 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Guppi.Application.Extensions;
+using Guppi.Application;
+using Guppi.Domain.Entities.Hue;
+using Guppi.Domain.Interfaces;
 using Q42.HueApi;
 using Q42.HueApi.ColorConverters;
 using Q42.HueApi.ColorConverters.Original;
 using Q42.HueApi.Interfaces;
 using Q42.HueApi.Models.Bridge;
 using Q42.HueApi.Models.Groups;
-using Spectre.Console;
 
-namespace ActionProvider.Hue
+namespace Guppi.Infrastructure.Services.Hue
 {
-    internal class HueController
+    internal class HueService : IHueService
     {
         string _key;
         ILocalHueClient _client;
         readonly RGBColor _black = new RGBColor("000000");
+        HueConfiguration _configuration;
 
-        public async Task ListBridges()
+        public HueService()
         {
-            AnsiConsoleHelper.TitleRule(":desktop_computer: SUDAR Scan Complete. Found bridges...");
+            _configuration = Configuration.Load<HueConfiguration>("hue");
+        }
 
+        public Action<string> WaitForUserInput { get; set; } = null;
+
+        public async Task<IEnumerable<HueBridge>> ListBridges()
+        {
             IBridgeLocator locator = new HttpBridgeLocator();
             IEnumerable<LocatedBridge> bridges = await locator.LocateBridgesAsync(TimeSpan.FromSeconds(5));
-            foreach (var bridge in bridges)
-            {
-                AnsiConsole.MarkupLine($"[silver]{bridge.BridgeId} - {bridge.IpAddress}[/]");
-            }
-            AnsiConsoleHelper.Rule("white");
+            return bridges.Select(b => new HueBridge { BridgeId = b.BridgeId, IpAddress = b.IpAddress });
+        }
+
+        public async Task<IEnumerable<HueLight>> ListLights(string ip)
+        {
+            if (await ConnectToBridge(ip) == false)
+                return Enumerable.Empty<HueLight>(); ;
+
+            var lights = await _client.GetLightsAsync();
+            return lights.Select(l => new HueLight { Id = l.Id, Name = l.Name, On = l.State.On, Brightness = l.State.Brightness });
+        }
+
+        public async Task Set(string ip, bool on, bool off, bool alert, byte? brightness, string color, uint light)
+        {
+            if (await ConnectToBridge(ip) == false)
+                return;
+
+            var cmd = GetCommand(on, off, alert, brightness, color);
+            var lts = GetLights(light);
+            await SendCommand(cmd, lts);
         }
 
         public async Task<bool> Register(string ip = null)
@@ -50,8 +72,7 @@ namespace ActionProvider.Hue
 
             if (bridge == null)
             {
-                AnsiConsole.MarkupLine("[red][[:cross_mark: Hue Bridge not found]][/]");
-                return false;
+                throw new ArgumentException("Hue Bridge not found");
             }
 
             var configuration = new HueKey(bridge.IpAddress);
@@ -73,24 +94,29 @@ namespace ActionProvider.Hue
             return true;
         }
 
+        public void Configure()
+        {
+            _configuration.RunConfiguration("Hue Lights", "Enter your default light");
+        }
+
+        public uint GetDefaultLight() =>
+            _configuration.GetDefaultLight();
+
         async Task<string> Register(LocatedBridge bridge)
         {
-            AnsiConsole.MarkupLine("[green][[:check_mark_button: Press the button on your bridge then press ENTER]][/]");
-            Console.ReadLine();
+            if (WaitForUserInput == null)
+                throw new InvalidOperationException("You must set WaitForUserInput");
 
+            WaitForUserInput("Press the button on your bridge then press ENTER");
             try
             {
                 ILocalHueClient client = new LocalHueClient(bridge.IpAddress);
                 return await client.RegisterAsync("Alteridem.Hue.CLI", Environment.MachineName);
             }
-            catch (Exception ex)
+            catch(Exception e)
             {
-                AnsiConsole.MarkupLine("[red][[:cross_mark: Failed to register with the bridge.]][/]");
-                AnsiConsole.WriteException(ex,
-                    ExceptionFormats.ShortenPaths | ExceptionFormats.ShortenTypes |
-                    ExceptionFormats.ShortenMethods | ExceptionFormats.ShowLinks);
+                throw new InvalidOperationException(e.Message, e);
             }
-            return null;
         }
 
         ILocalHueClient Initialize(LocatedBridge bridge)
@@ -101,19 +127,7 @@ namespace ActionProvider.Hue
 
         }
 
-        public async Task ListLights()
-        {
-            AnsiConsoleHelper.TitleRule(":light_bulb: Scans are complete. Found lights...");
-
-            var lights = await _client.GetLightsAsync();
-            foreach (var light in lights)
-            {
-                AnsiConsole.MarkupLine($"[white]{light.Id,2}: {light.Name,-40}[/] [silver]{(light.State.On ? $":yellow_circle: {(light.State.Brightness * 100 / 255)}%" : ":black_circle:")}[/]");
-            }
-            AnsiConsoleHelper.Rule("white");
-        }
-
-        public LightCommand GetCommand(bool on, bool off, bool alert, byte? brightness, string color)
+        LightCommand GetCommand(bool on, bool off, bool alert, byte? brightness, string color)
         {
             var command = new LightCommand();
             if (on)
@@ -141,7 +155,7 @@ namespace ActionProvider.Hue
             return command;
         }
 
-        public IEnumerable<string> GetLights(uint light)
+        IEnumerable<string> GetLights(uint light)
         {
             if (light > 0)
                 return new[] { light.ToString() };
@@ -149,7 +163,7 @@ namespace ActionProvider.Hue
             return null;
         }
 
-        public Task<HueResults> SendCommand(LightCommand command, IEnumerable<string> lights = null) =>
+        Task<HueResults> SendCommand(LightCommand command, IEnumerable<string> lights = null) =>
             _client.SendCommandAsync(command, lights);
 
         RGBColor GetColor(string color)

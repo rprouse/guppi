@@ -2,7 +2,7 @@
   "profiles": {
     "Guppi.Console": {
       "commandName": "Project",
-      "commandLineArgs": "notes --nocreate"
+      "commandLineArgs": "hue set -b 80"
     }
   }
 }

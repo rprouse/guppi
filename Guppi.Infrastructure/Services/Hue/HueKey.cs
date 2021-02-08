@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using Spectre.Console;
 
-namespace ActionProvider.Hue
+namespace Guppi.Infrastructure.Services.Hue
 {
     class HueKey
     {

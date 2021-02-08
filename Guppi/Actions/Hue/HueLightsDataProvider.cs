@@ -1,27 +1,35 @@
+using System;
 using System.CommandLine;
 using System.CommandLine.Invocation;
+using System.Linq;
 using System.Threading.Tasks;
 using Guppi.Application;
+using Guppi.Application.Commands.Hue;
+using Guppi.Application.Extensions;
+using Guppi.Application.Queries.Hue;
+using MediatR;
+using Spectre.Console;
 
 namespace ActionProvider.Hue
 {
-    public class HueLightsDataProvider : IActionProvider
+    internal class HueLightsDataProvider : IActionProvider
     {
-        HueConfiguration _configuration;
+        private readonly IMediator _mediator;
 
-        public HueLightsDataProvider()
+        public HueLightsDataProvider(IMediator mediator)
         {
-            _configuration = Configuration.Load<HueConfiguration>("hue");
+            _mediator = mediator;
         }
 
         public Command GetCommand()
         {
+            uint defaultLight = _mediator.Send(new GetDefaultLightQuery()).Result;
             var bridges = new Command("bridges", "List bridges on the network");
             bridges.Handler = CommandHandler.Create(async () => await ListBridges());
 
             var configure = new Command("configure", "Configures default lights");
             configure.AddAlias("config");
-            configure.Handler = CommandHandler.Create(() => Configure());
+            configure.Handler = CommandHandler.Create(async () => await Configure());
 
             var register = new Command("register", "Register with a Hue Bridge. Registration usually happens automatically, you should only need to use to fix a broken registration");
             register.Handler = CommandHandler.Create(async (string ip) => await Register(ip));
@@ -34,13 +42,13 @@ namespace ActionProvider.Hue
             {
                 new Option<byte?>(new string[]{ "--brightness", "-b" }, "Set the brightness of a light, from 0 to 100 percent"),
                 new Option<string>(new string[]{ "--color", "-c" }, "Color as a HEX color in the format FF0000 or #FF0000, or a common color name like red or blue"),
-                new Option<uint>(new string[]{ "--light", "-l" }, () => _configuration.GetDefaultLight(), "The light to perform an action on. If unset, your default light or if 0 all lights"),
+                new Option<uint>(new string[]{ "--light", "-l" }, () => defaultLight, "The light to perform an action on. If unset, your default light or if 0 all lights"),
             };
             on.Handler = CommandHandler.Create(async (string ip, byte? brightness, string color, uint light) => await Set(ip, true, false, false, brightness, color, light));
 
             var off = new Command("off", "Turn lights off")
             {
-                new Option<uint>(new string[]{ "--light", "-l" }, () => _configuration.GetDefaultLight(), "The light to perform an action on. If unset, your default light or if 0 all lights"),
+                new Option<uint>(new string[]{ "--light", "-l" }, () => defaultLight, "The light to perform an action on. If unset, your default light or if 0 all lights"),
             };
             off.Handler = CommandHandler.Create(async (string ip, uint light) => await Set(ip, false, true, false, null, null, light));
 
@@ -48,7 +56,7 @@ namespace ActionProvider.Hue
             {
                 new Option<byte?>(new string[]{ "--brightness", "-b" }, "Set the brightness of a light, from 0 to 100 percent"),
                 new Option<string>(new string[]{ "--color", "-c" }, "Color as a HEX color in the format FF0000 or #FF0000, or a common color name like red or blue"),
-                new Option<uint>(new string[]{ "--light", "-l" }, () => _configuration.GetDefaultLight(), "The light to perform an action on. If unset, your default light or if 0 all lights"),
+                new Option<uint>(new string[]{ "--light", "-l" }, () => defaultLight, "The light to perform an action on. If unset, your default light or if 0 all lights"),
             };
             alert.Handler = CommandHandler.Create(async (string ip, byte? brightness, string color, uint light) => await Set(ip, false, false, true, brightness, color, light));
 
@@ -56,7 +64,7 @@ namespace ActionProvider.Hue
             {
                 new Option<byte?>(new string[]{ "--brightness", "-b" }, "Set the brightness of a light, from 0 to 100 percent"),
                 new Option<string>(new string[]{ "--color", "-c" }, "Color as a HEX color in the format FF0000 or #FF0000, or a common color name like red or blue"),
-                new Option<uint>(new string[]{ "--light", "-l" }, () => _configuration.GetDefaultLight(), "The light to perform an action on. If unset, your default light or if 0 all lights"),
+                new Option<uint>(new string[]{ "--light", "-l" }, () => defaultLight, "The light to perform an action on. If unset, your default light or if 0 all lights"),
             };
             set.Handler = CommandHandler.Create(async (string ip, byte? brightness, string color, uint light) => await Set(ip, false, false, false, brightness, color, light));
 
@@ -79,39 +87,90 @@ namespace ActionProvider.Hue
 
         private async Task ListBridges()
         {
-            var controller = new HueController();
-            await controller.ListBridges();
+            try
+            {
+                var bridges = await _mediator.Send(new ListBridgesQuery());
+                AnsiConsoleHelper.TitleRule(":desktop_computer: SUDAR Scan Complete. Found bridges...");
+                foreach (var bridge in bridges)
+                {
+                    AnsiConsole.MarkupLine($"[silver]{bridge.BridgeId} - {bridge.IpAddress}[/]");
+                }
+                AnsiConsoleHelper.Rule("white");
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.MarkupLine("[red][[:cross_mark: Failed to list bridges.]][/]");
+                AnsiConsole.WriteException(ex,
+                    ExceptionFormats.ShortenPaths | ExceptionFormats.ShortenTypes |
+                    ExceptionFormats.ShortenMethods | ExceptionFormats.ShowLinks);
+            }
         }
 
         private async Task ListLights(string ip)
         {
-            var controller = new HueController();
-            if (await controller.ConnectToBridge(ip) == false)
-                return;
+            try
+            {
+                var lights = await _mediator.Send(new ListLightsQuery { IpAddress = ip, WaitForUserInput = WaitForUserInput });
+                if (lights.Count() == 0)
+                {
+                    AnsiConsole.MarkupLine("[red][[:cross_mark: No lights found.]][/]");
+                    return;
+                }
+                AnsiConsoleHelper.TitleRule(":light_bulb: Scans are complete. Found lights...");
 
-            await controller.ListLights();
+                foreach (var light in lights)
+                {
+                    AnsiConsole.MarkupLine($"[white]{light.Id,2}: {light.Name,-40}[/] [silver]{(light.On ? $":yellow_circle: {(light.Brightness * 100 / 255)}%" : ":black_circle:")}[/]");
+                }
+                AnsiConsoleHelper.Rule("white");
+            }
+            catch(ArgumentException ae)
+            {
+                AnsiConsole.MarkupLine($"[red][[:cross_mark: {ae.Message}]][/]");
+            }
+            catch (InvalidOperationException ex)
+            {
+                AnsiConsole.MarkupLine("[red][[:cross_mark: Failed to register with the bridge.]][/]");
+                AnsiConsole.WriteException(ex,
+                    ExceptionFormats.ShortenPaths | ExceptionFormats.ShortenTypes |
+                    ExceptionFormats.ShortenMethods | ExceptionFormats.ShowLinks);
+            }
         }
 
         private async Task Set(string ip, bool on, bool off, bool alert, byte? brightness, string color, uint light)
         {
-            var controller = new HueController();
-            if (await controller.ConnectToBridge(ip) == false)
-                return;
-
-            var cmd = controller.GetCommand(on, off, alert, brightness, color);
-            var lts = controller.GetLights(light);
-            await controller.SendCommand(cmd, lts);
+            try
+            {
+                var command = new SetLightCommand { IpAddress = ip, On = on, Off = off, Alert = alert, Brightness = brightness, Color = color, Light = light, WaitForUserInput = WaitForUserInput };
+                await _mediator.Send(command);
+            }
+            catch (ArgumentException ae)
+            {
+                AnsiConsole.MarkupLine($"[red][[:cross_mark: {ae.Message}]][/]");
+            }
+            catch (InvalidOperationException ex)
+            {
+                AnsiConsole.MarkupLine("[red][[:cross_mark: Failed to register with the bridge.]][/]");
+                AnsiConsole.WriteException(ex,
+                    ExceptionFormats.ShortenPaths | ExceptionFormats.ShortenTypes |
+                    ExceptionFormats.ShortenMethods | ExceptionFormats.ShowLinks);
+            }
         }
 
         private async Task Register(string ip)
         {
-            var controller = new HueController();
-            await controller.Register(ip);
+            await _mediator.Send(new RegisterCommand { IpAddress = ip, WaitForUserInput = WaitForUserInput });
         }
 
-        private void Configure()
+        private void WaitForUserInput(string message)
         {
-            _configuration.RunConfiguration("Hue Lights", "Enter your default light");
+            AnsiConsole.MarkupLine($"[green][[:check_mark_button: {message}]][/]");
+            Console.ReadLine();
+        }
+
+        private async Task Configure()
+        {
+            await _mediator.Send(new ConfigureHueCommand());
         }
     }
 }

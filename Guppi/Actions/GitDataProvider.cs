@@ -52,9 +52,6 @@ namespace Guppi.Console.Actions
             {
                 AnsiConsole.MarkupLine($"[green][[:check_mark_button: Switching to branch {branchName}]][/]");
                 await _mediator.Send(new UpdateGitCommand { Branch = branchName });
-
-                RunGit("fetch -p");
-                RunGit("pull");
             }
             catch(WarningException ex)
             {
@@ -67,23 +64,10 @@ namespace Guppi.Console.Actions
             }
         }
 
-        async Task Ammend()
-        {
-            await _mediator.Send(new AmmendGitCommand());
-        }
+        async Task Ammend() => await _mediator.Send(new AmmendGitCommand());
 
-        async Task Undo(bool hard)
-        {
-            await _mediator.Send(new UndoGitCommand { Hard = hard });
-        }
+        async Task Undo(bool hard) => await _mediator.Send(new UndoGitCommand { Hard = hard });
 
-        async Task Unstage()
-        {
-            await _mediator.Send(new UnstageGitCommand());
-        }
-
-        void RunGit(string args)
-        {
-        }
+        async Task Unstage() => await _mediator.Send(new UnstageGitCommand());
     }
 }

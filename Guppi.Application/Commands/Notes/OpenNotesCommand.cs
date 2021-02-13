@@ -7,8 +7,8 @@ namespace Guppi.Application.Commands.Notes
 {
     public sealed class OpenNotesCommand : IRequest
     {
-        public bool NoCreate { get; set; }
-        public string Filename { get; set; }
+        public bool NoCreate { get; init; }
+        public string Filename { get; init; }
     }
 
     internal sealed class OpenNotesCommandHandler : IRequestHandler<OpenNotesCommand>

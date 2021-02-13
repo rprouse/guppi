@@ -8,19 +8,19 @@ namespace Guppi.Application.Commands.Hue
 {
     public sealed class SetLightCommand : IRequest
     {
-        public string IpAddress { get; set; }
+        public string IpAddress { get; init; }
 
-        public bool On { get; set; }
+        public bool On { get; init; }
 
-        public bool  Off { get; set; }
+        public bool  Off { get; init; }
 
-        public bool Alert { get; set; }
+        public bool Alert { get; init; }
 
-        public byte? Brightness { get; set; }
+        public byte? Brightness { get; init; }
 
-        public string Color { get; set; }
+        public string Color { get; init; }
 
-        public uint Light { get; set; }
+        public uint Light { get; init; }
 
         public Action<string> WaitForUserInput { get; set; }
     }

@@ -10,8 +10,8 @@ namespace Guppi.Application.Queries.Calendar
 {
     public sealed class CalendarEventsQuery : IRequest<IEnumerable<Event>>
     {
-        public DateTime? MinDate { get; set; }
-        public DateTime? MaxDate { get; set; }
+        public DateTime? MinDate { get; init; }
+        public DateTime? MaxDate { get; init; }
     }
 
     internal sealed class CalendarEventsQueryHandler : IRequestHandler<CalendarEventsQuery, IEnumerable<Event>>
@@ -23,9 +23,7 @@ namespace Guppi.Application.Queries.Calendar
             _calendarService = calendarService;
         }
 
-        public async Task<IEnumerable<Event>> Handle(CalendarEventsQuery request, CancellationToken cancellationToken)
-        {
-            return await _calendarService.GetCalendarEvents(request.MinDate, request.MaxDate);
-        }
+        public async Task<IEnumerable<Event>> Handle(CalendarEventsQuery request, CancellationToken cancellationToken) =>
+            await _calendarService.GetCalendarEvents(request.MinDate, request.MaxDate);
     }
 }

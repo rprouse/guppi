@@ -8,9 +8,9 @@ namespace Guppi.Application.Commands.Hue
 {
     public sealed class RegisterCommand : IRequest<bool>
     {
-        public string IpAddress { get; set; }
+        public string IpAddress { get; init; }
 
-        public Action<string> WaitForUserInput { get; set; }
+        public Action<string> WaitForUserInput { get; init; }
     }
 
     internal sealed class RegisterCommandHandler : IRequestHandler<RegisterCommand, bool>

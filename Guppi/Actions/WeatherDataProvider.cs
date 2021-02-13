@@ -61,10 +61,7 @@ namespace Guppi.Console.Actions
             }
         }
 
-        private async Task Configure()
-        {
-            await _mediator.Send(new ConfigureWeatherCommand());
-        }
+        private async Task Configure() => await _mediator.Send(new ConfigureWeatherCommand());
 
         private void DisplayLong(WeatherForecast weather)
         {

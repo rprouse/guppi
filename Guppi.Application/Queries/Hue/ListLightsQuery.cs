@@ -11,7 +11,7 @@ namespace Guppi.Application.Queries.Hue
 {
     public sealed class ListLightsQuery : IRequest<IEnumerable<HueLight>>
     {
-        public string IpAddress { get; set; }
+        public string IpAddress { get; init; }
 
         public Action<string> WaitForUserInput { get; set; }
     }

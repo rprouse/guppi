@@ -156,10 +156,8 @@ namespace Guppi.Console.Actions
             }
         }
 
-        private async Task Register(string ip)
-        {
+        private async Task Register(string ip) =>
             await _mediator.Send(new RegisterCommand { IpAddress = ip, WaitForUserInput = WaitForUserInput });
-        }
 
         private void WaitForUserInput(string message)
         {
@@ -167,9 +165,6 @@ namespace Guppi.Console.Actions
             System.Console.ReadLine();
         }
 
-        private async Task Configure()
-        {
-            await _mediator.Send(new ConfigureHueCommand());
-        }
+        private async Task Configure() => await _mediator.Send(new ConfigureHueCommand());
     }
 }

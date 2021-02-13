@@ -128,10 +128,7 @@ namespace Guppi.Console.Actions
             }
         }
 
-        private async Task Configure()
-        {
-            await _mediator.Send(new ConfigureAocCommand());
-        }
+        private async Task Configure() => await _mediator.Send(new ConfigureAocCommand());
 
         private async Task RunTests(int year, int day)
         {

@@ -80,6 +80,30 @@ only needs to be done once and work for all applications built using `System.Com
 Follow the [setup instructions](https://github.com/dotnet/command-line-api/blob/main/docs/dotnet-suggest.md)
 for your shell.
 
+## Configuring Actions
+
+### Actions.Calendar
+
+Displays your next calendar event or today's agenda.
+
+To get the information to configure:
+
+1. [Enable the Google Calendar API](https://developers.google.com/calendar/quickstart/dotnet)
+2. Configure the API as a Desktop App
+3. Download client configuration and save to `C:\Users\rob\AppData\Local\Guppi\calendar_credentials.json`
+4. Run and log in using OAuth2.
+
+To check your API information, see the [API Console](https://console.developers.google.com/).
+
+### Actions.Weather
+
+Displays today's weather information.
+
+To get the information to configure;
+
+1. Sign up to [OpenWeatherMap](https://openweathermap.org/) and get an API Key.
+2. Use [Google Maps](https://google.ca/maps) to get your Latitude and Longitude.
+
 ## ToDo
 
 Ideas of information that I would like to see every morning.

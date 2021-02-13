@@ -61,10 +61,7 @@ namespace Guppi.Console.Actions
             }
         }
 
-        private async Task Configure()
-        {
-            await _mediator.Send(new ConfigureWeatherCommand());
-        }
+        private async Task Configure() => await _mediator.Send(new ConfigureWeatherCommand());
 
         private void DisplayLong(WeatherForecast weather)
         {
@@ -82,10 +79,9 @@ namespace Guppi.Console.Actions
                     AnsiConsoleHelper.Rule("silver");
                 }
                 last = dt;
-                string icon = hour.Icon;
                 string desc = (hour.Description).PadRight(maxDesc);
                 AnsiConsole.MarkupLine(
-                    $"{dt.GetEmoji()} [silver]{dt:HH:mm}  {WeatherIcon.Icons[icon]} {desc} {hour.Temperature,3}°C FeelsLike {hour.FeelsLike,3}°C {(int)(hour.ProbabilityOfPrecipitation),3}%:droplet:[/]"
+                    $"{dt.GetEmoji()} [silver]{dt:HH:mm}  {hour.Icon} {desc} {hour.Temperature,3}°C FeelsLike {hour.FeelsLike,3}°C {(int)(hour.ProbabilityOfPrecipitation),3}%:droplet:[/]"
                 );
             }
         }
@@ -96,14 +92,12 @@ namespace Guppi.Console.Actions
 
             int maxDesc = weather.Hourly.Select(h => h.Description).Max(d => d.Length);
 
-            string icon = weather.Current.Icon;
             string desc = (weather.Current.Description).PadRight(maxDesc);
-            AnsiConsole.MarkupLine($"[white]Current:[/][silver]  {WeatherIcon.Icons[icon]} {desc} {weather.Current.Temperature,3}°C FeelsLike {weather.Current.FeelsLike,3}°C[/]");
+            AnsiConsole.MarkupLine($"[white]Current:[/][silver]  {weather.Current.Icon} {desc} {weather.Current.Temperature,3}°C FeelsLike {weather.Current.FeelsLike,3}°C[/]");
 
             DailyWeather today = weather.Daily.FirstOrDefault();
-            icon = today.Icon;
             desc = (today.Description).PadRight(maxDesc);
-            AnsiConsole.MarkupLine($"[white]Today:[/][silver]    {WeatherIcon.Icons[icon]} {desc} {today.Temperature.Max,3}°C/{today.Temperature.Min,3}°C[/][silver] High/Low[/]");
+            AnsiConsole.MarkupLine($"[white]Today:[/][silver]    {today.Icon} {desc} {today.Temperature.Max,3}°C/{today.Temperature.Min,3}°C[/][silver] High/Low[/]");
         }
     }
 }

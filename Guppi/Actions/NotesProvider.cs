@@ -33,7 +33,7 @@ namespace Guppi.Console.Actions
             if (configure)
                 await _mediator.Send(new ConfigureNotesCommand());
 
-            await _mediator.Send(new OpenNotesCommand());
+            await _mediator.Send(new OpenNotesCommand(filename, nocreate));
         }
     }
 }

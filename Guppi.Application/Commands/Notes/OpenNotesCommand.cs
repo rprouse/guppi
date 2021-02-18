@@ -5,11 +5,7 @@ using MediatR;
 
 namespace Guppi.Application.Commands.Notes
 {
-    public sealed class OpenNotesCommand : IRequest
-    {
-        public bool NoCreate { get; init; }
-        public string Filename { get; init; }
-    }
+    public record OpenNotesCommand(string Filename, bool NoCreate) : IRequest;
 
     internal sealed class OpenNotesCommandHandler : IRequestHandler<OpenNotesCommand>
     {

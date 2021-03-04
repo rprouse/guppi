@@ -19,6 +19,7 @@ static IServiceProvider ConfigureServices() =>
         .AddTransient<IActionProvider, GitDataProvider>()
         .AddTransient<IActionProvider, HueLightsDataProvider>()
         .AddTransient<IActionProvider, NotesProvider>()
+        .AddTransient<IActionProvider, StravaProvider>()
         .AddTransient<IActionProvider, WeatherDataProvider>()
         .AddTransient<IMultipleActionProvider, UtilitiesProvider>()
         .BuildServiceProvider();

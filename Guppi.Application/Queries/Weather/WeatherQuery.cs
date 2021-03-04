@@ -4,7 +4,7 @@ using Guppi.Domain.Entities.Weather;
 using Guppi.Domain.Interfaces;
 using MediatR;
 
-namespace Guppi.Application.Queryies.Weather
+namespace Guppi.Application.Queries.Weather
 {
     public sealed class WeatherQuery : IRequest<WeatherForecast>
     {

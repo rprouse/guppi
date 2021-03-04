@@ -20,7 +20,7 @@ namespace Guppi.Application.Commands.Weather
 
         public async Task<Unit> Handle(ConfigureWeatherCommand request, CancellationToken cancellationToken)
         {
-            await _weatherService.GetWeatherData();
+            _weatherService.Configure();
             return await Unit.Task;
         }
     }

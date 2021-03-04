@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 using Guppi.Application.Commands.Strava;
 using Guppi.Application.Exceptions;
 using Guppi.Application.Extensions;
+using Guppi.Application.Queries.Strava;
 using Guppi.Domain.Entities.Weather;
 using MediatR;
 using Spectre.Console;
@@ -42,7 +44,7 @@ namespace Guppi.Console.Actions
         {
             try
             {
-                //WeatherForecast weather = await _mediator.Send(new WeatherQuery());
+                IEnumerable<Domain.Entities.Strava.StravaActivity> weather = await _mediator.Send(new GetActivitiesQuery());
 
                 AnsiConsoleHelper.Rule("white");
             }

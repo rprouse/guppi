@@ -1,13 +1,12 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Guppi.Domain.Interfaces
 {
     public interface IStravaService
     {
+        Task<IEnumerable<Domain.Entities.Strava.StravaActivity>> GetActivities();
+
         void Configure();
     }
 }

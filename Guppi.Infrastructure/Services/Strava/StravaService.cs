@@ -46,11 +46,16 @@ namespace Guppi.Infrastructure.Services.Strava
             {
                 throw new UnconfiguredException("Please configure the Strava provider");
             }
-            if (string.IsNullOrWhiteSpace(_configuration.RefreshToken) && await Authorize() == false)
+            string access_token = string.Empty;
+            if (string.IsNullOrWhiteSpace(_configuration.RefreshToken))
             {
-                throw new UnauthorizedException("Failed to log into Strava");
+                string code = await Authorize();
+                access_token = await GetAccessToken(code, null, "authorization_code");
             }
-            var access_token = await GetAccessToken();
+            else
+            {
+                access_token = await GetAccessToken(null, _configuration.RefreshToken, "refresh_token");
+            }
 
             _client.DefaultRequestHeaders.Add("Authorization", $"Bearer {access_token}");
 
@@ -61,7 +66,7 @@ namespace Guppi.Infrastructure.Services.Strava
             return activities.Select(a => a.GetActivity());
         }
 
-        private async Task<bool> Authorize()
+        private async Task<string> Authorize()
         {
             int port = 39428;
             string url = $"http://www.strava.com/oauth/authorize?client_id={_configuration.ClientId}&response_type=code&redirect_uri=http://localhost:{port}&approval_prompt=auto&scope=read,activity:read_all";
@@ -76,33 +81,34 @@ namespace Guppi.Infrastructure.Services.Strava
             HttpListenerResponse response = context.Response;
 
             bool result;
-            string refresh_token = context.Request.QueryString["code"];
-            if (string.IsNullOrWhiteSpace(refresh_token))
+            string code = context.Request.QueryString["code"];
+            if (string.IsNullOrWhiteSpace(code))
             {
                 result = false;
-                byte[] bytes = Encoding.UTF8.GetBytes("<html><body><h2>Failed to log in to Strava</h2><h3>You may close this window</h3></body></html>");
+                byte[] errorBytes = Encoding.UTF8.GetBytes("<html><body><h2>Failed to log in to Strava</h2><h3>You may close this window</h3></body></html>");
                 response.Headers.Clear();
                 response.StatusCode = (int)HttpStatusCode.OK;
-                await response.OutputStream.WriteAsync(bytes, 0, bytes.Length);
+                await response.OutputStream.WriteAsync(errorBytes, 0, errorBytes.Length);
                 response.Close();
+                await Task.Delay(100);
+                listener.Stop();
+                throw new UnauthorizedException("Failed to log into Strava");
             }
-            else
-            {
-                _configuration.RefreshToken = refresh_token;
-                _configuration.Save();
 
-                result = true;
-                byte[] bytes = Encoding.UTF8.GetBytes("<html><body><h3>You may close this window</h3></body></html>");
-                response.Headers.Clear();
-                response.StatusCode = (int)HttpStatusCode.OK;
-                await response.OutputStream.WriteAsync(bytes, 0, bytes.Length);
-                response.Close();
-            }
+            _configuration.RefreshToken = code;
+            _configuration.Save();
+
+            result = true;
+            byte[] bytes = Encoding.UTF8.GetBytes("<html><body><h3>You may close this window</h3></body></html>");
+            response.Headers.Clear();
+            response.StatusCode = (int)HttpStatusCode.OK;
+            await response.OutputStream.WriteAsync(bytes, 0, bytes.Length);
+            response.Close();
 
             await Task.Delay(100);
             listener.Stop();
 
-            return result;
+            return code;
         }
 
         private void OpenUrl(string url)
@@ -134,13 +140,15 @@ namespace Guppi.Infrastructure.Services.Strava
             }
         }
 
-        private async Task<string> GetAccessToken()
+        private async Task<string> GetAccessToken(string code, string refresh_token, string grant_type)
         {
             var authRequest = new AuthorizationRequest
             {
                 client_id = _configuration.ClientId,
                 client_secret = _configuration.ClientSecret,
-                code = _configuration.RefreshToken
+                code = code,
+                refresh_token = refresh_token,
+                grant_type = grant_type
             };
             var request = new HttpRequestMessage
             {
@@ -179,6 +187,7 @@ namespace Guppi.Infrastructure.Services.Strava
         public string client_id { get; set; }
         public string client_secret { get; set; }
         public string code { get; set; }
+        public string refresh_token { get; set; }
         public string grant_type { get; set; } = "authorization_code";
     }
 

@@ -44,13 +44,17 @@ namespace Guppi.Console.Actions
         {
             try
             {
-                IEnumerable<Domain.Entities.Strava.StravaActivity> weather = await _mediator.Send(new GetActivitiesQuery());
+                IEnumerable<Domain.Entities.Strava.StravaActivity> activities = await _mediator.Send(new GetActivitiesQuery());
 
                 AnsiConsoleHelper.Rule("white");
             }
             catch (UnconfiguredException ue)
             {
                 AnsiConsole.MarkupLine($"[yellow][[:yellow_circle: {ue.Message}]][/]");
+            }
+            catch (UnauthorizedException ue)
+            {
+                AnsiConsole.MarkupLine($"[red][[:cross_mark: ${ue.Message}]][/]");
             }
         }
 

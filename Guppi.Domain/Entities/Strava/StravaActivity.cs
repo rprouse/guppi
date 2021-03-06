@@ -14,5 +14,6 @@ namespace Guppi.Domain.Entities.Strava
         public DateTimeOffset StartDate { get; init; }
         public int Kudos { get; init; }
         public double SufferScore { get; init; }
+        public string Icon { get; set; }
     }
 }

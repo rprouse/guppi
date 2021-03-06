@@ -8,7 +8,6 @@ using Guppi.Application.Commands.Strava;
 using Guppi.Application.Exceptions;
 using Guppi.Application.Extensions;
 using Guppi.Application.Queries.Strava;
-using Guppi.Domain.Entities.Weather;
 using MediatR;
 using Spectre.Console;
 
@@ -29,15 +28,17 @@ namespace Guppi.Console.Actions
 
             view.Handler = CommandHandler.Create(async (bool all) => await Execute(all));
 
-            var configure = new Command("configure", "Configures the weather provider");
+            var configure = new Command("configure", "Configures the Strava provider");
             configure.AddAlias("config");
             configure.Handler = CommandHandler.Create(async () => await Configure());
 
-            return new Command("strava", "Displays today's weather")
+            var command = new Command("strava", "Displays Strava fitness activities")
             {
                view,
                configure
             };
+            command.AddAlias("fitness");
+            return command;
         }
 
         private async Task Execute(bool all)
@@ -45,6 +46,14 @@ namespace Guppi.Console.Actions
             try
             {
                 IEnumerable<Domain.Entities.Strava.StravaActivity> activities = await _mediator.Send(new GetActivitiesQuery());
+
+                AnsiConsoleHelper.TitleRule(":person_biking: Fitness activities from the last seven days");
+
+                var lastWeek = DateTime.Now.AddDays(-7).Date;
+                foreach(var act in activities.Where(a => a.StartDate >= lastWeek).OrderByDescending(a => a.StartDate))
+                {
+                    AnsiConsole.MarkupLine($"{act.Icon} {act.StartDate.Date.ToShortDateString()} {(act.Distance / 1000).ToString("0.0"),5} km :four_o_clock: {act.MovingTime.ToString(@"hh\:mm\:ss")} :mount_fuji: {act.Elevation.ToString("0"),4} m - {act.Name}");
+                }
 
                 AnsiConsoleHelper.Rule("white");
             }

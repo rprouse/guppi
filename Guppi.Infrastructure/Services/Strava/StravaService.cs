@@ -264,7 +264,8 @@ namespace Guppi.Infrastructure.Services.Strava
                 Elevation = total_elevation_gain,
                 StartDate = start_date,
                 Kudos = kudos_count,
-                SufferScore = suffer_score
+                SufferScore = suffer_score,
+                Icon = FitnessIcon.Icons[type]
             };
     }
 

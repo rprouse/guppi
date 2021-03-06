@@ -24,9 +24,12 @@ namespace Guppi.Console.Actions
 
         public Command GetCommand()
         {
-            var view = new Command("view", "Views activities from the past week");
+            var view = new Command("view", "Views activities from the past week")
+            {
+                new Option<int>(new string[]{"--days", "-d" }, () => 7, "Number of days to view up to 90. Defaults to 7.")
+            };
 
-            view.Handler = CommandHandler.Create(async (bool all) => await Execute(all));
+            view.Handler = CommandHandler.Create(async (int days) => await View(days));
 
             var configure = new Command("configure", "Configures the Strava provider");
             configure.AddAlias("config");
@@ -41,18 +44,18 @@ namespace Guppi.Console.Actions
             return command;
         }
 
-        private async Task Execute(bool all)
+        private async Task View(int days)
         {
             try
             {
                 IEnumerable<Domain.Entities.Strava.StravaActivity> activities = await _mediator.Send(new GetActivitiesQuery());
 
-                AnsiConsoleHelper.TitleRule(":person_biking: Fitness activities from the last seven days");
+                AnsiConsoleHelper.TitleRule($":person_biking: Fitness activities from the last {days} days");
 
-                var lastWeek = DateTime.Now.AddDays(-7).Date;
-                foreach(var act in activities.Where(a => a.StartDate >= lastWeek).OrderByDescending(a => a.StartDate))
+                var lastWeek = DateTime.Now.AddDays(-days).Date;
+                foreach(var act in activities.Where(a => a.StartDate >= lastWeek).OrderBy(a => a.StartDate))
                 {
-                    AnsiConsole.MarkupLine($"{act.Icon} {act.StartDate.Date.ToShortDateString()} {(act.Distance / 1000).ToString("0.0"),5} km :four_o_clock: {act.MovingTime.ToString(@"hh\:mm\:ss")} :mount_fuji: {act.Elevation.ToString("0"),4} m - {act.Name}");
+                    AnsiConsole.MarkupLine($"{act.Icon} {act.StartDate.Date.ToString("ddd yyyy-MM-dd")} {(act.Distance / 1000).ToString("0.0"),5} km :four_o_clock: {act.MovingTime.ToString(@"hh\:mm\:ss")} :mount_fuji: {act.Elevation.ToString("0"),4} m - {act.Name}");
                 }
 
                 AnsiConsoleHelper.Rule("white");

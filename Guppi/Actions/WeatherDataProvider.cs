@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Guppi.Application.Commands.Weather;
 using Guppi.Application.Exceptions;
 using Guppi.Application.Extensions;
-using Guppi.Application.Queryies.Weather;
+using Guppi.Application.Queries.Weather;
 using Guppi.Domain.Entities.Weather;
 using MediatR;
 using Spectre.Console;

@@ -25,10 +25,11 @@ namespace Guppi.Console.Actions
         {
             var view = new Command("view", "Views Covid-19 Stats for a country. Defaults to Canada.")
             {
-                new Option<string>(new string[]{"--country", "-c" }, () => "Canada", "The country to view. Defaults to Canada. Valid countries, Canada, Brazil, Germany, Spain, France, UK, India, Italy, Mexico and USA"),
+                new Option<string>(new string[]{"--country" }, () => "Canada", "The country to view. Defaults to Canada. Valid countries, Canada, Brazil, Germany, Spain, France, UK, India, Italy, Mexico and USA"),
+                new Option<bool>(new string[]{"--cases", "-c"}, () => false, "Views the cases for provinces or states."),
                 new Option<bool>(new string[]{"--deaths", "-d"}, () => false, "View deaths for provinces or states.")
             };
-            view.Handler = CommandHandler.Create(async (string country, bool deaths) => await View(country, deaths));
+            view.Handler = CommandHandler.Create(async (string country, bool cases, bool deaths) => await View(country, cases, deaths));
 
             return new Command("covid", "Displays Covid-19 Stats")
             {
@@ -36,7 +37,7 @@ namespace Guppi.Console.Actions
             };
         }
 
-        private async Task View(string country, bool deaths)
+        private async Task View(string country, bool cases, bool deaths)
         {
             try
             {
@@ -54,11 +55,17 @@ namespace Guppi.Console.Actions
                 DisplayCountryData(data);
                 AnsiConsole.WriteLine();
 
-                DisplayRegionalCases(data);
-                AnsiConsole.WriteLine();
+                if (cases)
+                {
+                    DisplayRegionalCases(data);
+                    AnsiConsole.WriteLine();
+                }
 
-                if(deaths)
+                if (deaths)
+                {
                     DisplayRegionalDeaths(data);
+                    AnsiConsole.WriteLine();
+                }
             }
             catch (Exception ue)
             {

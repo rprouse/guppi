@@ -40,11 +40,11 @@ namespace Guppi.Infrastructure.Services.Covid
                 RegionType = region_type,
                 Population = population,
                 LatestCases = latest.cases,
-                LatestDeaths = latest.deaths
+                LatestDeaths = latest.deaths,
+                LatestDate = DateTime.Parse(range[1] ?? "1970-01-01")
             };
-            var start = DateTime.Parse(range[0]);
-            var end = DateTime.Parse(range[1]);
-            int days = (int)end.Subtract(start).TotalDays;
+            var start = DateTime.Parse(range[0] ?? "1970-01-01");
+            int days = (int)data.LatestDate.Subtract(start).TotalDays;
 
             for (int i = 0; i <= days; i++)
             {

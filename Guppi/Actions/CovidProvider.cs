@@ -66,6 +66,8 @@ namespace Guppi.Console.Actions
                     DisplayRegionalDeaths(data);
                     AnsiConsole.WriteLine();
                 }
+
+                AnsiConsoleHelper.Rule("white");
             }
             catch (Exception ue)
             {
@@ -76,7 +78,7 @@ namespace Guppi.Console.Actions
         private static void DisplayCountryData(CovidData data)
         {
             var table = new Table();
-            table.Border = TableBorder.Rounded;
+            table.Border = TableBorder.Minimal;
             table.AddColumns("", "Total Reported", "Per 100k", "Daily Reported", "Weekly Trend");
             table.Columns[0].LeftAligned();
             table.Columns[1].RightAligned();
@@ -106,7 +108,7 @@ namespace Guppi.Console.Actions
         private static void DisplayRegionalCases(CovidData data)
         {
             var table = new Table();
-            table.Border = TableBorder.Rounded;
+            table.Border = TableBorder.Minimal;
             table.AddColumns("", "Cases", "Per 100k", "7d Avg", "Per 100k");
             table.Columns[0].LeftAligned();
             table.Columns[1].RightAligned();
@@ -133,7 +135,7 @@ namespace Guppi.Console.Actions
         private static void DisplayRegionalDeaths(CovidData data)
         {
             var table = new Table();
-            table.Border = TableBorder.Rounded;
+            table.Border = TableBorder.Minimal;
             table.AddColumns("", "Deaths", "Per 100k", "7d Avg", "Per 100k");
             table.Columns[0].LeftAligned();
             table.Columns[1].RightAligned();

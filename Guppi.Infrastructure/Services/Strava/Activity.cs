@@ -54,7 +54,7 @@ namespace Guppi.Infrastructure.Services.Strava
         public int pr_count { get; set; }
         public int total_photo_count { get; set; }
         public bool has_kudoed { get; set; }
-        public double suffer_score { get; set; }
+        public double? suffer_score { get; set; }
 
         public StravaActivity GetActivity() =>
             new StravaActivity

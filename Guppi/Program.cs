@@ -15,6 +15,7 @@ static IServiceProvider ConfigureServices() =>
         .AddApplication()
         .AddInfrastructure()
         .AddTransient<IActionProvider, AdventOfCodeDataProvider>()
+        .AddTransient<IActionProvider, CovidProvider>()
         .AddTransient<IActionProvider, CalendarDataProvider>()
         .AddTransient<IActionProvider, GitDataProvider>()
         .AddTransient<IActionProvider, HueLightsDataProvider>()

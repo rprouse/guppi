@@ -53,11 +53,32 @@ namespace Guppi.Console.Actions
 
                 AnsiConsoleHelper.TitleRule($":person_biking: Fitness activities from the last {days} days");
 
+                var table = new Table();
+                table.Border = TableBorder.Minimal;
+                table.AddColumns("", "Day", ":calendar: Date", ":sports_medal: Distance", ":four_o_clock: Time", ":mount_fuji: Elevaton", ":growing_heart: Suffer", ":compass: Activity");
+                table.Columns[0].LeftAligned();
+                table.Columns[1].LeftAligned();
+                table.Columns[2].LeftAligned();
+                table.Columns[3].RightAligned();
+                table.Columns[4].RightAligned();
+                table.Columns[5].RightAligned();
+                table.Columns[6].RightAligned();
+                table.Columns[7].LeftAligned();
+
                 var lastWeek = DateTime.Now.AddDays(-days).Date;
                 foreach(var act in activities.Where(a => a.StartDate >= lastWeek).OrderBy(a => a.StartDate))
                 {
-                    AnsiConsole.MarkupLine($"{act.Icon} {act.StartDate:ddd yyyy-MM-dd} {(act.Distance / 1000),5:0.0} km :four_o_clock: {act.MovingTime:hh\\:mm\\:ss} :mount_fuji: {act.Elevation,4:0} m - {act.Name}");
+                    table.AddRow(
+                        act.Icon,
+                        act.StartDate.ToString("ddd"),
+                        act.StartDate.ToString("yyyy-MM-dd"),
+                        $"{(act.Distance / 1000):0.0} km",
+                        act.MovingTime.ToString(@"hh\:mm\:ss"),
+                        $"{act.Elevation:0} m",
+                        (act.SufferScore ?? 0).ToString(),
+                        act.Name);
                 }
+                AnsiConsole.Render(table);
 
                 AnsiConsoleHelper.Rule("white");
             }

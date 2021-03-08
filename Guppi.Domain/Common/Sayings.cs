@@ -2,7 +2,7 @@ using System;
 
 namespace Guppi.Domain.Common
 {
-    public class Sayings
+    public static class Sayings
     {
         static readonly Random _rand = new Random();
 

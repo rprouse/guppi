@@ -8,21 +8,16 @@ using Guppi.Domain.Interfaces;
 
 namespace Guppi.Infrastructure.Services.Weather
 {
-    internal sealed class WeatherService : IWeatherService
+    internal sealed class WeatherService : HttpService, IWeatherService
     {
         const string Command = "weather";
         const string Name = "Weather";
 
         WeatherConfiguration _configuration;
-        HttpClient _client;
 
         public WeatherService()
         {
             _configuration = Configuration.Load<WeatherConfiguration>(Command);
-            _client = new HttpClient();
-            _client.DefaultRequestHeaders.Accept.Clear();
-            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            _client.DefaultRequestHeaders.Add("User-Agent", "Guppi CLI (https://github.com/rprouse/guppi)");
         }
 
         public void Configure()
@@ -37,8 +32,7 @@ namespace Guppi.Infrastructure.Services.Weather
                 throw new UnconfiguredException("Please configure the weather provider");
             }
 
-            string json = await _client.GetStringAsync($"http://api.openweathermap.org/data/2.5/onecall?lat={_configuration.Latitude}&lon={_configuration.Longitude}&appid={_configuration.ApiKey}");
-            var weather = JsonSerializer.Deserialize<WeatherResponse>(json);
+            var weather = await GetData<WeatherResponse>($"http://api.openweathermap.org/data/2.5/onecall?lat={_configuration.Latitude}&lon={_configuration.Longitude}&appid={_configuration.ApiKey}");
             return weather.GetWeather();
         }
 

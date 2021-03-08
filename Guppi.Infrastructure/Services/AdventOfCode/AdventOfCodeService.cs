@@ -1,9 +1,6 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text.Json;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Guppi.Application;
@@ -12,7 +9,7 @@ using Guppi.Domain.Interfaces;
 
 namespace Guppi.Infrastructure.Services.AdventOfCode
 {
-    public class AdventOfCodeService : IAdventOfCodeService
+    public class AdventOfCodeService : HttpService, IAdventOfCodeService
     {
         AdventOfCodeConfiguration _configuration;
 
@@ -33,14 +30,8 @@ namespace Guppi.Infrastructure.Services.AdventOfCode
                 throw new UnconfiguredException("Please configure the Advent of Code provider.");
             }
 
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.Add("User-Agent", "Guppi CLI (https://github.com/rprouse/guppi)");
-            client.DefaultRequestHeaders.Add("Cookie", $"session={_configuration.LoginToken}");
-            string json = await client.GetStringAsync($"https://adventofcode.com/{year}/leaderboard/private/view/{board}.json");
-
-            var leaders = JsonSerializer.Deserialize<Leaderboard>(json);
+            Client.DefaultRequestHeaders.Add("Cookie", $"session={_configuration.LoginToken}");
+            var leaders = await GetData<Leaderboard>($"https://adventofcode.com/{year}/leaderboard/private/view/{board}.json");
             return leaders.GetLeaderboard();
         }
 

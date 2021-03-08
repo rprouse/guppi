@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Guppi.Domain.Entities.Covid
 {
@@ -21,10 +22,22 @@ namespace Guppi.Domain.Entities.Covid
         public Dictionary<DateTime, int> Cases { get; } = new Dictionary<DateTime, int>();
         public Dictionary<DateTime, int> Deaths { get; } = new Dictionary<DateTime, int>();
 
-        public double CasesPerHundredThousand =>
-            LatestCases * 100000d / Population;
+        public int CasesPerHundredThousand =>
+            (int)(LatestCases * 100000d / Population);
 
-        public double DeathsPerHundredThousand =>
-            LatestDeaths * 100000d / Population;
+        public int DeathsPerHundredThousand =>
+            (int)(LatestDeaths * 100000d / Population);
+
+        public int DailyAverageCasesLastSevenDays
+        {
+            get
+            {
+                var latestDate = Cases.Keys.Max();
+                var prevWeek = latestDate.AddDays(-7);
+                int prev = Cases[prevWeek];
+                int current = Cases[latestDate];
+                return (current - prev) / 7;
+            }
+        }
     }
 }

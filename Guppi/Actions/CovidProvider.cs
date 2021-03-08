@@ -52,8 +52,27 @@ namespace Guppi.Console.Actions
 
                 AnsiConsoleHelper.TitleRule($":biohazard: Covid data for {country} days");
 
-                AnsiConsole.MarkupLine($"[white]Cases:  [/][silver]{data.RegionData.LatestCases,8:n0} {data.RegionData.CasesPerHundredThousand,7:0.0}/100k[/]");
-                AnsiConsole.MarkupLine($"[white]Deaths: [/][silver]{data.RegionData.LatestDeaths,8:n0} {data.RegionData.DeathsPerHundredThousand,7:0.0}/100k[/]");
+                AnsiConsole.MarkupLine($"[white]Cases:  [/][silver]{data.RegionData.LatestCases,8:n0} {data.RegionData.CasesPerHundredThousand,7:n0}/100k[/]");
+                AnsiConsole.MarkupLine($"[white]Deaths: [/][silver]{data.RegionData.LatestDeaths,8:n0} {data.RegionData.DeathsPerHundredThousand,7:n0}/100k[/]");
+
+                AnsiConsole.WriteLine();
+
+                var table = new Table();
+                table.AddColumns("", "Cases", "Per 100k", "7D Avg", "Per 100k");
+                table.Columns[0].Alignment(Justify.Left);
+                table.Columns[1].Alignment(Justify.Right);
+                table.Columns[2].Alignment(Justify.Right);
+                table.Columns[3].Alignment(Justify.Right);
+                foreach (var region in data.SubRegionData.Where(d => d.Name != "Unknown").OrderByDescending(d => d.CasesPerHundredThousand))
+                {
+                    table.AddRow(
+                        region.Name, 
+                        region.LatestCases.ToString("n0"), 
+                        region.CasesPerHundredThousand.ToString("n0"), 
+                        region.DailyAverageCasesLastSevenDays.ToString("n0"), 
+                        "");
+                }
+                AnsiConsole.Render(table);
             }
             catch (Exception ue)
             {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 using Guppi.Application.Commands.Hue;
 using Guppi.Application.Extensions;
 using Guppi.Application.Queries.Hue;
+using Guppi.Domain.Entities.Hue;
 using MediatR;
 using Spectre.Console;
 
@@ -116,14 +118,9 @@ namespace Guppi.Console.Actions
                     return;
                 }
                 AnsiConsoleHelper.TitleRule(":light_bulb: Scans are complete. Found lights...");
-
-                foreach (var light in lights)
-                {
-                    AnsiConsole.MarkupLine($"[white]{light.Id,2}: {light.Name,-40}[/] [silver]{(light.On ? $":yellow_circle: {(light.Brightness * 100 / 255)}%" : ":black_circle:")}[/]");
-                }
-                AnsiConsoleHelper.Rule("white");
+                OutputLights(lights);
             }
-            catch(ArgumentException ae)
+            catch (ArgumentException ae)
             {
                 AnsiConsole.MarkupLine($"[red][[:cross_mark: {ae.Message}]][/]");
             }
@@ -136,12 +133,26 @@ namespace Guppi.Console.Actions
             }
         }
 
+        private static void OutputLights(IEnumerable<HueLight> lights)
+        {
+            foreach (var light in lights)
+            {
+                AnsiConsole.MarkupLine($"[white]{light.Id,2}: {light.Name,-40}[/] [silver]{(light.On ? $":yellow_circle: {(light.Brightness * 100 / 255)}% #{light.Color}" : ":black_circle:")}[/]");
+            }
+            AnsiConsoleHelper.Rule("white");
+        }
+
         private async Task Set(string ip, bool on, bool off, bool alert, byte? brightness, string color, uint light)
         {
             try
             {
                 var command = new SetLightCommand { IpAddress = ip, On = on, Off = off, Alert = alert, Brightness = brightness, Color = color, Light = light, WaitForUserInput = WaitForUserInput };
                 await _mediator.Send(command);
+
+                AnsiConsoleHelper.TitleRule(":light_bulb: Roamer systems dispatched. Lights have been adjusted...");
+
+                var lights = await _mediator.Send(new ListLightsQuery { IpAddress = ip, WaitForUserInput = WaitForUserInput });
+                OutputLights(lights);
             }
             catch (ArgumentException ae)
             {

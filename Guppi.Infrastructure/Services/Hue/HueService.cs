@@ -42,7 +42,7 @@ namespace Guppi.Infrastructure.Services.Hue
                 return Enumerable.Empty<HueLight>(); ;
 
             var lights = await _client.GetLightsAsync();
-            return lights.Select(l => new HueLight { Id = l.Id, Name = l.Name, On = l.State.On, Brightness = l.State.Brightness });
+            return lights.Select(l => new HueLight { Id = l.Id, Name = l.Name, On = l.State.On, Brightness = l.State.Brightness, Color = l.ToHex(), Type = l.Type });
         }
 
         public async Task Set(string ip, bool on, bool off, bool alert, byte? brightness, string color, uint light)

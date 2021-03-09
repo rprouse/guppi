@@ -9,5 +9,9 @@ namespace Guppi.Domain.Entities.Hue
         public bool On { get; set; }
 
         public byte Brightness { get; set; }
+
+        public string Color { get; set; }
+
+        public string Type { get; set; }
     }
 }

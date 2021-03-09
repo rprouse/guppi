@@ -79,7 +79,7 @@ namespace Guppi.Console.Actions
         {
             var table = new Table();
             table.Border = TableBorder.Minimal;
-            table.AddColumns("", "Total Reported", "Per 100k", "Daily Reported", "Weekly Trend");
+            table.AddColumns("", "Total Reported", "Per 100k", data.RegionData.LatestDate.ToString("yyyy-MM-dd"), "Weekly Trend");
             table.Columns[0].LeftAligned();
             table.Columns[1].RightAligned();
             table.Columns[2].RightAligned();

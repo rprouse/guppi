@@ -3,6 +3,7 @@ using System.CommandLine;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Guppi.Application.Extensions;
 using Guppi.Console.Actions;
 using Guppi.Domain.Common;
 using Spectre.Console;
@@ -29,7 +30,7 @@ namespace Alteridem.Guppi
 
         public async Task Run(string[] args)
         {
-            AnsiConsole.MarkupLine("[gold3_1]{0}[/]", Sayings.Affirmative().EscapeMarkup());
+            AnsiConsoleHelper.TitleRule(Sayings.Affirmative().EscapeMarkup(), "gold3_1");
             AnsiConsole.WriteLine();
 
             await _rootCommand.InvokeAsync(args);

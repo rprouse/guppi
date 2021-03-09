@@ -11,11 +11,11 @@ namespace Guppi.Application.Extensions
             AnsiConsole.Render(rule);
         }
 
-        public static void TitleRule(string title)
+        public static void TitleRule(string title, string color = "white")
         {
-            var rule = new Rule($"[white][[{title}]][/]");
+            var rule = new Rule($"[{color}][[{title}]][/]");
             rule.Alignment = Justify.Left;
-            rule.RuleStyle("white");
+            rule.RuleStyle(color);
             AnsiConsole.Render(rule);
             AnsiConsole.WriteLine();
         }

@@ -2,10 +2,10 @@ using Guppi.Domain.Entities.Covid;
 
 namespace Guppi.Domain.Common
 {
-    public static class Countries
+    public static class CountriesExtensions
     {
-        public static Country GetCountry(string country) =>
-            country.ToLower() switch
+        public static Country GetCountry(this string country) =>
+            country?.ToLower() switch
             {
                 "canada" => Country.CAN,
                 "brazil" => Country.BRA,

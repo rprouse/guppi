@@ -41,7 +41,7 @@ namespace Guppi.Console.Actions
         {
             try
             {
-                var c = Countries.GetCountry(country);
+                var c = country.GetCountry();
                 if (c == Country.Unknown)
                 {
                     AnsiConsole.MarkupLine($"[red][[:cross_mark: Could not find country ${country}]][/]");

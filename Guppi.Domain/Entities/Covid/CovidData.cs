@@ -98,7 +98,7 @@ namespace Guppi.Domain.Entities.Covid
                     if (Cases.Count > 0)
                     {
                         var latestDate = Cases.Keys.Max().AddDays(-7);
-                        var prevWeek = latestDate.AddDays(-14);
+                        var prevWeek = latestDate.AddDays(-7);
                         int prev = Cases[prevWeek];
                         int current = Cases[latestDate];
                         _dailyAverageCasesPreviousSevenDays = (current - prev) / 7;
@@ -123,7 +123,7 @@ namespace Guppi.Domain.Entities.Covid
                     if (Deaths.Count > 0)
                     {
                         var lastDay = Deaths.Keys.Max().AddDays(-7);
-                        var prevWeek = lastDay.AddDays(-14);
+                        var prevWeek = lastDay.AddDays(-7);
                         int prev = Deaths[prevWeek];
                         int current = Deaths[lastDay];
                         _dailyAverageDeathsPreviousSevenDays = (current - prev) / 7;

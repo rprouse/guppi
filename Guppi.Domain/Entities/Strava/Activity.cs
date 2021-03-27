@@ -2,7 +2,7 @@ using System;
 
 namespace Guppi.Domain.Entities.Strava
 {
-    public record StravaActivity
+    public record Activity
     {
         public long Id { get; init; }
         public string Name { get; init; }

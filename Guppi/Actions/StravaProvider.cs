@@ -49,7 +49,7 @@ namespace Guppi.Console.Actions
         {
             try
             {
-                IEnumerable<StravaActivity> activities = await _mediator.Send(new GetActivitiesQuery());
+                IEnumerable<Activity> activities = await _mediator.Send(new GetActivitiesQuery());
 
                 AnsiConsoleHelper.TitleRule($":person_biking: Fitness activities from the last {days} days");
 

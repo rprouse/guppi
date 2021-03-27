@@ -18,11 +18,11 @@ using MediatR;
 
 namespace Guppi.Application.Queries.Strava
 {
-    public sealed class GetActivitiesQuery : IRequest<IEnumerable<StravaActivity>>
+    public sealed class GetActivitiesQuery : IRequest<IEnumerable<Domain.Entities.Strava.Activity>>
     {
     }
 
-    internal sealed class GetActivitiesQueryHandler : IRequestHandler<GetActivitiesQuery, IEnumerable<StravaActivity>>
+    internal sealed class GetActivitiesQueryHandler : IRequestHandler<GetActivitiesQuery, IEnumerable<Domain.Entities.Strava.Activity>>
     {
         private readonly IHttpRestService _restService;
         private readonly StravaConfiguration _configuration;
@@ -33,7 +33,7 @@ namespace Guppi.Application.Queries.Strava
             _configuration = Configuration.Load<StravaConfiguration>("strava");
         }
 
-        public async Task<IEnumerable<StravaActivity>> Handle(GetActivitiesQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Domain.Entities.Strava.Activity>> Handle(GetActivitiesQuery request, CancellationToken cancellationToken)
         {
             if (!Configured)
             {
@@ -54,7 +54,7 @@ namespace Guppi.Application.Queries.Strava
 
             TimeSpan t = DateTime.UtcNow.AddDays(-90) - new DateTime(1970, 1, 1);
             int epoch = (int)t.TotalSeconds;
-            var activities = await _restService.GetData<List<Activity>>($"https://www.strava.com/api/v3/athlete/activities?after={epoch}&per_page=100");
+            var activities = await _restService.GetData<List<StravaActivity>>($"https://www.strava.com/api/v3/athlete/activities?after={epoch}&per_page=100");
             return activities.Select(a => a.GetActivity());
         }
 

@@ -1,6 +1,7 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Guppi.Domain.Interfaces;
+using Guppi.Infrastructure.Services;
 using Guppi.Infrastructure.Services.AdventOfCode;
 using Guppi.Infrastructure.Services.Calendar;
 using Guppi.Infrastructure.Services.Covid;
@@ -8,7 +9,6 @@ using Guppi.Infrastructure.Services.Git;
 using Guppi.Infrastructure.Services.Hue;
 using Guppi.Infrastructure.Services.Notes;
 using Guppi.Infrastructure.Services.Strava;
-using Guppi.Infrastructure.Services.Weather;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Guppi.Infrastructure
@@ -30,10 +30,9 @@ namespace Guppi.Infrastructure
                 .AddTransient<ICalendarService, CalendarService>()
                 .AddTransient<ICovidService, CovidService>()
                 .AddTransient<IGitService, GitService>()
-                .AddTransient<IHttpRestService, IHttpRestService>()
+                .AddTransient<IHttpRestService, HttpRestService>()
                 .AddTransient<IHueService, HueService>()
                 .AddTransient<INotesService, NotesService>()
-                .AddTransient<IStravaService, StravaService>()
-                .AddTransient<IWeatherService, WeatherService>();
+                .AddTransient<IStravaService, StravaService>();
     }
 }

@@ -1,9 +1,8 @@
-using Guppi.Application;
 using Guppi.Application.Attributes;
 
-namespace Guppi.Infrastructure.Services.Weather
+namespace Guppi.Application.Configurations
 {
-    class WeatherConfiguration : Configuration
+    public class WeatherConfiguration : Configuration
     {
         [Display("API Key")]
         public string ApiKey { get; set; }

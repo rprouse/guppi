@@ -15,16 +15,17 @@ using Guppi.Domain.Interfaces;
 
 namespace Guppi.Infrastructure.Services.Strava
 {
-    public class StravaService : HttpService, IStravaService
+    public class StravaService : IStravaService
     {
         const string Command = "strava";
         const string Name = "strava";
-
+        private readonly IHttpRestService _restService;
         StravaConfiguration _configuration;
 
-        public StravaService()
+        public StravaService(IHttpRestService restService)
         {
             _configuration = Configuration.Load<StravaConfiguration>(Command);
+            _restService = restService;
         }
 
         public void Configure()
@@ -49,11 +50,11 @@ namespace Guppi.Infrastructure.Services.Strava
                 access_token = await GetAccessToken(null, _configuration.RefreshToken, "refresh_token");
             }
 
-            Client.DefaultRequestHeaders.Add("Authorization", $"Bearer {access_token}");
+            _restService.AddHeader("Authorization", $"Bearer {access_token}");
 
             TimeSpan t = DateTime.UtcNow.AddDays(-90) - new DateTime(1970, 1, 1);
             int epoch = (int)t.TotalSeconds;
-            var activities = await GetData<List<Activity>>($"https://www.strava.com/api/v3/athlete/activities?after={epoch}&per_page=100");
+            var activities = await _restService.GetData<List<Activity>>($"https://www.strava.com/api/v3/athlete/activities?after={epoch}&per_page=100");
             return activities.Select(a => a.GetActivity());
         }
 
@@ -147,7 +148,7 @@ namespace Guppi.Infrastructure.Services.Strava
                     Headers = { ContentType = new MediaTypeHeaderValue("application/json") }
                 }
             };
-            using var response = await Client.SendAsync(request);
+            using var response = await _restService.SendAsync(request);
 
             if (response.StatusCode == HttpStatusCode.BadRequest)
             {

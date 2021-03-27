@@ -9,13 +9,15 @@ using Guppi.Domain.Interfaces;
 
 namespace Guppi.Infrastructure.Services.AdventOfCode
 {
-    public class AdventOfCodeService : HttpService, IAdventOfCodeService
+    public class AdventOfCodeService : IAdventOfCodeService
     {
         AdventOfCodeConfiguration _configuration;
+        private readonly IHttpRestService _restService;
 
-        public AdventOfCodeService()
+        public AdventOfCodeService(IHttpRestService restService)
         {
             _configuration = Configuration.Load<AdventOfCodeConfiguration>("AdventOfCode");
+            _restService = restService;
         }
 
         public void Configure()
@@ -30,8 +32,8 @@ namespace Guppi.Infrastructure.Services.AdventOfCode
                 throw new UnconfiguredException("Please configure the Advent of Code provider.");
             }
 
-            Client.DefaultRequestHeaders.Add("Cookie", $"session={_configuration.LoginToken}");
-            var leaders = await GetData<Leaderboard>($"https://adventofcode.com/{year}/leaderboard/private/view/{board}.json");
+            _restService.AddHeader("Cookie", $"session={_configuration.LoginToken}");
+            var leaders = await _restService.GetData<Leaderboard>($"https://adventofcode.com/{year}/leaderboard/private/view/{board}.json");
             return leaders.GetLeaderboard();
         }
 

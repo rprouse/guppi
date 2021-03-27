@@ -1,6 +1,3 @@
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Guppi.Application;
 using Guppi.Application.Exceptions;
@@ -8,16 +5,17 @@ using Guppi.Domain.Interfaces;
 
 namespace Guppi.Infrastructure.Services.Weather
 {
-    internal sealed class WeatherService : HttpService, IWeatherService
+    internal sealed class WeatherService : IWeatherService
     {
         const string Command = "weather";
         const string Name = "Weather";
-
+        private readonly IHttpRestService _restService;
         WeatherConfiguration _configuration;
 
-        public WeatherService()
+        public WeatherService(IHttpRestService restService)
         {
             _configuration = Configuration.Load<WeatherConfiguration>(Command);
+            _restService = restService;
         }
 
         public void Configure()
@@ -32,7 +30,7 @@ namespace Guppi.Infrastructure.Services.Weather
                 throw new UnconfiguredException("Please configure the weather provider");
             }
 
-            var weather = await GetData<WeatherResponse>($"http://api.openweathermap.org/data/2.5/onecall?lat={_configuration.Latitude}&lon={_configuration.Longitude}&appid={_configuration.ApiKey}");
+            var weather = await _restService.GetData<WeatherResponse>($"http://api.openweathermap.org/data/2.5/onecall?lat={_configuration.Latitude}&lon={_configuration.Longitude}&appid={_configuration.ApiKey}");
             return weather.GetWeather();
         }
 

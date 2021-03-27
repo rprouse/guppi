@@ -4,7 +4,6 @@ using Guppi.Domain.Interfaces;
 using Guppi.Infrastructure.Services;
 using Guppi.Infrastructure.Services.AdventOfCode;
 using Guppi.Infrastructure.Services.Calendar;
-using Guppi.Infrastructure.Services.Covid;
 using Guppi.Infrastructure.Services.Git;
 using Guppi.Infrastructure.Services.Hue;
 using Guppi.Infrastructure.Services.Notes;
@@ -28,7 +27,6 @@ namespace Guppi.Infrastructure
                 })
                 .AddTransient<IAdventOfCodeService, AdventOfCodeService>()
                 .AddTransient<ICalendarService, CalendarService>()
-                .AddTransient<ICovidService, CovidService>()
                 .AddTransient<IGitService, GitService>()
                 .AddTransient<IHttpRestService, HttpRestService>()
                 .AddTransient<IHueService, HueService>()

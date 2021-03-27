@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using Guppi.Domain.Entities.Covid;
 
-namespace Guppi.Infrastructure.Services.Covid
+namespace Guppi.Application.Queries.Covid
 {
 #pragma warning disable IDE1006 // Naming Styles
     public class NyTimesCovidData

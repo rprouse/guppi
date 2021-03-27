@@ -1,7 +1,6 @@
-using Guppi.Application;
 using Guppi.Application.Attributes;
 
-namespace Guppi.Infrastructure.Services.Notes
+namespace Guppi.Application.Configurations
 {
     public class NotesConfiguration : Configuration
     {

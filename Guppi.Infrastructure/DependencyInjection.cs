@@ -5,7 +5,6 @@ using Guppi.Infrastructure.Services;
 using Guppi.Infrastructure.Services.Calendar;
 using Guppi.Infrastructure.Services.Git;
 using Guppi.Infrastructure.Services.Hue;
-using Guppi.Infrastructure.Services.Notes;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Guppi.Infrastructure
@@ -26,7 +25,6 @@ namespace Guppi.Infrastructure
                 .AddTransient<ICalendarService, CalendarService>()
                 .AddTransient<IGitService, GitService>()
                 .AddTransient<IHttpRestService, HttpRestService>()
-                .AddTransient<IHueService, HueService>()
-                .AddTransient<INotesService, NotesService>();
+                .AddTransient<IHueService, HueService>();
     }
 }

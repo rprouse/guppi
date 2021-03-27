@@ -1,7 +1,6 @@
-using Guppi.Application;
 using Guppi.Application.Attributes;
 
-namespace Guppi.Infrastructure.Services.Hue
+namespace Guppi.Application.Configurations
 {
     public class HueConfiguration : Configuration
     {

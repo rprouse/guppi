@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Guppi.Application.Configurations;
 using Guppi.Domain.Interfaces;
 using MediatR;
 
@@ -20,7 +21,8 @@ namespace Guppi.Application.Commands.Hue
 
         public async Task<Unit> Handle(ConfigureHueCommand request, CancellationToken cancellationToken)
         {
-            _hueService.Configure();
+            var configuration = Configuration.Load<HueConfiguration>("hue");
+            configuration.RunConfiguration("Hue Lights", "Enter your default light");
             return await Unit.Task;
         }
     }

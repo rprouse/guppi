@@ -20,12 +20,6 @@ namespace Guppi.Infrastructure.Services.Hue
         string _key;
         ILocalHueClient _client;
         readonly RGBColor _black = new RGBColor("000000");
-        HueConfiguration _configuration;
-
-        public HueService()
-        {
-            _configuration = Configuration.Load<HueConfiguration>("hue");
-        }
 
         public Action<string> WaitForUserInput { get; set; } = null;
 
@@ -93,14 +87,6 @@ namespace Guppi.Infrastructure.Services.Hue
             _client = Initialize(bridge);
             return true;
         }
-
-        public void Configure()
-        {
-            _configuration.RunConfiguration("Hue Lights", "Enter your default light");
-        }
-
-        public uint GetDefaultLight() =>
-            _configuration.GetDefaultLight();
 
         async Task<string> Register(LocatedBridge bridge)
         {

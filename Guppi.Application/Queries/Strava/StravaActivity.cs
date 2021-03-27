@@ -1,10 +1,10 @@
 using System;
 using Guppi.Domain.Entities.Strava;
 
-namespace Guppi.Infrastructure.Services.Strava
+namespace Guppi.Application.Queries.Strava
 {
 #pragma warning disable IDE1006 // Naming Styles
-    public class Activity
+    public class StravaActivity
     {
         public int resource_state { get; set; }
         public Athlete athlete { get; set; }
@@ -56,8 +56,8 @@ namespace Guppi.Infrastructure.Services.Strava
         public bool has_kudoed { get; set; }
         public double? suffer_score { get; set; }
 
-        public StravaActivity GetActivity() =>
-            new StravaActivity
+        public Activity GetActivity() =>
+            new Activity
             {
                 Id = id,
                 Name = name,

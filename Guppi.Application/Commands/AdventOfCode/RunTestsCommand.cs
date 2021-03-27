@@ -1,6 +1,9 @@
+using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Guppi.Domain.Interfaces;
+using Guppi.Application.Configurations;
+using Guppi.Application.Exceptions;
 using MediatR;
 
 namespace Guppi.Application.Commands.AdventOfCode
@@ -14,17 +17,30 @@ namespace Guppi.Application.Commands.AdventOfCode
 
     internal sealed class RunTestsCommandHandler : IRequestHandler<RunTestsCommand>
     {
-        private readonly IAdventOfCodeService _aocService;
-
-        public RunTestsCommandHandler(IAdventOfCodeService aocService)
-        {
-            _aocService = aocService;
-        }
-
         public async Task<Unit> Handle(RunTestsCommand request, CancellationToken cancellationToken)
         {
-            _aocService.RunTests(request.Year, request.Day);
+            var configuration = Configuration.Load<AdventOfCodeConfiguration>("AdventOfCode");
+
+            string dir = Path.Combine(configuration.SolutionDirectory, $"AdventOfCode{request.Year}");
+            if (!Directory.Exists(dir))
+            {
+                throw new UnconfiguredException($"Project {dir} does not exist.");
+            }
+
+            var psi = new ProcessStartInfo
+            {
+                FileName = "dotnet",
+                Arguments = "test" + GetTestFilter(request.Year, request.Day),
+                WorkingDirectory = dir,
+                UseShellExecute = false
+            };
+            var test = Process.Start(psi);
+            test.WaitForExit();
+
             return await Unit.Task;
         }
+
+        static string GetTestFilter(int year, int day) =>
+            day == 0 ? "" : $" --filter FullyQualifiedName=AdventOfCode{year}.Day{day:00}Tests";
     }
 }

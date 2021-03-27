@@ -1,6 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Guppi.Domain.Interfaces;
+using Guppi.Application.Configurations;
 using MediatR;
 
 namespace Guppi.Application.Commands.Weather
@@ -11,16 +11,10 @@ namespace Guppi.Application.Commands.Weather
 
     internal sealed class ConfigureWeatherCommandHandler : IRequestHandler<ConfigureWeatherCommand>
     {
-        private readonly IWeatherService _weatherService;
-
-        public ConfigureWeatherCommandHandler(IWeatherService weatherService)
-        {
-            _weatherService = weatherService;
-        }
-
         public async Task<Unit> Handle(ConfigureWeatherCommand request, CancellationToken cancellationToken)
         {
-            _weatherService.Configure();
+            var configuration = Configuration.Load<WeatherConfiguration>("weather");
+            configuration.RunConfiguration("Weather", "Enter the OpenWeather API key and your location");
             return await Unit.Task;
         }
     }

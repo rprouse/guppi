@@ -1,7 +1,6 @@
-using Guppi.Application;
 using Guppi.Application.Attributes;
 
-namespace Guppi.Infrastructure.Services.AdventOfCode
+namespace Guppi.Application.Configurations
 {
     class AdventOfCodeConfiguration : Configuration
     {

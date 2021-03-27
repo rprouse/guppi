@@ -1,7 +1,7 @@
 using Guppi.Application;
 using Guppi.Application.Attributes;
 
-namespace Guppi.Infrastructure.Services.Strava
+namespace Guppi.Application.Configurations
 {
     public class StravaConfiguration : Configuration
     {

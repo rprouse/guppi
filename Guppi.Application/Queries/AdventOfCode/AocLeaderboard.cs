@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 
-namespace Guppi.Infrastructure.Services.AdventOfCode
+namespace Guppi.Application.Queries.AdventOfCode
 {
 #pragma warning disable IDE1006 // Naming Styles
-    internal class Leaderboard
+    internal class AocLeaderboard
     {
         public string year { get; set; }
         public string owner_id { get; set; }

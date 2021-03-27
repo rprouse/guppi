@@ -18,9 +18,5 @@ namespace Guppi.Domain.Interfaces
         Task<bool> Register(string ip = null);
 
         Action<string> WaitForUserInput { get; set; }
-
-        void Configure();
-
-        uint GetDefaultLight();
     }
 }

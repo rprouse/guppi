@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Spectre.Console;
 
-namespace Guppi.Infrastructure.Services.Weather
+namespace Guppi.Application.Queries.Weather
 {
     /// <summary>
     /// Used for converting OpenWeatherMap icons

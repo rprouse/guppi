@@ -1,6 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Guppi.Domain.Interfaces;
+using Guppi.Application.Configurations;
 using MediatR;
 
 namespace Guppi.Application.Commands.AdventOfCode
@@ -12,16 +12,10 @@ namespace Guppi.Application.Commands.AdventOfCode
 
     internal sealed class ConfigureAocCommandHandler : IRequestHandler<ConfigureAocCommand>
     {
-        private readonly IAdventOfCodeService _aocService;
-
-        public ConfigureAocCommandHandler(IAdventOfCodeService aocService)
-        {
-            _aocService = aocService;
-        }
-
         public async Task<Unit> Handle(ConfigureAocCommand request, CancellationToken cancellationToken)
         {
-            _aocService.Configure();
+            var configuration = Configuration.Load<AdventOfCodeConfiguration>("AdventOfCode");
+            configuration.RunConfiguration("Advent of Code", "Enter the Advent of Code session cookie value.");
             return await Unit.Task;
         }
     }

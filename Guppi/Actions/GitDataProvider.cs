@@ -57,7 +57,7 @@ namespace Guppi.Console.Actions
             {
                 AnsiConsole.MarkupLine($"[yellow][[:yellow_circle: {ex.Message}]][/]");
             }
-            catch(UnconfiguredException ex)
+            catch(UnconfiguredException)
             {
                 AnsiConsole.MarkupLine("[yellow][[:yellow_circle: The current directory is not a git repository.]][/]");
                 AnsiConsole.MarkupLine("[silver][[Make sure you are in the root of the repository.]][/]");

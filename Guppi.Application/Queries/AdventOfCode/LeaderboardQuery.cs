@@ -1,5 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Guppi.Application.Configurations;
+using Guppi.Application.Exceptions;
 using Guppi.Domain.Entities.AdventOfCode;
 using Guppi.Domain.Interfaces;
 using MediatR;
@@ -15,14 +17,24 @@ namespace Guppi.Application.Queries.AdventOfCode
 
     internal sealed class LeaderboardQueryHandler : IRequestHandler<LeaderboardQuery, Leaderboard>
     {
-        private readonly IAdventOfCodeService _aocService;
+        private readonly IHttpRestService _restService;
 
-        public LeaderboardQueryHandler(IAdventOfCodeService aocService)
+        public LeaderboardQueryHandler(IHttpRestService restService)
         {
-            _aocService = aocService;
+            _restService = restService;
         }
 
-        public async Task<Leaderboard> Handle(LeaderboardQuery request, CancellationToken cancellationToken) =>
-            await _aocService.GetLeaderboard(request.Year, request.Board);
+        public async Task<Leaderboard> Handle(LeaderboardQuery request, CancellationToken cancellationToken)
+        {
+            var configuration = Configuration.Load<AdventOfCodeConfiguration>("AdventOfCode");
+            if (!configuration.Configured)
+            {
+                throw new UnconfiguredException("Please configure the Advent of Code provider.");
+            }
+
+            _restService.AddHeader("Cookie", $"session={configuration.LoginToken}");
+            var leaders = await _restService.GetData<AocLeaderboard>($"https://adventofcode.com/{request.Year}/leaderboard/private/view/{request.Board}.json");
+            return leaders.GetLeaderboard();
+        }
     }
 }

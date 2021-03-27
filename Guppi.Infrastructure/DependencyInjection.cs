@@ -2,7 +2,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Guppi.Domain.Interfaces;
 using Guppi.Infrastructure.Services;
-using Guppi.Infrastructure.Services.AdventOfCode;
 using Guppi.Infrastructure.Services.Calendar;
 using Guppi.Infrastructure.Services.Git;
 using Guppi.Infrastructure.Services.Hue;
@@ -25,7 +24,6 @@ namespace Guppi.Infrastructure
                     client.DefaultRequestHeaders.Add("User-Agent", "Guppi CLI (https://github.com/rprouse/guppi)");
                     return client;
                 })
-                .AddTransient<IAdventOfCodeService, AdventOfCodeService>()
                 .AddTransient<ICalendarService, CalendarService>()
                 .AddTransient<IGitService, GitService>()
                 .AddTransient<IHttpRestService, HttpRestService>()

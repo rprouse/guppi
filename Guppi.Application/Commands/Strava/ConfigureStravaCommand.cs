@@ -1,6 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Guppi.Domain.Interfaces;
+using Guppi.Application.Configurations;
 using MediatR;
 
 namespace Guppi.Application.Commands.Strava
@@ -11,16 +11,10 @@ namespace Guppi.Application.Commands.Strava
 
     internal sealed class ConfigureStravaCommandHandler : IRequestHandler<ConfigureStravaCommand>
     {
-        private readonly IStravaService _stravaService;
-
-        public ConfigureStravaCommandHandler(IStravaService stravaService)
-        {
-            _stravaService = stravaService;
-        }
-
         public async Task<Unit> Handle(ConfigureStravaCommand request, CancellationToken cancellationToken)
         {
-            _stravaService.Configure();
+            var configuration = Configuration.Load<StravaConfiguration>("strava");
+            configuration.RunConfiguration("Strava", "Enter the Strava Client Id and Secret");
             return await Unit.Task;
         }
     }

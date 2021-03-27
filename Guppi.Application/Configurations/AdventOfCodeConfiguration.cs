@@ -1,4 +1,3 @@
-using Guppi.Application;
 using Guppi.Application.Attributes;
 
 namespace Guppi.Application.Configurations

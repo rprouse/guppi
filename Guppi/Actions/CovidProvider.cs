@@ -85,16 +85,16 @@ namespace Guppi.Console.Actions
             table.Columns[2].RightAligned();
             table.Columns[3].RightAligned();
             table.Columns[4].RightAligned();
-            string casesColor = data.RegionData.CasesWeeklyTrend > 0 ? "[red]" : "[green]";
+            string casesColor = data.RegionData.CasesWeeklyTrend > 0 ? "[red]↗ " : "[green]↘ ";
             table.AddRow(
                 "[white]Cases[/]",
                 data.RegionData.LatestCases.ToString("n0"),
                 data.RegionData.CasesPerHundredThousand.ToString("n0"),
-                data.RegionData.LastReportedCases.ToString("n0"),
+                data.RegionData.LastReportedCases.ToString("n0")
                 casesColor + data.RegionData.CasesWeeklyTrend + "%[/]"
                 );
 
-            string deathsColor = data.RegionData.DeathsWeeklyTrend > 0 ? "[red]" : "[green]";
+            string deathsColor = data.RegionData.DeathsWeeklyTrend > 0 ? "[red]↗ " : "[green]↘ ";
             table.AddRow(
                 "[white]Deaths[/]",
                 data.RegionData.LatestDeaths.ToString("n0"),

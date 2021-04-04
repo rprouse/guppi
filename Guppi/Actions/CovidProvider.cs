@@ -90,7 +90,7 @@ namespace Guppi.Console.Actions
                 "[white]Cases[/]",
                 data.RegionData.LatestCases.ToString("n0"),
                 data.RegionData.CasesPerHundredThousand.ToString("n0"),
-                data.RegionData.LastReportedCases.ToString("n0")
+                data.RegionData.LastReportedCases.ToString("n0"),
                 casesColor + data.RegionData.CasesWeeklyTrend + "%[/]"
                 );
 

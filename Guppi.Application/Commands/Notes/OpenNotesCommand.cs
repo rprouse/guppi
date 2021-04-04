@@ -1,11 +1,11 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Guppi.Application.Configurations;
 using Guppi.Application.Exceptions;
+using Guppi.Domain.Interfaces;
 using MediatR;
 
 namespace Guppi.Application.Commands.Notes
@@ -14,6 +14,13 @@ namespace Guppi.Application.Commands.Notes
 
     internal sealed class OpenNotesCommandHandler : IRequestHandler<OpenNotesCommand>
     {
+        private readonly IProcessService _process;
+
+        public OpenNotesCommandHandler(IProcessService process)
+        {
+            _process = process;
+        }
+
         public async Task<Unit> Handle(OpenNotesCommand request, CancellationToken cancellationToken)
         {
             var configuration = Configuration.Load<NotesConfiguration>("notes");
@@ -42,12 +49,7 @@ namespace Guppi.Application.Commands.Notes
                 $"\"{configuration.NotesDirectory}\"" :
                 $"-g \"{fullname}:3\" \"{configuration.NotesDirectory}\"";
 
-            var psi = new ProcessStartInfo
-            {
-                FileName = cmd,
-                Arguments = args
-            };
-            Process.Start(psi);
+            _process.Start(cmd, args);
             return await Unit.Task;
         }
     }

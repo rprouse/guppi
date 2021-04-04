@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -12,7 +11,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Guppi.Application.Configurations;
 using Guppi.Application.Exceptions;
-using Guppi.Domain.Entities.Strava;
 using Guppi.Domain.Interfaces;
 using MediatR;
 
@@ -25,11 +23,13 @@ namespace Guppi.Application.Queries.Strava
     internal sealed class GetActivitiesQueryHandler : IRequestHandler<GetActivitiesQuery, IEnumerable<Domain.Entities.Strava.Activity>>
     {
         private readonly IHttpRestService _restService;
+        private readonly IProcessService _processService;
         private readonly StravaConfiguration _configuration;
 
-        public GetActivitiesQueryHandler(IHttpRestService restService)
+        public GetActivitiesQueryHandler(IHttpRestService restService, IProcessService processService)
         {
-            _restService = restService; 
+            _restService = restService;
+            _processService = processService;
             _configuration = Configuration.Load<StravaConfiguration>("strava");
         }
 
@@ -104,7 +104,7 @@ namespace Guppi.Application.Queries.Strava
         {
             try
             {
-                Process.Start(url);
+                _processService.Start(url);
             }
             catch
             {
@@ -112,15 +112,15 @@ namespace Guppi.Application.Queries.Strava
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
                     url = url.Replace("&", "^&");
-                    Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
+                    _processService.Start("cmd", $"/c start {url}");
                 }
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
-                    Process.Start("xdg-open", url);
+                    _processService.Start("xdg-open", url);
                 }
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 {
-                    Process.Start("open", url);
+                    _processService.Start("open", url);
                 }
                 else
                 {

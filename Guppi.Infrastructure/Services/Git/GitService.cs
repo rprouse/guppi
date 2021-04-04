@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Guppi.Application.Exceptions;
 using Guppi.Domain.Interfaces;
 using LibGit2Sharp;
@@ -8,19 +7,16 @@ namespace Guppi.Infrastructure.Services.Git
     public class GitService : IGitService
     {
         const string WorkingDirectory = ".";
-        //const string WorkingDirectory = @"C:\Src\Reliq\aws-cli-s3-deploy";
+        private readonly IProcessService _process;
+
+        public GitService(IProcessService process)
+        {
+            _process = process;
+        }
 
         public void RunGit(string args)
         {
-            var psi = new ProcessStartInfo
-            {
-                FileName = "git",
-                Arguments = args,
-                WorkingDirectory = WorkingDirectory,
-                UseShellExecute = false
-            };
-            var test = Process.Start(psi);
-            test.WaitForExit();
+            _process.Start("git", args, WorkingDirectory, true);
         }
 
         public void SwitchToBranch(string branchName)

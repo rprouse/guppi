@@ -25,6 +25,7 @@ namespace Guppi.Infrastructure
                 .AddTransient<ICalendarService, CalendarService>()
                 .AddTransient<IGitService, GitService>()
                 .AddTransient<IHttpRestService, HttpRestService>()
-                .AddTransient<IHueService, HueService>();
+                .AddTransient<IHueService, HueService>()
+                .AddTransient<IProcessService, ProcessService>();
     }
 }

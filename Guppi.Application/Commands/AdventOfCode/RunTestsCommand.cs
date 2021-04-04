@@ -1,9 +1,9 @@
-using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Guppi.Application.Configurations;
 using Guppi.Application.Exceptions;
+using Guppi.Domain.Interfaces;
 using MediatR;
 
 namespace Guppi.Application.Commands.AdventOfCode
@@ -17,26 +17,22 @@ namespace Guppi.Application.Commands.AdventOfCode
 
     internal sealed class RunTestsCommandHandler : IRequestHandler<RunTestsCommand>
     {
+        private readonly IProcessService _process;
+
+        public RunTestsCommandHandler(IProcessService process)
+        {
+            _process = process;
+        }
+
         public async Task<Unit> Handle(RunTestsCommand request, CancellationToken cancellationToken)
         {
             var configuration = Configuration.Load<AdventOfCodeConfiguration>("AdventOfCode");
-
             string dir = Path.Combine(configuration.SolutionDirectory, $"AdventOfCode{request.Year}");
             if (!Directory.Exists(dir))
             {
                 throw new UnconfiguredException($"Project {dir} does not exist.");
             }
-
-            var psi = new ProcessStartInfo
-            {
-                FileName = "dotnet",
-                Arguments = "test" + GetTestFilter(request.Year, request.Day),
-                WorkingDirectory = dir,
-                UseShellExecute = false
-            };
-            var test = Process.Start(psi);
-            test.WaitForExit();
-
+            _process.Start("dotnet", "test" + GetTestFilter(request.Year, request.Day), dir, true);
             return await Unit.Task;
         }
 

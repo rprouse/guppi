@@ -28,7 +28,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: nupkg
-        path: Guppi/nupkg/*.nupkg
+        path: Guppi.Console/nupkg/*.nupkg
 
   publish:
     runs-on: ubuntu-latest

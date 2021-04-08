@@ -27,6 +27,6 @@ namespace Guppi.Infrastructure
                 .AddTransient<IHttpRestService, HttpRestService>()
                 .AddTransient<IHueService, HueService>()
                 .AddTransient<IProcessService, ProcessService>()
-                .AddTransient<ISpeechService, SpeechService>();
+                .AddSingleton<ISpeechService, SpeechService>();
     }
 }

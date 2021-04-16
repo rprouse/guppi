@@ -43,7 +43,7 @@ namespace Guppi.Application.Commands.Notes
             bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
             string cmd = isWindows ?
-                         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Programs\Microsoft VS Code\Code.exe") :
+                         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Programs\Microsoft VS Code\bin\Code.cmd") :
                          "/usr/bin/code";
             string args = request.NoCreate ?
                 $"\"{configuration.NotesDirectory}\"" :

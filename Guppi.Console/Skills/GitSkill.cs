@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Threading.Tasks;
@@ -6,18 +7,18 @@ using Guppi.Application.Exceptions;
 using MediatR;
 using Spectre.Console;
 
-namespace Guppi.Console.Actions
+namespace Guppi.Console.Skills
 {
-    public class GitDataProvider : IActionProvider
+    public class GitSkill : ISkill
     {
         private readonly IMediator _mediator;
 
-        public GitDataProvider(IMediator mediator)
+        public GitSkill(IMediator mediator)
         {
             _mediator = mediator;
         }
 
-        public Command GetCommand()
+        public IEnumerable<Command> GetCommands()
         {
             var amend = new Command("ammend", "Adds any steged files to the last git commit using the same message");
             amend.Handler = CommandHandler.Create(async () => await Ammend());
@@ -37,12 +38,15 @@ namespace Guppi.Console.Actions
             };
             update.Handler = CommandHandler.Create(async (string branch) => await Update(branch));
 
-            return new Command("git", "Helpful git extensions")
+            return new[] 
             {
-                amend,
-                undo,
-                unstage,
-                update,
+                new Command("git", "Helpful git extensions")
+                {
+                    amend,
+                    undo,
+                    unstage,
+                    update,
+                }
             };
         }
 

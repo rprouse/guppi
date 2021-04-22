@@ -1,22 +1,23 @@
 using System;
+using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Threading.Tasks;
 using Guppi.Application.Commands.Notes;
 using MediatR;
 
-namespace Guppi.Console.Actions
+namespace Guppi.Console.Skills
 {
-    public class NotesProvider : IActionProvider
+    public class NotesSkill : ISkill
     {
         private readonly IMediator _mediator;
 
-        public NotesProvider(IMediator mediator)
+        public NotesSkill(IMediator mediator)
         {
             _mediator = mediator;
         }
 
-        public Command GetCommand()
+        public IEnumerable<Command> GetCommands()
         {
             var notes = new Command("notes", "Opens the notes directory and creates a new note for today if it doesn't exist.")
             {
@@ -25,7 +26,7 @@ namespace Guppi.Console.Actions
             };
             notes.AddArgument(new Argument<string>("filename", () => DateTime.Now.ToString("yyyy-MM-dd")));
             notes.Handler = CommandHandler.Create(async (bool nocreate, bool configure, string filename) => await OpenNotes(nocreate, configure, filename));
-            return notes;
+            return new[] { notes };
         }
 
         private async Task OpenNotes(bool nocreate, bool configure, string filename)

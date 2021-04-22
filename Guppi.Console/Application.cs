@@ -6,19 +6,19 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Guppi.Application.Extensions;
-using Guppi.Console.Actions;
+using Guppi.Console.Skills;
 using Guppi.Domain.Common;
 using Guppi.Domain.Interfaces;
 using Spectre.Console;
 
-namespace Alteridem.Guppi
+namespace Guppi.Console
 {
     internal class Application : IApplication
     {
         private readonly Parser _parser;
         private readonly ISpeechService _speech;
 
-        public Application(IEnumerable<IActionProvider> providers, IEnumerable<IMultipleActionProvider> multiProviders, ISpeechService speech)
+        public Application(IEnumerable<ISkill> skills, ISpeechService speech)
         {
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
             _speech = speech;
@@ -28,9 +28,8 @@ namespace Alteridem.Guppi
                 new Option<bool>(new [] { "--silent", "-s" }, () => false, "Don't display or speak initial quip.")
             };
 
-            var commands = providers
-                .Select(p => p.GetCommand())
-                .Union(multiProviders.SelectMany(m => m.GetCommands()))
+            var commands = skills
+                .SelectMany(m => m.GetCommands())
                 .OrderBy(c => c.Name);
 
             foreach (var command in commands)

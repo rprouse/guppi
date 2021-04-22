@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.CommandLine;
 
-namespace Guppi.Console.Actions
+namespace Guppi.Console.Skills
 {
-    public interface IMultipleActionProvider
+    public interface ISkill
     {
         /// <summary>
         /// Gets multiple commands that a provider supports

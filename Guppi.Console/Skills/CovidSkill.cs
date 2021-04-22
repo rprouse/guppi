@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Linq;
@@ -10,18 +11,18 @@ using Guppi.Domain.Entities.Covid;
 using MediatR;
 using Spectre.Console;
 
-namespace Guppi.Console.Actions
+namespace Guppi.Console.Skills
 {
-    public class CovidProvider : IActionProvider
+    public class CovidSkill : ISkill
     {
         private readonly IMediator _mediator;
 
-        public CovidProvider(IMediator mediator)
+        public CovidSkill(IMediator mediator)
         {
             _mediator = mediator;
         }
 
-        public Command GetCommand()
+        public IEnumerable<Command> GetCommands()
         {
             var view = new Command("view", "Views Covid-19 Stats for a country. Defaults to Canada.")
             {
@@ -31,9 +32,8 @@ namespace Guppi.Console.Actions
             };
             view.Handler = CommandHandler.Create(async (string country, bool cases, bool deaths) => await View(country, cases, deaths));
 
-            return new Command("covid", "Displays Covid-19 Stats")
-            {
-               view
+            return new[] {
+                new Command("covid", "Displays Covid-19 Stats") { view }
             };
         }
 

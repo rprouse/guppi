@@ -1,9 +1,9 @@
 using System;
-using Guppi.Console.Actions;
-using Alteridem.Guppi;
+using Guppi.Console.Skills;
 using Guppi.Application;
 using Guppi.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
+using Guppi.Console;
 
 await ConfigureServices()
     .GetRequiredService<IApplication>()
@@ -14,13 +14,13 @@ static IServiceProvider ConfigureServices() =>
         .AddTransient<IApplication, Application>()
         .AddApplication()
         .AddInfrastructure()
-        .AddTransient<IActionProvider, AdventOfCodeDataProvider>()
-        .AddTransient<IActionProvider, CovidProvider>()
-        .AddTransient<IActionProvider, CalendarDataProvider>()
-        .AddTransient<IActionProvider, GitDataProvider>()
-        .AddTransient<IActionProvider, HueLightsDataProvider>()
-        .AddTransient<IActionProvider, NotesProvider>()
-        .AddTransient<IActionProvider, StravaProvider>()
-        .AddTransient<IActionProvider, WeatherDataProvider>()
-        .AddTransient<IMultipleActionProvider, UtilitiesProvider>()
+        .AddTransient<ISkill, AdventOfCodeSkill>()
+        .AddTransient<ISkill, CovidSkill>()
+        .AddTransient<ISkill, CalendarSkill>()
+        .AddTransient<ISkill, GitSkill>()
+        .AddTransient<ISkill, HueLightsSkill>()
+        .AddTransient<ISkill, NotesSkill>()
+        .AddTransient<ISkill, StravaSkill>()
+        .AddTransient<ISkill, WeatherSkill>()
+        .AddTransient<ISkill, UtilitiesSkill>()
         .BuildServiceProvider();

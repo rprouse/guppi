@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Linq;
@@ -11,18 +12,18 @@ using Guppi.Domain.Entities.AdventOfCode;
 using MediatR;
 using Spectre.Console;
 
-namespace Guppi.Console.Actions
+namespace Guppi.Console.Skills
 {
-    public class AdventOfCodeDataProvider : IActionProvider
+    public class AdventOfCodeSkill : ISkill
     {
         private readonly IMediator _mediator;
 
-        public AdventOfCodeDataProvider(IMediator mediator)
+        public AdventOfCodeSkill(IMediator mediator)
         {
             _mediator = mediator;
         }
 
-        public Command GetCommand()
+        public IEnumerable<Command> GetCommands()
         {
             var add = new Command("add", "Adds a new day to my Advent of Code solution")
             {
@@ -56,7 +57,7 @@ namespace Guppi.Console.Actions
                 configure
             };
             command.AddAlias("advent");
-            return command;
+            return new[] { command };
         }
 
         private async Task ViewLeaderboard(int year, int board)

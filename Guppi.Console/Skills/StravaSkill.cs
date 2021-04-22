@@ -12,18 +12,18 @@ using Guppi.Domain.Entities.Strava;
 using MediatR;
 using Spectre.Console;
 
-namespace Guppi.Console.Actions
+namespace Guppi.Console.Skills
 {
-    public class StravaProvider : IActionProvider
+    public class StravaSkill : ISkill
     {
         private readonly IMediator _mediator;
 
-        public StravaProvider(IMediator mediator)
+        public StravaSkill(IMediator mediator)
         {
             _mediator = mediator;
         }
 
-        public Command GetCommand()
+        public IEnumerable<Command> GetCommands()
         {
             var view = new Command("view", "Views activities from the past week")
             {
@@ -42,7 +42,7 @@ namespace Guppi.Console.Actions
                configure
             };
             command.AddAlias("fitness");
-            return command;
+            return new[] { command };
         }
 
         private async Task View(int days)

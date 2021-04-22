@@ -11,18 +11,18 @@ using Guppi.Domain.Entities.Hue;
 using MediatR;
 using Spectre.Console;
 
-namespace Guppi.Console.Actions
+namespace Guppi.Console.Skills
 {
-    internal class HueLightsDataProvider : IActionProvider
+    internal class HueLightsSkill : ISkill
     {
         private readonly IMediator _mediator;
 
-        public HueLightsDataProvider(IMediator mediator)
+        public HueLightsSkill(IMediator mediator)
         {
             _mediator = mediator;
         }
 
-        public Command GetCommand()
+        public IEnumerable<Command> GetCommands()
         {
             uint defaultLight = _mediator.Send(new GetDefaultLightQuery()).Result;
             var bridges = new Command("bridges", "List bridges on the network");
@@ -83,7 +83,7 @@ namespace Guppi.Console.Actions
             command.AddAlias("lights");
 
             command.AddOption(new Option<string>(new string[] { "--ip", "-i" }, "IP Address of the Hue Bridge. Will default to the first bridge found."));
-            return command;
+            return new[] { command };
         }
 
         private async Task ListBridges()

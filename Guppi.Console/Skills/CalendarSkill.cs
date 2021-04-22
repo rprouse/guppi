@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Linq;
@@ -10,18 +11,18 @@ using Guppi.Application.Queries.Calendar;
 using MediatR;
 using Spectre.Console;
 
-namespace Guppi.Console.Actions
+namespace Guppi.Console.Skills
 {
-    public class CalendarDataProvider : IActionProvider
+    public class CalendarSkill : ISkill
     {
         private readonly IMediator _mediator;
 
-        public CalendarDataProvider(IMediator mediator)
+        public CalendarSkill(IMediator mediator)
         {
             _mediator = mediator;
         }
 
-        public Command GetCommand()
+        public IEnumerable<Command> GetCommands()
         {
             var view = new Command("view", "Views upcoming calendar events")
             {
@@ -38,7 +39,7 @@ namespace Guppi.Console.Actions
                 logout
             };
             cmd.AddAlias("cal");
-            return cmd;
+            return new[] { cmd };
         }
 
         private async Task Logout()

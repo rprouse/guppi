@@ -4,9 +4,9 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using Spectre.Console;
 
-namespace Guppi.Console.Actions
+namespace Guppi.Console.Skills
 {
-    public class UtilitiesProvider : IMultipleActionProvider
+    public class UtilitiesSkill : ISkill
     {
         public IEnumerable<Command> GetCommands()
         {

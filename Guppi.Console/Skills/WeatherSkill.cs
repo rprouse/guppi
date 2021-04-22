@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Linq;
@@ -11,19 +12,19 @@ using Guppi.Domain.Entities.Weather;
 using MediatR;
 using Spectre.Console;
 
-namespace Guppi.Console.Actions
+namespace Guppi.Console.Skills
 {
-    public class WeatherDataProvider : IActionProvider
+    public class WeatherSkill : ISkill
     {
         const string Command = "weather";
         private readonly IMediator _mediator;
 
-        public WeatherDataProvider(IMediator mediator)
+        public WeatherSkill(IMediator mediator)
         {
             _mediator = mediator;
         }
 
-        public Command GetCommand()
+        public IEnumerable<Command> GetCommands()
         {
             var view = new Command("view", "Views the weather")
             {
@@ -36,10 +37,13 @@ namespace Guppi.Console.Actions
             configure.AddAlias("config");
             configure.Handler = CommandHandler.Create(async () => await Configure());
 
-            return new Command(Command, "Displays today's weather")
+            return new []
             {
-               view,
-               configure
+                new Command(Command, "Displays today's weather")
+                {
+                   view,
+                   configure
+                }
             };
         }
 

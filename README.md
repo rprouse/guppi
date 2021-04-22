@@ -11,6 +11,72 @@ me with the information I need.
 
 ![Continuous Integration](https://github.com/rprouse/guppi/workflows/Continuous%20Integration/badge.svg)
 
+## Skills
+
+### Advent of Code
+
+Views the AoC leaderboard, adds a new day to my AoC Visual Studio solution and runs the tests.
+
+To configure:
+
+1. Log in to [Advent of Code](https://adventofcode.com/)
+2. Go to the private leaderboard, click on API and view the JSON for the board
+3. Take the leaderboard number from the JSON filename
+4. In the browser dev tools, copy the session cookie minus the `session=`
+5. Set the `src` directory for the Visual Studio AoC solution
+
+### Calendar
+
+Displays your next calendar event or today's agenda.
+
+To get the information to configure:
+
+1. [Enable the Google Calendar API](https://developers.google.com/calendar/quickstart/dotnet)
+2. Configure the API as a Desktop App
+3. Download client configuration and save to `C:\Users\rob\AppData\Local\Guppi\calendar_credentials.json`
+4. Run and log in using OAuth2.
+
+To check your API information, see the [API Console](https://console.developers.google.com/).
+
+### Covid Tracking
+
+Displays Covid statistics for a number of countries around the world, defaulting to Canada.
+
+### Git
+
+Useful git aliases like `ammend`, `undo`, `unstage` and `update` which switches to the
+master branch, does a fetch and a pull.
+
+### Hue Lights
+
+Control Philip's Hue lights. On first run, it will search for and connect to the first Hue Bridge
+it finds. If there are more than one bridge, list the bridges and register using the IP.
+
+You can have one default light which is set using the configure command.
+
+### Notes
+
+Opens the notes directory and creates a new note for today if it doesn't exist.
+
+### Strava
+
+Displays Strava fitness activities.
+
+1. Get the [client id and secret](https://www.strava.com/settings/api) for the api.
+
+### Utilities
+
+Displays the date, the time or creates a new Guid.
+
+### Weather
+
+Displays today's weather information.
+
+To get the information to configure;
+
+1. Sign up to [OpenWeatherMap](https://openweathermap.org/) and get an API Key.
+2. Use [Google Maps](https://google.ca/maps) to get your Latitude and Longitude.
+
 ## Installation
 
 This program is a [dotnet tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) and requires the latest version of
@@ -79,59 +145,3 @@ only needs to be done once and work for all applications built using `System.Com
 
 Follow the [setup instructions](https://github.com/dotnet/command-line-api/blob/main/docs/dotnet-suggest.md)
 for your shell.
-
-## Configuring Actions
-
-### Actions.Calendar
-
-Displays your next calendar event or today's agenda.
-
-To get the information to configure:
-
-1. [Enable the Google Calendar API](https://developers.google.com/calendar/quickstart/dotnet)
-2. Configure the API as a Desktop App
-3. Download client configuration and save to `C:\Users\rob\AppData\Local\Guppi\calendar_credentials.json`
-4. Run and log in using OAuth2.
-
-To check your API information, see the [API Console](https://console.developers.google.com/).
-
-### Actions.Weather
-
-Displays today's weather information.
-
-To get the information to configure;
-
-1. Sign up to [OpenWeatherMap](https://openweathermap.org/) and get an API Key.
-2. Use [Google Maps](https://google.ca/maps) to get your Latitude and Longitude.
-
-## ToDo
-
-Ideas of information that I would like to see every morning.
-
-- [x] [Weather](ActionProvider.Weather/Readme.md)
-- [x] [Today's calendar events](ActionProvider.Calendar/Readme.md)
-- [x] Turn on office lights (Hue)
-- [x] Open PRs that I'm assigned to (Use the [GitHub CLI](https://github.com/cli/cli) `gh pr list`)
-- [ ] CPU temperature, load and other system statistics
-- [ ] Upcoming birthdays
-- [ ] Monday.com inbox
-- [ ] Jira issues/epics
-- [x] GitHub issues (Use the [GitHub CLI](https://github.com/cli/cli) `gh issue list -a rprouse`)
-- [ ] Car maintenance reminders?
-- [ ] Top news headlines
-- [ ] Open my browser to specific locations?
-- [x] Todos (Use my [.NET Implementation](https://github.com/rprouse/dotnet-todo) of [todo.txt CLI](http://todotxt.org/)?)
-- [x] AoC - Advent of Code leaderboards
-- [x] AoC - Add a new day to my Advent of Code solution
-- [x] AoC - Run tests for a year/day
-- [x] Git - Switch to master/main, fetch and pull
-- [x] Git - Undo last commit
-- [x] Git - Ammend last commit
-- [ ] Windows - Lock computer with `rundll32.exe user32.dll,LockWorkStation`
-- [ ] Windows - Reboot computer with `shutdown.exe /r /t 5`
-- [ ] Windows - Shutdown/halt with `shutdown.exe /s /t 5`
-- [ ] Windows - Update with `start ms-settings:windowsupdate-action`
-- [ ] Utils - New Guid (with format?)
-- [ ] Docker?
-- [ ] 7-ZIP - Zip current directory
-- [ ] Run a Jupyter notebook server from a given directory

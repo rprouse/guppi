@@ -54,7 +54,7 @@ namespace Guppi.Application.Queries.Strava
 
             TimeSpan t = DateTime.UtcNow.AddDays(-90) - new DateTime(1970, 1, 1);
             int epoch = (int)t.TotalSeconds;
-            var activities = await _restService.GetData<List<StravaActivity>>($"https://www.strava.com/api/v3/athlete/activities?after={epoch}&per_page=100");
+            var activities = await _restService.GetData<List<StravaActivity>>($"https://www.strava.com/api/v3/athlete/activities?after={epoch}&per_page=300");
             return activities.Select(a => a.GetActivity());
         }
 

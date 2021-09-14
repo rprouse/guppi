@@ -12,13 +12,12 @@ using Google.Apis.Util.Store;
 using Guppi.Application;
 using Guppi.Application.Exceptions;
 using Guppi.Domain.Interfaces;
-using GoogleCalendarService = Google.Apis.Calendar.v3.CalendarService;
 
 namespace Guppi.Infrastructure.Services.Calendar
 {
-    internal sealed class CalendarService : ICalendarService
+    internal sealed class GoogleCalendarService : ICalendarService
     {
-        static string[] Scopes = { GoogleCalendarService.Scope.CalendarReadonly };
+        static string[] Scopes = { CalendarService.Scope.CalendarReadonly };
         static string ApplicationName = "Guppi ActionProvider.Calendar";
 
         public async Task<IEnumerable<Domain.Entities.Calendar.Event>> GetCalendarEvents(DateTime? minDate, DateTime? maxDate)
@@ -48,7 +47,7 @@ namespace Guppi.Infrastructure.Services.Calendar
             }
 
             // Create Google Calendar API service.
-            var service = new GoogleCalendarService(new BaseClientService.Initializer()
+            var service = new CalendarService(new BaseClientService.Initializer()
             {
                 HttpClientInitializer = credential,
                 ApplicationName = ApplicationName,

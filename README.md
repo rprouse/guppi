@@ -27,9 +27,24 @@ To configure:
 
 ### Calendar
 
-Displays your next calendar event or today's agenda.
+Displays your next calendar event or today's agenda from Google Calendar and Office 365. Right
+now it gets both and both must be configured.
+
+#### Google Calendar
 
 To get the information to configure:
+
+1. Sign in to the [Azure portal](https://portal.azure.com/)
+2. In the left-hand navigation pane, select the `Azure Active Directory` service, and then select `Add application registration`
+3. Set a name and appropriate account types, then set the redirect URL to native with the url `http://localhost:39428`
+3. Download client configuration and save to `C:\Users\rob\AppData\Local\Guppi\calendar_credentials.json`
+4. Run and log in using OAuth2.
+
+To check your API information, see the [API Console](https://console.developers.google.com/).
+
+#### Office 365
+
+To get the information to configure, follow the instructions at:
 
 1. [Enable the Google Calendar API](https://developers.google.com/calendar/quickstart/dotnet)
 2. Configure the API as a Desktop App

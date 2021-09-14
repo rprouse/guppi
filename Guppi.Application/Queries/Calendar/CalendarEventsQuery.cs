@@ -28,7 +28,7 @@ namespace Guppi.Application.Queries.Calendar
         {
             var tasks = _calendarServices.Select(service => service.GetCalendarEvents(request.MinDate, request.MaxDate));
             Task.WaitAll(tasks.ToArray());
-            return tasks.SelectMany(t => t.Result);
+            return tasks.SelectMany(t => t.Result).OrderBy(e => e.Start);
         }
     }
 }

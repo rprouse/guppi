@@ -104,7 +104,7 @@ namespace Guppi.Application
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static string GetConfigurationFile(string name) =>
-            Path.Combine(ConfigurationDirectory, $"{name}.json");
+        public static string GetConfigurationFile(string name, string extension = "json") =>
+            Path.Combine(ConfigurationDirectory, $"{name}.{extension}");
     }
 }

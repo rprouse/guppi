@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Guppi.Domain.Interfaces;
@@ -11,16 +12,18 @@ namespace Guppi.Application.Commands.Calendar
 
     internal sealed class CalendarLogoutCommandHandler : IRequestHandler<CalendarLogoutCommand>
     {
-        private readonly ICalendarService _calendarService;
+        private readonly IEnumerable<ICalendarService> _calendarServices;
 
-        public CalendarLogoutCommandHandler(ICalendarService calendarService)
+        public CalendarLogoutCommandHandler(IEnumerable<ICalendarService> calendarServices)
         {
-            _calendarService = calendarService;
+            _calendarServices = calendarServices;
         }
 
         public async Task<Unit> Handle(CalendarLogoutCommand request, CancellationToken cancellationToken)
         {
-            _calendarService.Logout();
+            Parallel.ForEach(_calendarServices, service =>
+                service.Logout()
+            );
             return await Unit.Task;
         }
     }

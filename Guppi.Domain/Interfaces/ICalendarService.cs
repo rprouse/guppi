@@ -9,6 +9,6 @@ namespace Guppi.Domain.Interfaces
     {
         Task<IEnumerable<Event>> GetCalendarEvents(DateTime? minDate, DateTime? maxDate);
 
-        void Logout();
+        Task<string> Logout();
     }
 }

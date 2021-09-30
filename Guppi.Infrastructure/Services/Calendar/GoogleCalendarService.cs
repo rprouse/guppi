@@ -69,11 +69,14 @@ namespace Guppi.Infrastructure.Services.Calendar
             return events.Items.Select(e => new Domain.Entities.Calendar.Event { Start = e.Start.DateTime, End = e.End.DateTime, Summary = e.Summary });
         }
 
-        public void Logout()
+        public Task<string> Logout()
         {
             string token = Configuration.GetConfigurationFile("calendar_token");
             if (Directory.Exists(token))
+            {
                 Directory.Delete(token, true);
+            }
+            return Task.FromResult("Signed out of Google");
         }
     }
 }

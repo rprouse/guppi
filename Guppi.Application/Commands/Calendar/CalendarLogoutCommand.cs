@@ -21,9 +21,9 @@ namespace Guppi.Application.Commands.Calendar
 
         public async Task<Unit> Handle(CalendarLogoutCommand request, CancellationToken cancellationToken)
         {
-            Parallel.ForEach(_calendarServices, service =>
-                service.Logout()
-            );
+            // TODO: Return the string
+            foreach (var service in _calendarServices)
+                await service.Logout();
             return await Unit.Task;
         }
     }

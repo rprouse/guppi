@@ -10,7 +10,7 @@ namespace Guppi.Infrastructure.Services.Calendar
     {
         static TokenCacheHelper()
         {
-            CacheFilePath = Configuration.GetConfigurationFile("o365.msalcache", "bin3");
+            CacheFilePath = Configuration.GetConfigurationFile("o365.msalcache", "bin");
         }
 
         /// <summary>

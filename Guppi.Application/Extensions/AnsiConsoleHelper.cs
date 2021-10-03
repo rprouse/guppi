@@ -19,5 +19,12 @@ namespace Guppi.Application.Extensions
             AnsiConsole.Render(rule);
             AnsiConsole.WriteLine();
         }
+
+        public static void PressEnterToContinue()
+        {
+            AnsiConsole.WriteLine();
+            AnsiConsole.MarkupLine("[red][[Press ENTER to continue...]][/]");
+            System.Console.ReadLine();
+        }
     }
 }

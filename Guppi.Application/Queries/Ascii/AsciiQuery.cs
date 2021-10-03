@@ -48,13 +48,62 @@ namespace Guppi.Application.Queries.Ascii
                 new AsciiData(29, "GS", "Group Separator"),
                 new AsciiData(30, "RS", "Record Separator"),
                 new AsciiData(31, "US", "Unit Separator"),
-                new AsciiData(32, "SPACE", "Space")
+                new AsciiData(32, "SPACE", "Space"),
+                new AsciiData(33, "!", "Exclamation Point"),
+                new AsciiData(34, "\"", "Double Quote"),
+                new AsciiData(35, "#", "Hash"),
+                new AsciiData(36, "$", "Dollar"),
+                new AsciiData(37, "%", "Percent"),
+                new AsciiData(38, "&", "Ampersand"),
+                new AsciiData(39, "'", "Single Quote"),
+                new AsciiData(40, "(", "Left Parenthesis"),
+                new AsciiData(41, ")", "Right Parenthesis"),
+                new AsciiData(42, "*", "Asterisk"),
+                new AsciiData(43, "+", "Plus"),
+                new AsciiData(44, ",", "Comma"),
+                new AsciiData(45, "-", "Minus"),
+                new AsciiData(46, ".", "Period"),
+                new AsciiData(47, "/", "Slash"),
             };
 
-            for (char c = '!'; c <= '~'; c++)
+            for (char c = '0'; c <= '9'; c++)
             {
                 result.Add(new AsciiData(c, $"{c}", ""));
             }
+
+            result.AddRange( new [] {
+                new AsciiData(58, ":", "Colon"),
+                new AsciiData(59, ";", "Semicolon"),
+                new AsciiData(60, "<", "Less Than"),
+                new AsciiData(61, "=", "Equals"),
+                new AsciiData(62, ">", "Greater Than"),
+                new AsciiData(63, "?", "Question Mark"),
+                new AsciiData(64, "@", "At Sign"),
+            });
+
+            for (char c = 'A'; c <= 'Z'; c++)
+            {
+                result.Add(new AsciiData(c, $"{c}", ""));
+            }
+
+            result.AddRange(new[] {
+                new AsciiData(91, "[", "Left Square Bracket"),
+                new AsciiData(92, "\\", "Backslash"),
+                new AsciiData(93, "]", "Right Square Bracket"),
+                new AsciiData(94, "^", "Circumflex"),
+                new AsciiData(95, "_", "Underscore"),
+                new AsciiData(96, "`", "Grave/Accent"),
+            });
+
+            for (char c = 'a'; c <= 'z'; c++)
+            {
+                result.Add(new AsciiData(c, $"{c}", ""));
+            }
+
+            result.Add(new AsciiData(123, "{", "Left Curly Brace"));
+            result.Add(new AsciiData(124, "|", "Vertical Bar"));
+            result.Add(new AsciiData(125, "}", "Right Curly Brace"));
+            result.Add(new AsciiData(126, "~", "Tilde"));
             result.Add(new AsciiData(127, "DEL", "Delete"));
 
             return Task.FromResult(result.ToArray());

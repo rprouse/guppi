@@ -9,16 +9,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Spectre.Console" Version="0.35.0" />
+    <PackageReference Include="Spectre.Console" Version="0.41.0" />
     <PackageReference Include="System.Speech" Version="5.0.0" />
-    <PackageReference Include="System.Text.Json" Version="4.7.2" />
+    <PackageReference Include="System.Text.Json" Version="5.0.2" />
     <PackageReference Include="MediatR" Version="9.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
 
-    <PackageReference Include="Google.Apis.Calendar.v3" Version="1.49.0.2087" />
+    <PackageReference Include="Google.Apis.Calendar.v3" Version="1.55.0.2410" />
     <PackageReference Include="LibGit2Sharp" Version="0.26.2" />
-    <PackageReference Include="Q42.HueApi" Version="3.15.8" />
-    <PackageReference Include="Q42.HueApi.ColorConverters" Version="3.14.0" />
+    <PackageReference Include="Q42.HueApi" Version="3.18.1" />
+    <PackageReference Include="Q42.HueApi.ColorConverters" Version="3.18.1" />
   </ItemGroup>
 
 </Project>

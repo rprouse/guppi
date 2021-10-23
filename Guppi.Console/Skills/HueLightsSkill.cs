@@ -51,6 +51,7 @@ namespace Guppi.Console.Skills
             {
                 new Option<uint>(new string[]{ "--light", "-l" }, () => defaultLight, "The light to perform an action on. If unset, your default light or if 0 all lights"),
             };
+            off.AddAlias("out");
             off.Handler = CommandHandler.Create(async (string ip, uint light) => await Set(ip, false, true, false, null, null, light));
 
             var alert = new Command("alert", "Set an alert on the lights")

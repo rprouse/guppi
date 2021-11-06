@@ -10,7 +10,7 @@ using MediatR;
 
 namespace Guppi.Application.Commands.Notes
 {
-    public record OpenNotesCommand(string Filename, bool NoCreate) : IRequest;
+    public record OpenNotesCommand(string Title, string Filename, bool NoCreate) : IRequest;
 
     internal sealed class OpenNotesCommandHandler : IRequestHandler<OpenNotesCommand>
     {
@@ -30,27 +30,60 @@ namespace Guppi.Application.Commands.Notes
             if (!Directory.Exists(configuration.NotesDirectory))
                 Directory.CreateDirectory(configuration.NotesDirectory);
 
-            string fullname = request.Filename is null ? configuration.NotesDirectory : Path.Combine(configuration.NotesDirectory, request.Filename);
-            var fi = new FileInfo(fullname);
-            if (string.IsNullOrWhiteSpace(fi.Extension))
-                fullname += ".md";
+            var fullname = GetFilename(request.Filename, request.Title, configuration.NotesDirectory);
+            CreateMarkdownFile(request, fullname);
+            LaunchVSCode(request, configuration, fullname);
+            
+            return await Unit.Task;
+        }
 
-            if (!request.NoCreate && !File.Exists(fullname))
-            {
-                File.WriteAllText(fullname, $"# {request.Filename}\n\n");
-            }
-
+        private void LaunchVSCode(OpenNotesCommand request, NotesConfiguration configuration, string fullname)
+        {
             bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
-            string cmd = isWindows ?
-                         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Programs\Microsoft VS Code\bin\Code.cmd") :
-                         "/usr/bin/code";
-            string args = request.NoCreate ?
-                $"\"{configuration.NotesDirectory}\"" :
-                $"-g \"{fullname}:3\" \"{configuration.NotesDirectory}\"";
+            string cmd = isWindows
+                ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                    @"Programs\Microsoft VS Code\bin\Code.cmd")
+                : "/usr/bin/code";
+            string args = request.NoCreate
+                ? $"\"{configuration.NotesDirectory}\""
+                : $"-g \"{fullname}:3\" \"{configuration.NotesDirectory}\"";
 
             _process.Start(cmd, args);
-            return await Unit.Task;
+        }
+
+        private static void CreateMarkdownFile(OpenNotesCommand request, string fullname)
+        {
+            if (!request.NoCreate && !File.Exists(fullname))
+            {
+                string content = $"# {request.Filename}\n\n";
+                if (!string.IsNullOrWhiteSpace(request.Title))
+                    content += $"## {request.Title}\n\n";
+
+                File.WriteAllText(fullname, content);
+            }
+        }
+
+        internal static string GetFilename(string filename, string title, string notesDirectory)
+        {
+            string fullname = filename is null
+                ? notesDirectory
+                : Path.Combine(notesDirectory, filename);
+            var fi = new FileInfo(fullname);
+
+            if (!string.IsNullOrWhiteSpace(title))
+            {
+                fullname = Path.Combine(notesDirectory,
+                    $"{Path.GetFileNameWithoutExtension(fi.Name)} - {title}{fi.Extension}");
+                fi = new FileInfo(fullname);
+            }
+            
+            if (string.IsNullOrWhiteSpace(fi.Extension))
+            {
+                fullname += ".md";
+            }
+
+            return fullname;
         }
     }
 }

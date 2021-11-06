@@ -2,7 +2,7 @@
   "profiles": {
     "Guppi.Console": {
       "commandName": "Project",
-      "commandLineArgs": "lights --help"
+      "commandLineArgs": "notes -t \"This is a note title\""
     }
   }
 }

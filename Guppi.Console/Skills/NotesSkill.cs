@@ -22,19 +22,21 @@ namespace Guppi.Console.Skills
             var notes = new Command("notes", "Opens the notes directory and creates a new note for today if it doesn't exist.")
             {
                 new Option<bool>(new string[]{"--nocreate", "-n"}, "Do not create today's note."),
-                new Option<bool>(new string[]{"--configure", "-c"}, "Set the notes directory.")
+                new Option<bool>(new string[]{"--configure", "-c"}, "Set the notes directory."),
+                new Option<string>( new string[]{"--title", "-t"}, () => string.Empty, "Sets the note title")
             };
             notes.AddArgument(new Argument<string>("filename", () => DateTime.Now.ToString("yyyy-MM-dd")));
-            notes.Handler = CommandHandler.Create(async (bool nocreate, bool configure, string filename) => await OpenNotes(nocreate, configure, filename));
+            notes.Handler = CommandHandler.Create(async (string title, bool nocreate, bool configure, string filename) => 
+                await OpenNotes(title, nocreate, configure, filename));
             return new[] { notes };
         }
 
-        private async Task OpenNotes(bool nocreate, bool configure, string filename)
+        private async Task OpenNotes(string title, bool nocreate, bool configure, string filename)
         {
             if (configure)
                 await _mediator.Send(new ConfigureNotesCommand());
 
-            await _mediator.Send(new OpenNotesCommand(filename, nocreate));
+            await _mediator.Send(new OpenNotesCommand(title, filename, nocreate));
         }
     }
 }

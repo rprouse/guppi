@@ -44,7 +44,7 @@ namespace Guppi.Application.Queries.AdventOfCode
 
     internal class Part
     {
-        public string get_star_ts { get; set; }
+        public int? get_star_ts { get; set; }
     }
 
     internal class Day

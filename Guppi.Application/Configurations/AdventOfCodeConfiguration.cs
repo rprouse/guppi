@@ -12,14 +12,8 @@ namespace Guppi.Application.Configurations
             get => _loginToken;
             set
             {
-                if(value?.StartsWith("session=", System.StringComparison.OrdinalIgnoreCase) == true)
-                {
-                    _loginToken = value.Substring(8);
-                }
-                else
-                {
-                    _loginToken = value;
-                }
+                _loginToken = value?.StartsWith("session=", System.StringComparison.OrdinalIgnoreCase) == true ?
+                    value.Substring(8) : value;
             }
         }
 

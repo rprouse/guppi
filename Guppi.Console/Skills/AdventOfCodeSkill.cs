@@ -31,7 +31,7 @@ namespace Guppi.Console.Skills
             };
             add.Handler = CommandHandler.Create(async (int year) => await AddDayTo(year));
 
-            var data = new Command("data", "Adds the data for a given day to my Advent of Code solution")
+            var data = new Command("data", "Adds the data for a given day to my Advent of Code solution. The data file for the day must exist and will be overwritten")
             {
                 new Option<int>(new string[]{"--year", "-y" }, () => DateTime.Now.Year, "Adds data for the given year. Defaults to this year."),
                 new Option<int>(new string[]{"--day", "-d" }, "Adds data for the given day. Required."),
@@ -140,16 +140,18 @@ namespace Guppi.Console.Skills
         {
             try
             {
-                AnsiConsole.MarkupLine($"[green][[:check_mark_button: Getting data for {year}-12-{day:00}]][/]");
+                AnsiConsole.MarkupLine($"[green][[:fast_down_button: Getting data for {year}-12-{day:00}]][/]");
                 var data = await _mediator.Send(new PuzzleDataQuery( year, day ));
                 System.Console.WriteLine();
                 System.Console.WriteLine(data);
-                //AnsiConsole.MarkupLine($"[green][[:check_mark_button: Added Day{result.NewDay:00}]][/]");
+
+                AnsiConsole.MarkupLine($"[green][[:memo: Saving Data for day {day:00}]][/]");
+                await _mediator.Send(new AddDataCommand(year, day, data));
             }
             catch (WarningException ex)
             {
                 AnsiConsole.MarkupLine($"[yellow][[:yellow_circle: {ex.Message}]][/]");
-                AnsiConsole.MarkupLine("[silver][[No day added.]][/]");
+                AnsiConsole.MarkupLine($"[silver][[Data not added for day {day:00}.]][/]");
             }
             catch (UnconfiguredException ex)
             {

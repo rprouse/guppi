@@ -31,6 +31,13 @@ namespace Guppi.Console.Skills
             };
             add.Handler = CommandHandler.Create(async (int year) => await AddDayTo(year));
 
+            var data = new Command("data", "Adds the data for a given day to my Advent of Code solution")
+            {
+                new Option<int>(new string[]{"--year", "-y" }, () => DateTime.Now.Year, "Adds data for the given year. Defaults to this year."),
+                new Option<int>(new string[]{"--day", "-d" }, "Adds data for the given day. Required."),
+            };
+            data.Handler = CommandHandler.Create(async (int year, int day) => await AddDataTo(year, day));
+
             var test = new Command("test", "Runs tests in my Advent of Code solution")
             {
                 new Option<int>(new string[]{"--year", "-y" }, () => DateTime.Now.Year, "Runs tests for the given year. Defaults to this year."),
@@ -52,6 +59,7 @@ namespace Guppi.Console.Skills
             var command = new Command("aoc", "Work with Advent of Code (AoC)")
             {
                 add,
+                data,
                 test,
                 view,
                 configure
@@ -127,6 +135,28 @@ namespace Guppi.Console.Skills
                 AnsiConsole.MarkupLine($"[red][[:cross_mark: {ex.Message}]][/]");
                 AnsiConsole.MarkupLine("[silver][[Configure the data provider to set the solution directory.]][/]");
             }
+        }
+        private async Task AddDataTo(int year, int day)
+        {
+            try
+            {
+                AnsiConsole.MarkupLine($"[green][[:check_mark_button: Getting data for {year}-12-{day:00}]][/]");
+                var data = await _mediator.Send(new PuzzleDataQuery( year, day ));
+                System.Console.WriteLine();
+                System.Console.WriteLine(data);
+                //AnsiConsole.MarkupLine($"[green][[:check_mark_button: Added Day{result.NewDay:00}]][/]");
+            }
+            catch (WarningException ex)
+            {
+                AnsiConsole.MarkupLine($"[yellow][[:yellow_circle: {ex.Message}]][/]");
+                AnsiConsole.MarkupLine("[silver][[No day added.]][/]");
+            }
+            catch (UnconfiguredException ex)
+            {
+                AnsiConsole.MarkupLine($"[red][[:cross_mark: {ex.Message}]][/]");
+                AnsiConsole.MarkupLine("[silver][[Configure the data provider to set the solution directory.]][/]");
+            }
+
         }
 
         private async Task Configure() => await _mediator.Send(new ConfigureAocCommand());

@@ -2,7 +2,7 @@
   "profiles": {
     "Guppi.Console": {
       "commandName": "Project",
-      "commandLineArgs": "aoc config"
+      "commandLineArgs": "aoc data -y 2015 -d 16"
     }
   }
 }

@@ -6,5 +6,8 @@ namespace Guppi.Application.Configurations
     {
         [Display("Notes Directory")]
         public string NotesDirectory { get; set; }
+
+        [Display("Obsidian Vault")]
+        public string VaultName { get; set; } = "Notes";
     }
 }

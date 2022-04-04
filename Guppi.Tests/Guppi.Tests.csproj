@@ -22,4 +22,8 @@
     <ProjectReference Include="..\Guppi.Console\Guppi.Console.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Application\Commands\" />
+  </ItemGroup>
+
 </Project>

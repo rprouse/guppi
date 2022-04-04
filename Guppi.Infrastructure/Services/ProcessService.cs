@@ -20,5 +20,15 @@ namespace Guppi.Infrastructure.Services
             if(waitForExit)
                 process.WaitForExit();
         }
+
+        public void Open(string uri)
+        {
+            var ps = new ProcessStartInfo(uri)
+            {
+                UseShellExecute = true,
+                Verb = "open"
+            };
+            Process.Start(ps);
+        }
     }
 }

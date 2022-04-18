@@ -2,7 +2,7 @@
   "profiles": {
     "Guppi.Console": {
       "commandName": "Project",
-      "commandLineArgs": "--silent lights list"
+      "commandLineArgs": "lights list"
     }
   }
 }

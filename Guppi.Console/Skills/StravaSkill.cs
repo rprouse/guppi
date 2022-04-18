@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.CommandLine;
-using System.CommandLine.Invocation;
+using System.CommandLine.NamingConventionBinder;
 using System.Linq;
 using System.Threading.Tasks;
 using Guppi.Application.Commands.Strava;
@@ -78,7 +78,7 @@ namespace Guppi.Console.Skills
                         (act.SufferScore ?? 0).ToString(),
                         act.Name);
                 }
-                AnsiConsole.Render(table);
+                AnsiConsole.Write(table);
 
                 AnsiConsoleHelper.Rule("white");
             }

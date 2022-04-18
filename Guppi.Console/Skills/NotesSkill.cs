@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.CommandLine;
-using System.CommandLine.Invocation;
+using System.CommandLine.NamingConventionBinder;
 using System.Threading.Tasks;
 using Guppi.Application.Commands.Notes;
 using MediatR;
@@ -61,9 +61,10 @@ namespace Guppi.Console.Skills
         private async Task Add(string title, string folder, string vault) =>
             await _mediator.Send(new AddFileCommand(title, folder, vault));
 
-        private async Task Daily(string vault)
+        private Task Daily(string vault)
         {
             // TODO
+            return Task.CompletedTask;
         }
 
         private async Task View(string vault) =>

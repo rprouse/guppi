@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.CommandLine;
-using System.CommandLine.Invocation;
+using System.CommandLine.NamingConventionBinder;
 using System.Threading.Tasks;
 using Guppi.Application.Extensions;
 using Guppi.Application.Queries.Ascii;
@@ -72,7 +72,7 @@ namespace Guppi.Console.Skills
                     data[i + num].Description
                     );
             }
-            AnsiConsole.Render(table);
+            AnsiConsole.Write(table);
         }
     }
 }

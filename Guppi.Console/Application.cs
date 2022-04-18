@@ -23,9 +23,10 @@ namespace Guppi.Console
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
             _speech = speech;
 
+            var silentOption = new Option<bool>(new[] { "--silent", "-s" }, () => false, "Don't display or speak initial quip.");
             var rootCommand = new RootCommand(AssemblyDescription)
             {
-                new Option<bool>(new [] { "--silent", "-s" }, () => false, "Don't display or speak initial quip.")
+                silentOption
             };
 
             var commands = skills
@@ -36,11 +37,11 @@ namespace Guppi.Console
                 rootCommand.AddCommand(command);
 
             var commandLineBuilder = new CommandLineBuilder(rootCommand);
-            commandLineBuilder.UseMiddleware(async (context, next) =>
+            commandLineBuilder.AddMiddleware(async (context, next) =>
             {
                 var silent = context.ParseResult
                     .RootCommandResult
-                    .OptionResult("--silent")
+                    .FindResultFor(silentOption)
                     ?.GetValueOrDefault<bool>();
                 if (silent != true)
                 {

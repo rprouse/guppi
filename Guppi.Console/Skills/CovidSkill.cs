@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.CommandLine;
-using System.CommandLine.Invocation;
+using System.CommandLine.NamingConventionBinder;
 using System.Linq;
 using System.Threading.Tasks;
 using Guppi.Application.Extensions;
@@ -102,7 +102,7 @@ namespace Guppi.Console.Skills
                 data.RegionData.LastReportedDeaths.ToString("n0"),
                 deathsColor + data.RegionData.DeathsWeeklyTrend + "%[/]"
                 );
-            AnsiConsole.Render(table);
+            AnsiConsole.Write(table);
         }
 
         private static void DisplayRegionalCases(CovidData data)
@@ -129,7 +129,7 @@ namespace Guppi.Console.Skills
                     region.DailyAverageCasesLastSevenDays.ToString("n0"),
                     region.DailyAverageCasesLastSevenDaysPerHundredThousand.ToString("n1"));
             }
-            AnsiConsole.Render(table);
+            AnsiConsole.Write(table);
         }
 
         private static void DisplayRegionalDeaths(CovidData data)
@@ -156,7 +156,7 @@ namespace Guppi.Console.Skills
                     region.DailyAverageDeathsLastSevenDays.ToString("n0"),
                     region.DailyAverageDeathsLastSevenDaysPerHundredThousand.ToString("n1"));
             }
-            AnsiConsole.Render(table);
+            AnsiConsole.Write(table);
         }
     }
 }

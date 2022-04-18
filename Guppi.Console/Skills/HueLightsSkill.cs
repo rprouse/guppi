@@ -138,7 +138,7 @@ namespace Guppi.Console.Skills
         {
             foreach (var light in lights)
             {
-                AnsiConsole.MarkupLine($"[white]{light.Id,2}: {light.Name,-40}[/] [silver]{(light.On ? $":yellow_circle: {(light.Brightness * 100 / 255)}% #{light.Color}" : ":black_circle:")}[/]");
+                AnsiConsole.MarkupLine($"[white]{light.Id,2}: {light.Name,-40}[/] [#{light.Color}]{(light.On ? $"● {(light.Brightness * 100 / 255)}% #{light.Color}" : "○")}[/]");
             }
             AnsiConsoleHelper.Rule("white");
         }

@@ -24,10 +24,7 @@ namespace Guppi.Console
             _speech = speech;
 
             var silentOption = new Option<bool>(new[] { "--silent", "-s" }, () => false, "Don't display or speak initial quip.");
-            var rootCommand = new RootCommand(AssemblyDescription)
-            {
-                silentOption
-            };
+            var rootCommand = new RootCommand(AssemblyDescription) { silentOption };
 
             var commands = skills
                 .SelectMany(m => m.GetCommands())
@@ -36,21 +33,22 @@ namespace Guppi.Console
             foreach (var command in commands)
                 rootCommand.AddCommand(command);
 
-            var commandLineBuilder = new CommandLineBuilder(rootCommand);
-            commandLineBuilder.AddMiddleware(async (context, next) =>
-            {
-                var silent = context.ParseResult
-                    .RootCommandResult
-                    .FindResultFor(silentOption)
-                    ?.GetValueOrDefault<bool>();
-                if (silent != true)
+            _parser = new CommandLineBuilder(rootCommand)
+                .AddMiddleware(async (context, next) =>
                 {
-                    Quip();
-                }
-                await next(context);
-            });
-            commandLineBuilder.UseDefaults();
-            _parser = commandLineBuilder.Build();
+                    var silent = context.ParseResult
+                        .RootCommandResult
+                        .FindResultFor(silentOption)
+                        ?.GetValueOrDefault<bool>();
+                    if (silent != true)
+                    {
+                        Quip();
+                    }
+                    await next(context);
+                })
+                .RegisterWithDotnetSuggest()
+                .UseDefaults()
+                .Build();
         }
 
         public async Task Run(string[] args)

@@ -2,7 +2,7 @@
   "profiles": {
     "Guppi.Console": {
       "commandName": "Project",
-      "commandLineArgs": "lights alert --light 1"
+      "commandLineArgs": "lights set --light 1 --brightness 80"
     }
   }
 }

@@ -2,7 +2,7 @@
   "profiles": {
     "Guppi.Console": {
       "commandName": "Project",
-      "commandLineArgs": "calendar tomorrow"
+      "commandLineArgs": "calendar tomorrow --markdown"
     }
   }
 }

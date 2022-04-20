@@ -24,20 +24,21 @@ namespace Guppi.Console.Skills
 
         public IEnumerable<Command> GetCommands()
         {
-            var next = new Command("next", "Views next calendar event");
+            var markdown = new Option<bool>(new string[] { "--markdown", "-m" }, "Display as Markdown to be copied into Notes");
+            var next = new Command("next", "Views next calendar event") { markdown };
             next.AddAlias("view");
-            next.Handler = CommandHandler.Create(async () => await Next());
+            next.Handler = CommandHandler.Create(async (bool markdown) => await Next(markdown));
 
-            var today = new Command("today", "Displays today's agenda");
+            var today = new Command("today", "Displays today's agenda") { markdown };
             today.AddAlias("agenda");
-            today.Handler = CommandHandler.Create(async () => await Agenda(DateTime.Now, "Today's agenda"));
+            today.Handler = CommandHandler.Create(async (bool markdown) => await Agenda(DateTime.Now, "Today's agenda", markdown));
 
-            var tomorrow = new Command("tomorrow", "Displays tomorrow's agenda");
-            tomorrow.Handler = CommandHandler.Create(async () => 
+            var tomorrow = new Command("tomorrow", "Displays tomorrow's agenda") { markdown };
+            tomorrow.Handler = CommandHandler.Create(async (bool markdown) => 
             {
                 var now = DateTime.Now.AddDays(1);
                 var midnight = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0, DateTimeKind.Local);
-                await Agenda(midnight, "Tomorrow's agenda");
+                await Agenda(midnight, "Tomorrow's agenda", markdown);
             });
 
             var logout = new Command("logout", "Logs out of the current Google account");
@@ -60,7 +61,7 @@ namespace Guppi.Console.Skills
             AnsiConsole.MarkupLine("[green][[:check_mark_button: Logged out of Google]][/]");
         }
 
-        private async Task Next()
+        private async Task Next(bool markdown)
         {
             var now = DateTime.Now;
 
@@ -87,7 +88,10 @@ namespace Guppi.Console.Skills
                                 continue;
                             }
                             string end = eventItem.End?.ToString("-HH:mm") ?? "";
-                            AnsiConsole.MarkupLine($"{eventItem.Start.GetEmoji()} [white]{start}{end}\t[/][silver]{eventItem.Summary}[/]");
+                            if (markdown)
+                                AnsiConsole.WriteLine($"- {start}{end}: {eventItem.Summary}");
+                            else
+                                AnsiConsole.MarkupLine($"{eventItem.Start.GetEmoji()} [white]{start}{end}\t[/][silver]{eventItem.Summary}[/]");
                             return;
                         }
                     }
@@ -109,7 +113,7 @@ namespace Guppi.Console.Skills
             }
         }
 
-        private async Task Agenda(DateTime now, string title)
+        private async Task Agenda(DateTime now, string title, bool markdown)
         {
             var query = new CalendarEventsQuery
             {
@@ -135,7 +139,10 @@ namespace Guppi.Console.Skills
                                 continue;
                             }
                             string end = eventItem.End?.ToString("-HH:mm") ?? "";
-                            AnsiConsole.MarkupLine($"{eventItem.Start.GetEmoji()} [white]{start}{end}\t[/][silver]{eventItem.Summary}[/]");
+                            if (markdown)
+                                AnsiConsole.WriteLine($"- {start}{end}: {eventItem.Summary}");
+                            else
+                                AnsiConsole.MarkupLine($"{eventItem.Start.GetEmoji()} [white]{start}{end}\t[/][silver]{eventItem.Summary}[/]");
                             found = true;
                         }
                         if (found) return;

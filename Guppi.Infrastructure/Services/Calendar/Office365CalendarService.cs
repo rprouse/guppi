@@ -1,17 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
-using Azure.Core;
 using Guppi.Application.Exceptions;
-using Guppi.Domain.Entities.Calendar;
 using Guppi.Domain.Interfaces;
 using Microsoft.Graph;
 using Microsoft.Identity.Client;
-using Microsoft.Identity.Client.Extensions.Msal;
 using Event = Guppi.Domain.Entities.Calendar.Event;
 
 namespace Guppi.Infrastructure.Services.Calendar
@@ -90,8 +85,8 @@ namespace Guppi.Infrastructure.Services.Calendar
             {
                 events.Add(new Event
                 {
-                    Start = DateTime.Parse(item.Start.DateTime),
-                    End = DateTime.Parse(item.End.DateTime),
+                    Start = DateTime.Parse(item.Start.DateTime).ToLocalTime(),
+                    End = DateTime.Parse(item.End.DateTime).ToLocalTime(),
                     Summary = item.Subject
                 }); ;
             }

@@ -12,16 +12,15 @@ using Google.Apis.Util.Store;
 using Guppi.Application;
 using Guppi.Application.Exceptions;
 using Guppi.Domain.Interfaces;
-using GoogleCalendarService = Google.Apis.Calendar.v3.CalendarService;
 
 namespace Guppi.Infrastructure.Services.Calendar
 {
-    internal sealed class CalendarService : ICalendarService
+    internal sealed class GoogleCalendarService : ICalendarService
     {
-        static string[] Scopes = { GoogleCalendarService.Scope.CalendarReadonly };
+        static string[] Scopes = { CalendarService.Scope.CalendarReadonly };
         static string ApplicationName = "Guppi ActionProvider.Calendar";
 
-        public async Task<IEnumerable<Domain.Entities.Calendar.Event>> GetCalendarEvents(DateTime? minDate, DateTime? maxDate)
+        public async Task<IList<Domain.Entities.Calendar.Event>> GetCalendarEvents(DateTime? minDate, DateTime? maxDate)
         {
             string credentials = Configuration.GetConfigurationFile("calendar_credentials");
             if (!File.Exists(credentials))
@@ -48,7 +47,7 @@ namespace Guppi.Infrastructure.Services.Calendar
             }
 
             // Create Google Calendar API service.
-            var service = new GoogleCalendarService(new BaseClientService.Initializer()
+            var service = new CalendarService(new BaseClientService.Initializer()
             {
                 HttpClientInitializer = credential,
                 ApplicationName = ApplicationName,
@@ -56,7 +55,6 @@ namespace Guppi.Infrastructure.Services.Calendar
 
             // Define parameters of request.
             EventsResource.ListRequest request = service.Events.List("primary");
-            var now = DateTime.Now;
             request.TimeMin = minDate;
             request.TimeMax = maxDate;
             request.ShowHiddenInvitations = false;
@@ -67,14 +65,17 @@ namespace Guppi.Infrastructure.Services.Calendar
             // List events.
             Events events = await request.ExecuteAsync();
 
-            return events.Items.Select(e => new Domain.Entities.Calendar.Event { Start = e.Start.DateTime, End = e.End.DateTime, Summary = e.Summary });
+            return events.Items.Select(e => new Domain.Entities.Calendar.Event { Start = e.Start.DateTime, End = e.End.DateTime, Summary = e.Summary }).ToList();
         }
 
-        public void Logout()
+        public Task<string> Logout()
         {
             string token = Configuration.GetConfigurationFile("calendar_token");
             if (Directory.Exists(token))
+            {
                 Directory.Delete(token, true);
+            }
+            return Task.FromResult("Signed out of Google");
         }
     }
 }

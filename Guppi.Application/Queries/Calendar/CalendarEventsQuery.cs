@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Guppi.Domain.Entities.Calendar;
@@ -16,14 +17,21 @@ namespace Guppi.Application.Queries.Calendar
 
     internal sealed class CalendarEventsQueryHandler : IRequestHandler<CalendarEventsQuery, IEnumerable<Event>>
     {
-        private readonly ICalendarService _calendarService;
+        private readonly IEnumerable<ICalendarService> _calendarServices;
 
-        public CalendarEventsQueryHandler(ICalendarService calendarService)
+        public CalendarEventsQueryHandler(IEnumerable<ICalendarService> calendarServices)
         {
-            _calendarService = calendarService;
+            _calendarServices = calendarServices;
         }
 
-        public async Task<IEnumerable<Event>> Handle(CalendarEventsQuery request, CancellationToken cancellationToken) =>
-            await _calendarService.GetCalendarEvents(request.MinDate, request.MaxDate);
+        public async Task<IEnumerable<Event>> Handle(CalendarEventsQuery request, CancellationToken cancellationToken)
+        {
+            var events = new List<Event>();
+            foreach(var service in _calendarServices)
+            {
+                events.AddRange(await service.GetCalendarEvents(request.MinDate, request.MaxDate));
+            }
+            return events.OrderBy(e => e.Start);
+        }
     }
 }

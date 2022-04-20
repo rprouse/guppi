@@ -24,18 +24,31 @@ namespace Guppi.Console.Skills
 
         public IEnumerable<Command> GetCommands()
         {
-            var view = new Command("view", "Views upcoming calendar events")
+            var markdown = new Option<bool>(new string[] { "--markdown", "-m" }, "Display as Markdown to be copied into Notes");
+            var next = new Command("next", "Views next calendar event") { markdown };
+            next.AddAlias("view");
+            next.Handler = CommandHandler.Create(async (bool markdown) => await Next(markdown));
+
+            var today = new Command("today", "Displays today's agenda") { markdown };
+            today.AddAlias("agenda");
+            today.Handler = CommandHandler.Create(async (bool markdown) => await Agenda(DateTime.Now, "Today's agenda", markdown));
+
+            var tomorrow = new Command("tomorrow", "Displays tomorrow's agenda") { markdown };
+            tomorrow.Handler = CommandHandler.Create(async (bool markdown) => 
             {
-                new Option<bool>(new string[]{"--agenda", "-a" }, "Displays today's agenda")
-            };
-            view.Handler = CommandHandler.Create(async (bool agenda) => await Execute(agenda));
+                var now = DateTime.Now.AddDays(1);
+                var midnight = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0, DateTimeKind.Local);
+                await Agenda(midnight, "Tomorrow's agenda", markdown);
+            });
 
             var logout = new Command("logout", "Logs out of the current Google account");
             logout.Handler = CommandHandler.Create(async () => await Logout());
 
             var cmd = new Command("calendar", "Display's today's calendar events")
             {
-                view,
+                next,
+                today,
+                tomorrow,
                 logout
             };
             cmd.AddAlias("cal");
@@ -48,42 +61,39 @@ namespace Guppi.Console.Skills
             AnsiConsole.MarkupLine("[green][[:check_mark_button: Logged out of Google]][/]");
         }
 
-        private async Task Execute(bool agenda)
+        private async Task Next(bool markdown)
         {
             var now = DateTime.Now;
 
             var query = new CalendarEventsQuery
             {
                 MinDate = now,
-                MaxDate = agenda ? new DateTime(now.Year, now.Month, now.Day, 23, 59, 59) : null
+                MaxDate = now.AddDays(7)
             };
 
             try
             {
                 var events = await _mediator.Send(query);
-
-                string title = agenda ? ":calendar: Today's agenda" : ":tear_off_calendar: Next event";
-
-                AnsiConsoleHelper.TitleRule(title);
+                AnsiConsoleHelper.TitleRule(":tear_off_calendar: Next event");
 
                 try
                 {
                     if (events.Count() > 0)
                     {
-                        bool found = false;
                         foreach (var eventItem in events)
                         {
-                            string start = eventItem.Start?.ToString(agenda ? "HH:mm" : "MMM dd HH:mm");
+                            string start = eventItem.Start?.ToString("MMM dd HH:mm");
                             if (string.IsNullOrEmpty(start))
                             {
                                 continue;
                             }
                             string end = eventItem.End?.ToString("-HH:mm") ?? "";
-                            AnsiConsole.MarkupLine($"{eventItem.Start.GetEmoji()} [white]{start}{end}\t[/][silver]{eventItem.Summary}[/]");
-                            found = true;
-                            if (!agenda) return;
+                            if (markdown)
+                                AnsiConsole.WriteLine($"- {start}{end}: {eventItem.Summary}");
+                            else
+                                AnsiConsole.MarkupLine($"{eventItem.Start.GetEmoji()} [white]{start}{end}\t[/][silver]{eventItem.Summary}[/]");
+                            return;
                         }
-                        if (found) return;
                     }
                     AnsiConsole.MarkupLine("[white][[No upcoming events found.]][/]");
                 }
@@ -98,6 +108,58 @@ namespace Guppi.Console.Skills
                 return;
             }
             catch(UnconfiguredException ue)
+            {
+                AnsiConsole.MarkupLine($"[yellow][[:yellow_circle: ${ue.Message}]][/]");
+            }
+        }
+
+        private async Task Agenda(DateTime now, string title, bool markdown)
+        {
+            var query = new CalendarEventsQuery
+            {
+                MinDate = now,
+                MaxDate = new DateTime(now.Year, now.Month, now.Day, 23, 59, 59, DateTimeKind.Local)
+            };
+
+            try
+            {
+                var events = await _mediator.Send(query);
+                AnsiConsoleHelper.TitleRule($":calendar: {title}");
+
+                try
+                {
+                    if (events.Count() > 0)
+                    {
+                        bool found = false;
+                        foreach (var eventItem in events)
+                        {
+                            string start = eventItem.Start?.ToString("HH:mm");
+                            if (string.IsNullOrEmpty(start))
+                            {
+                                continue;
+                            }
+                            string end = eventItem.End?.ToString("-HH:mm") ?? "";
+                            if (markdown)
+                                AnsiConsole.WriteLine($"- {start}{end}: {eventItem.Summary}");
+                            else
+                                AnsiConsole.MarkupLine($"{eventItem.Start.GetEmoji()} [white]{start}{end}\t[/][silver]{eventItem.Summary}[/]");
+                            found = true;
+                        }
+                        if (found) return;
+                    }
+                    AnsiConsole.MarkupLine("[white][[No upcoming events found.]][/]");
+                }
+                finally
+                {
+                    AnsiConsoleHelper.Rule("white");
+                }
+            }
+            catch (UnauthorizedException ue)
+            {
+                AnsiConsole.MarkupLine($"[red][[:cross_mark: ${ue.Message}]][/]");
+                return;
+            }
+            catch (UnconfiguredException ue)
             {
                 AnsiConsole.MarkupLine($"[yellow][[:yellow_circle: ${ue.Message}]][/]");
             }

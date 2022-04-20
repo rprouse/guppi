@@ -55,7 +55,7 @@ To check your API information, see the [API Console](https://console.developers.
 
 ### Covid Tracking
 
-Displays Covid statistics for a number of countries around the world, defaulting to Canada.
+**No longer working** Displays Covid statistics for a number of countries around the world, defaulting to Canada.
 
 ### Git
 
@@ -71,7 +71,9 @@ You can have one default light which is set using the configure command.
 
 ### Notes
 
-Opens the notes directory and creates a new note for today if it doesn't exist.
+I keep all of my notes as Markdown files. I used to use VS Code, but recently switched to 
+[Obsidian](https://obsidian.md/) for better linking and formatting. This opens my notes 
+in Obsidian, adds new notes and optionally opens the notes directory in VS Code.
 
 ### Strava
 

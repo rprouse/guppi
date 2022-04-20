@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.CommandLine;
-using System.CommandLine.Invocation;
+using System.CommandLine.NamingConventionBinder;
+using System.CommandLine.Parsing;
 using System.Linq;
 using System.Threading.Tasks;
 using Guppi.Application.Commands.Hue;
@@ -25,6 +26,40 @@ namespace Guppi.Console.Skills
         public IEnumerable<Command> GetCommands()
         {
             uint defaultLight = _mediator.Send(new GetDefaultLightQuery()).Result;
+            // This is a workaround for https://github.com/dotnet/command-line-api/issues/1683, remove at next System.Commandline release
+            ParseArgument<uint> lightParser = (ArgumentResult result) =>
+            {
+                if(result.Tokens.Any())
+                {
+                    var value = result.Tokens.First().Value;
+                    if (uint.TryParse(value, out uint light))
+                    {
+                        return light;
+                    }
+                    result.ErrorMessage = $"Error: {value} is not an unsigned integer";
+                }
+                return defaultLight;
+            };
+
+            ParseArgument<byte?> brightParser = (ArgumentResult result) =>
+            {
+                if (result.Tokens.Any())
+                {
+                    var value = result.Tokens.First().Value;
+                    if (byte.TryParse(value, out byte brightness))
+                    {
+                        return brightness;
+                    }
+                    result.ErrorMessage = $"Error: {value} is not a byte";
+                }
+                return null;
+            };
+
+            // Common options
+            var brightness = new Option<byte?>(new string[] { "--brightness", "-b" }, brightParser, description: "Set the brightness of a light, from 0 to 100 percent");
+            var color = new Option<string>(new string[] { "--color", "-c" }, "Color as a HEX color in the format FF0000 or #FF0000, or a common color name like red or blue");
+            var light = new Option<uint>(new string[] { "--light", "-l" }, lightParser, description: "The light to perform an action on. If unset, your default light or if 0 all lights");
+
             var bridges = new Command("bridges", "List bridges on the network");
             bridges.Handler = CommandHandler.Create(async () => await ListBridges());
 
@@ -41,31 +76,32 @@ namespace Guppi.Console.Skills
 
             var on = new Command("on", "Turn lights on")
             {
-                new Option<byte?>(new string[]{ "--brightness", "-b" }, "Set the brightness of a light, from 0 to 100 percent"),
-                new Option<string>(new string[]{ "--color", "-c" }, "Color as a HEX color in the format FF0000 or #FF0000, or a common color name like red or blue"),
-                new Option<uint>(new string[]{ "--light", "-l" }, () => defaultLight, "The light to perform an action on. If unset, your default light or if 0 all lights"),
+                brightness,
+                color,
+                light,
             };
             on.Handler = CommandHandler.Create(async (string ip, byte? brightness, string color, uint light) => await Set(ip, true, false, false, brightness, color, light));
 
             var off = new Command("off", "Turn lights off")
             {
-                new Option<uint>(new string[]{ "--light", "-l" }, () => defaultLight, "The light to perform an action on. If unset, your default light or if 0 all lights"),
+                light,
             };
+            off.AddAlias("out");
             off.Handler = CommandHandler.Create(async (string ip, uint light) => await Set(ip, false, true, false, null, null, light));
 
             var alert = new Command("alert", "Set an alert on the lights")
             {
-                new Option<byte?>(new string[]{ "--brightness", "-b" }, "Set the brightness of a light, from 0 to 100 percent"),
-                new Option<string>(new string[]{ "--color", "-c" }, "Color as a HEX color in the format FF0000 or #FF0000, or a common color name like red or blue"),
-                new Option<uint>(new string[]{ "--light", "-l" }, () => defaultLight, "The light to perform an action on. If unset, your default light or if 0 all lights"),
+                brightness,
+                color,
+                light,
             };
             alert.Handler = CommandHandler.Create(async (string ip, byte? brightness, string color, uint light) => await Set(ip, false, false, true, brightness, color, light));
 
             var set = new Command("set", "Sets the brightness and/or color to a light or lights")
             {
-                new Option<byte?>(new string[]{ "--brightness", "-b" }, "Set the brightness of a light, from 0 to 100 percent"),
-                new Option<string>(new string[]{ "--color", "-c" }, "Color as a HEX color in the format FF0000 or #FF0000, or a common color name like red or blue"),
-                new Option<uint>(new string[]{ "--light", "-l" }, () => defaultLight, "The light to perform an action on. If unset, your default light or if 0 all lights"),
+                brightness,
+                color,
+                light,
             };
             set.Handler = CommandHandler.Create(async (string ip, byte? brightness, string color, uint light) => await Set(ip, false, false, false, brightness, color, light));
 
@@ -137,7 +173,7 @@ namespace Guppi.Console.Skills
         {
             foreach (var light in lights)
             {
-                AnsiConsole.MarkupLine($"[white]{light.Id,2}: {light.Name,-40}[/] [silver]{(light.On ? $":yellow_circle: {(light.Brightness * 100 / 255)}% #{light.Color}" : ":black_circle:")}[/]");
+                AnsiConsole.MarkupLine($"[white]{light.Id,2}: {light.Name,-40}[/] [#{light.Color}]{(light.On ? $"● {(light.Brightness * 100 / 255)}% #{light.Color}" : "○")}[/]");
             }
             AnsiConsoleHelper.Rule("white");
         }

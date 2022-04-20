@@ -34,7 +34,7 @@ namespace Guppi.Infrastructure.Services.Calendar
             {
                 string token = Configuration.GetConfigurationFile("calendar_token");
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    GoogleClientSecrets.Load(stream).Secrets,
+                    GoogleClientSecrets.FromStream(stream).Secrets,
                     Scopes,
                     "user",
                     CancellationToken.None,

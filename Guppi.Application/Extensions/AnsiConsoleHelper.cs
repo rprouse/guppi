@@ -8,7 +8,7 @@ namespace Guppi.Application.Extensions
         {
             var rule = new Rule();
             rule.RuleStyle(style);
-            AnsiConsole.Render(rule);
+            AnsiConsole.Write(rule);
         }
 
         public static void TitleRule(string title, string color = "white")
@@ -16,8 +16,15 @@ namespace Guppi.Application.Extensions
             var rule = new Rule($"[{color}][[{title}]][/]");
             rule.Alignment = Justify.Left;
             rule.RuleStyle(color);
-            AnsiConsole.Render(rule);
+            AnsiConsole.Write(rule);
             AnsiConsole.WriteLine();
+        }
+
+        public static void PressEnterToContinue()
+        {
+            AnsiConsole.WriteLine();
+            AnsiConsole.MarkupLine("[red][[Press ENTER to continue...]][/]");
+            System.Console.ReadLine();
         }
     }
 }

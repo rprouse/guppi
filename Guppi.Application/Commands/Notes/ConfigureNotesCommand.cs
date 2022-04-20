@@ -5,9 +5,7 @@ using MediatR;
 
 namespace Guppi.Application.Commands.Notes
 {
-    public sealed class ConfigureNotesCommand : IRequest
-    {
-    }
+    public sealed record ConfigureNotesCommand : IRequest;
 
     internal sealed class ConfigureNotesCommandHandler : IRequestHandler<ConfigureNotesCommand>
     {

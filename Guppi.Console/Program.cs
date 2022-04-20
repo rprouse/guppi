@@ -15,6 +15,7 @@ static IServiceProvider ConfigureServices() =>
         .AddApplication()
         .AddInfrastructure()
         .AddTransient<ISkill, AdventOfCodeSkill>()
+        .AddTransient<ISkill, AsciiSkill>()
         .AddTransient<ISkill, CovidSkill>()
         .AddTransient<ISkill, CalendarSkill>()
         .AddTransient<ISkill, GitSkill>()

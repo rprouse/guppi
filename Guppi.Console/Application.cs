@@ -23,10 +23,8 @@ namespace Guppi.Console
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
             _speech = speech;
 
-            var rootCommand = new RootCommand(AssemblyDescription)
-            {
-                new Option<bool>(new [] { "--silent", "-s" }, () => false, "Don't display or speak initial quip.")
-            };
+            var silentOption = new Option<bool>(new[] { "--silent", "-s" }, () => false, "Don't display or speak initial quip.");
+            var rootCommand = new RootCommand(AssemblyDescription) { silentOption };
 
             var commands = skills
                 .SelectMany(m => m.GetCommands())
@@ -35,21 +33,22 @@ namespace Guppi.Console
             foreach (var command in commands)
                 rootCommand.AddCommand(command);
 
-            var commandLineBuilder = new CommandLineBuilder(rootCommand);
-            commandLineBuilder.UseMiddleware(async (context, next) =>
-            {
-                var silent = context.ParseResult
-                    .RootCommandResult
-                    .OptionResult("--silent")
-                    ?.GetValueOrDefault<bool>();
-                if (silent != true)
+            _parser = new CommandLineBuilder(rootCommand)
+                .AddMiddleware(async (context, next) =>
                 {
-                    Quip();
-                }
-                await next(context);
-            });
-            commandLineBuilder.UseDefaults();
-            _parser = commandLineBuilder.Build();
+                    var silent = context.ParseResult
+                        .RootCommandResult
+                        .FindResultFor(silentOption)
+                        ?.GetValueOrDefault<bool>();
+                    if (silent != true)
+                    {
+                        Quip();
+                    }
+                    await next(context);
+                })
+                .RegisterWithDotnetSuggest()
+                .UseDefaults()
+                .Build();
         }
 
         public async Task Run(string[] args)

@@ -9,13 +9,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Identity" Version="1.4.1" />
-    <PackageReference Include="Microsoft.Graph" Version="4.6.0" />
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.36.1" />
+    <PackageReference Include="Azure.Identity" Version="1.6.0" />
+    <PackageReference Include="Microsoft.Graph" Version="4.25.0" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.43.1" />
     <PackageReference Include="Spectre.Console" Version="0.44.0" />
     <PackageReference Include="System.Speech" Version="6.0.0" />
     <PackageReference Include="System.Text.Json" Version="6.0.3" />
-    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="5.0.0" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="6.0.0" />
     <PackageReference Include="MediatR" Version="10.0.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="Google.Apis.Calendar.v3" Version="1.57.0.2647" />

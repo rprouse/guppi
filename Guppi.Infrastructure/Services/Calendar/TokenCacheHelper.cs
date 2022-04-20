@@ -1,63 +1,21 @@
-using System;
 using System.IO;
-using System.Security.Cryptography;
+using System.Threading.Tasks;
 using Guppi.Application;
 using Microsoft.Identity.Client;
+using Microsoft.Identity.Client.Extensions.Msal;
 
 namespace Guppi.Infrastructure.Services.Calendar
 {
     static class TokenCacheHelper
     {
-        static TokenCacheHelper()
+        internal static async Task RegisterCache(ITokenCache tokenCache)
         {
-            CacheFilePath = Configuration.GetConfigurationFile("o365.msalcache", "bin");
-        }
-
-        /// <summary>
-        /// Path to the token cache
-        /// </summary>
-        public static string CacheFilePath { get; private set; }
-
-        private static readonly object FileLock = new object();
-
-        public static void BeforeAccessNotification(TokenCacheNotificationArgs args)
-        {
-            lock (FileLock)
-            {
-                if (File.Exists(CacheFilePath))
-                {
-                    byte[] bytes = File.ReadAllBytes(CacheFilePath);
-                    if (OperatingSystem.IsWindows())
-                    {
-                        bytes = ProtectedData.Unprotect(bytes, null, DataProtectionScope.CurrentUser);
-                    }
-                    args.TokenCache.DeserializeMsalV3(bytes);
-                }
-            }
-        }
-
-        public static void AfterAccessNotification(TokenCacheNotificationArgs args)
-        {
-            // if the access operation resulted in a cache update
-            if (args.HasStateChanged)
-            {
-                lock (FileLock)
-                {
-                    byte[] bytes = args.TokenCache.SerializeMsalV3();
-                    if (OperatingSystem.IsWindows())
-                    {
-                        bytes = ProtectedData.Protect(bytes, null, DataProtectionScope.CurrentUser);
-                    }
-                    // reflect changesgs in the persistent store
-                    File.WriteAllBytes(CacheFilePath, bytes);
-                }
-            }
-        }
-
-        internal static void EnableSerialization(ITokenCache tokenCache)
-        {
-            tokenCache.SetBeforeAccess(BeforeAccessNotification);
-            tokenCache.SetAfterAccess(AfterAccessNotification);
+            var cacheFile = Configuration.GetConfigurationFile("o365.msalcache", "bin");
+            var cacheFileName = Path.GetFileName(cacheFile);
+            var cachePath = Path.GetDirectoryName(cacheFile);
+            var storageProperties = new StorageCreationPropertiesBuilder(cacheFileName, cachePath).Build();
+            var cacheHelper = await MsalCacheHelper.CreateAsync(storageProperties);
+            cacheHelper.RegisterCache(tokenCache);
         }
     }
 }

@@ -24,13 +24,14 @@ namespace Guppi.Application.Queries.Calendar
             _calendarServices = calendarServices;
         }
 
-        public Task<IEnumerable<Event>> Handle(CalendarEventsQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Event>> Handle(CalendarEventsQuery request, CancellationToken cancellationToken)
         {
-            var tasks = _calendarServices.Select(service => service.GetCalendarEvents(request.MinDate, request.MaxDate));
-            Task.WaitAll(tasks.ToArray());
-            return Task.FromResult<IEnumerable<Event>>(
-                tasks.SelectMany(t => t.Result).OrderBy(e => e.Start)
-            );
+            var events = new List<Event>();
+            foreach(var service in _calendarServices)
+            {
+                events.AddRange(await service.GetCalendarEvents(request.MinDate, request.MaxDate));
+            }
+            return events.OrderBy(e => e.Start);
         }
     }
 }

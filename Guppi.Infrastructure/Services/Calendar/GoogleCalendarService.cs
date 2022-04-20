@@ -20,7 +20,7 @@ namespace Guppi.Infrastructure.Services.Calendar
         static string[] Scopes = { CalendarService.Scope.CalendarReadonly };
         static string ApplicationName = "Guppi ActionProvider.Calendar";
 
-        public async Task<IEnumerable<Domain.Entities.Calendar.Event>> GetCalendarEvents(DateTime? minDate, DateTime? maxDate)
+        public async Task<IList<Domain.Entities.Calendar.Event>> GetCalendarEvents(DateTime? minDate, DateTime? maxDate)
         {
             string credentials = Configuration.GetConfigurationFile("calendar_credentials");
             if (!File.Exists(credentials))
@@ -55,7 +55,6 @@ namespace Guppi.Infrastructure.Services.Calendar
 
             // Define parameters of request.
             EventsResource.ListRequest request = service.Events.List("primary");
-            var now = DateTime.Now;
             request.TimeMin = minDate;
             request.TimeMax = maxDate;
             request.ShowHiddenInvitations = false;
@@ -66,7 +65,7 @@ namespace Guppi.Infrastructure.Services.Calendar
             // List events.
             Events events = await request.ExecuteAsync();
 
-            return events.Items.Select(e => new Domain.Entities.Calendar.Event { Start = e.Start.DateTime, End = e.End.DateTime, Summary = e.Summary });
+            return events.Items.Select(e => new Domain.Entities.Calendar.Event { Start = e.Start.DateTime, End = e.End.DateTime, Summary = e.Summary }).ToList();
         }
 
         public Task<string> Logout()

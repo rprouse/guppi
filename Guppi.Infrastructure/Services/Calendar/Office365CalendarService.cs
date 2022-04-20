@@ -11,6 +11,7 @@ using Guppi.Domain.Entities.Calendar;
 using Guppi.Domain.Interfaces;
 using Microsoft.Graph;
 using Microsoft.Identity.Client;
+using Microsoft.Identity.Client.Extensions.Msal;
 using Event = Guppi.Domain.Entities.Calendar.Event;
 
 namespace Guppi.Infrastructure.Services.Calendar
@@ -18,20 +19,18 @@ namespace Guppi.Infrastructure.Services.Calendar
     internal sealed class Office365CalendarService : ICalendarService
     {
         const string ClientId = "b4b31f71-ccd0-4161-98d5-30871f959ec5";
-        const string Tenant = "3b1e579a-142b-4e8d-b37e-b4851aae2439";
-        const string Instance = "https://login.microsoftonline.com/";
 
-        public async Task<IEnumerable<Event>> GetCalendarEvents(DateTime? minDate, DateTime? maxDate)
+        public async Task<IList<Event>> GetCalendarEvents(DateTime? minDate, DateTime? maxDate)
         {
-            IPublicClientApplication publicClientApp = CreatePublicClientApplication();
+            IPublicClientApplication publicClientApp = await CreatePublicClientApplication();
 
-            AuthenticationResult authResult;
-            var scopes = new[] { "user.read" };
+            var scopes = new[] { "calendars.read" };
             var accounts = await publicClientApp.GetAccountsAsync();
             var firstAccount = accounts.FirstOrDefault();
+            AuthenticationResult result;
             try
             {
-                authResult = await publicClientApp
+                result = await publicClientApp
                     .AcquireTokenSilent(scopes, firstAccount)
                     .ExecuteAsync();
             }
@@ -39,7 +38,7 @@ namespace Guppi.Infrastructure.Services.Calendar
             {
                 try
                 {
-                    authResult = await publicClientApp
+                    result = await publicClientApp
                         .AcquireTokenInteractive(scopes)
                         .WithAccount(firstAccount)
                         .WithPrompt(Microsoft.Identity.Client.Prompt.SelectAccount)
@@ -55,32 +54,54 @@ namespace Guppi.Infrastructure.Services.Calendar
                 throw new UnauthorizedException($"Failed to login to Office 365: {ex.Message}");
             }
 
-            if (authResult != null)
+            var accessToken = result.AccessToken;
+
+            var graphClient = new GraphServiceClient(
+                new DelegateAuthenticationProvider((requestMessage) =>
+                {
+                    requestMessage
+                        .Headers
+                        .Authorization = new AuthenticationHeaderValue("bearer", accessToken);
+
+                    return Task.CompletedTask;
+                }));
+
+            var calendars = await graphClient.Me.Calendars
+                .Request()
+                .GetAsync();
+
+            // TODO: Configure which calendar
+            var calendar = calendars.FirstOrDefault(c => c.Name == "Valsoft");
+
+            var start = (minDate.HasValue ? minDate.Value : DateTime.Now).ToString("O");
+            var end = (maxDate.HasValue ? maxDate.Value : DateTime.Now.AddDays(1)).ToString("O");
+            var queryOptions = new List<QueryOption>()
             {
-                try
+                new QueryOption("startDateTime", start),
+                new QueryOption("endDateTime", end),
+                new QueryOption("top", "100"),
+            };
+            var calendarView = await graphClient.Me.Calendars[calendar?.Id].CalendarView
+                .Request(queryOptions)
+                .GetAsync();
+
+            var events = new List<Event>();
+            foreach (var item in calendarView)
+            {
+                events.Add(new Event
                 {
-                    // Get Calendars
-                    var authProvider = new GraphAuthenticationProvider(authResult);
-                    var httpClient = GraphClientFactory.Create(authProvider);
-                    var client = new GraphServiceClient(httpClient);
-                    //var calendars = await client.Me.Calendars.Request().GetAsync();
-                    var calendar = await client.Me.Calendar.Request().GetAsync();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    throw;
-                }
+                    Start = DateTime.Parse(item.Start.DateTime),
+                    End = DateTime.Parse(item.End.DateTime),
+                    Summary = item.Subject
+                }); ;
             }
 
-            return new[] {
-                new Event { Start = DateTime.Now.AddHours(1), End = DateTime.Now.AddHours(2), Summary = authResult?.AccessToken }
-            };
+            return events;
         }
 
         public async Task<string> Logout()
         {
-            IPublicClientApplication publicClientApp = CreatePublicClientApplication();
+            IPublicClientApplication publicClientApp = await CreatePublicClientApplication();
             var accounts = await publicClientApp.GetAccountsAsync();
             if (accounts.Any())
             {
@@ -96,31 +117,15 @@ namespace Guppi.Infrastructure.Services.Calendar
             return "Signed out of Office 365";
         }
 
-        private static IPublicClientApplication CreatePublicClientApplication()
+        private static async Task<IPublicClientApplication> CreatePublicClientApplication()
         {
-            IPublicClientApplication publicClientApp = PublicClientApplicationBuilder.Create(ClientId)
-                .WithRedirectUri("http://localhost:39428")
-                .WithAuthority($"{Instance}{Tenant}")
+            var app = PublicClientApplicationBuilder
+                .Create(ClientId)
+                .WithRedirectUri("http://localhost")
                 .Build();
 
-            TokenCacheHelper.EnableSerialization(publicClientApp.UserTokenCache);
-            return publicClientApp;
-        }
-    }
-
-    internal class GraphAuthenticationProvider : IAuthenticationProvider
-    {
-        AuthenticationResult _token;
-
-        public GraphAuthenticationProvider(AuthenticationResult token)
-        {
-            _token = token;
-        }
-
-        public Task AuthenticateRequestAsync(HttpRequestMessage request)
-        {
-            request.Headers.Add("Authorization", _token.CreateAuthorizationHeader());
-            return Task.CompletedTask;
+            await TokenCacheHelper.RegisterCache(app.UserTokenCache);
+            return app;
         }
     }
 }

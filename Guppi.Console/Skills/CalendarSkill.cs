@@ -89,7 +89,7 @@ namespace Guppi.Console.Skills
                             }
                             string end = eventItem.End?.ToString("-HH:mm") ?? "";
                             if (markdown)
-                                AnsiConsole.WriteLine($"- {start}{end}: {eventItem.Summary}");
+                                AnsiConsole.WriteLine($"- **{start}{end}** {eventItem.Summary}");
                             else
                                 AnsiConsole.MarkupLine($"{eventItem.Start.GetEmoji()} [white]{start}{end}\t[/][silver]{eventItem.Summary}[/]");
                             return;
@@ -140,7 +140,7 @@ namespace Guppi.Console.Skills
                             }
                             string end = eventItem.End?.ToString("-HH:mm") ?? "";
                             if (markdown)
-                                AnsiConsole.WriteLine($"- {start}{end}: {eventItem.Summary}");
+                                AnsiConsole.WriteLine($"- **{start}{end}** {eventItem.Summary}");
                             else
                                 AnsiConsole.MarkupLine($"{eventItem.Start.GetEmoji()} [white]{start}{end}\t[/][silver]{eventItem.Summary}[/]");
                             found = true;

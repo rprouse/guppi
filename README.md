@@ -53,10 +53,6 @@ To get the information to configure, follow the instructions at:
 
 To check your API information, see the [API Console](https://console.developers.google.com/).
 
-### Covid Tracking
-
-**No longer working** Displays Covid statistics for a number of countries around the world, defaulting to Canada.
-
 ### Git
 
 Useful git aliases like `ammend`, `undo`, `unstage` and `update` which switches to the

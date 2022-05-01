@@ -26,6 +26,7 @@ namespace Guppi.Console.Skills
         public IEnumerable<Command> GetCommands()
         {
             uint defaultLight = _mediator.Send(new GetDefaultLightQuery()).Result;
+
             // This is a workaround for https://github.com/dotnet/command-line-api/issues/1683, remove at next System.Commandline release
             ParseArgument<uint> lightParser = (ArgumentResult result) =>
             {
@@ -59,6 +60,7 @@ namespace Guppi.Console.Skills
             var brightness = new Option<byte?>(new string[] { "--brightness", "-b" }, brightParser, description: "Set the brightness of a light, from 0 to 100 percent");
             var color = new Option<string>(new string[] { "--color", "-c" }, "Color as a HEX color in the format FF0000 or #FF0000, or a common color name like red or blue");
             var light = new Option<uint>(new string[] { "--light", "-l" }, lightParser, description: "The light to perform an action on. If unset, your default light or if 0 all lights");
+            light.SetDefaultValue(defaultLight);
 
             var bridges = new Command("bridges", "List bridges on the network");
             bridges.Handler = CommandHandler.Create(async () => await ListBridges());

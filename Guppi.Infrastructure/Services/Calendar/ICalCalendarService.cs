@@ -23,11 +23,11 @@ namespace Guppi.Infrastructure.Services.Calendar
         public async Task<IList<Event>> GetCalendarEvents(DateTime? minDate, DateTime? maxDate)
         {
             IDateTime start = minDate.HasValue ?
-                new CalDateTime(minDate.Value, "America/Toronto") :
+                new CalDateTime(minDate.Value, "Local") :
                 CalDateTime.Now;
 
             IDateTime end = maxDate.HasValue ?
-                new CalDateTime(maxDate.Value, "America/Toronto") :
+                new CalDateTime(maxDate.Value, "Local") :
                 CalDateTime.Now.AddDays(1);
 
             var configuration = Configuration.Load<Application.Configurations.CalendarConfiguration>("Calendar");
@@ -59,8 +59,8 @@ namespace Guppi.Infrastructure.Services.Calendar
                 .Select(e => new Event
                 {
                     Summary = e.Summary,
-                    Start = e.Start.ToTimeZone("America/Toronto").Value,
-                    End = e.End.ToTimeZone("America/Toronto").Value,
+                    Start = e.Start.ToTimeZone("Local").Value,
+                    End = e.End.ToTimeZone("Local").Value,
                 })
                 .ToList();
 
@@ -78,8 +78,8 @@ namespace Guppi.Infrastructure.Services.Calendar
                     return new Event
                     {
                         Summary = e.Summary,
-                        Start = period.StartTime.ToTimeZone("America/Toronto").Value,
-                        End = period.EndTime.ToTimeZone("America/Toronto").Value,
+                        Start = period.StartTime.ToTimeZone("Local").Value,
+                        End = period.EndTime.ToTimeZone("Local").Value,
                     };
                 });
 

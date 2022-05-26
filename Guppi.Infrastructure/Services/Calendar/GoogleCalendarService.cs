@@ -20,6 +20,8 @@ namespace Guppi.Infrastructure.Services.Calendar
         static string[] Scopes = { CalendarService.Scope.CalendarReadonly };
         static string ApplicationName = "Guppi ActionProvider.Calendar";
 
+        public string Name => "Google Calendar";
+
         public async Task<IList<Domain.Entities.Calendar.Event>> GetCalendarEvents(DateTime? minDate, DateTime? maxDate)
         {
             string credentials = Configuration.GetConfigurationFile("calendar_credentials");

@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Azure.Identity" Version="1.6.0" />
+    <PackageReference Include="Ical.Net" Version="4.2.0" />
     <PackageReference Include="Microsoft.Graph" Version="4.25.0" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.43.1" />
     <PackageReference Include="Spectre.Console" Version="0.44.0" />

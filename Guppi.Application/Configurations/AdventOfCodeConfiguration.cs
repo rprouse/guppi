@@ -2,7 +2,7 @@ using Guppi.Application.Attributes;
 
 namespace Guppi.Application.Configurations
 {
-    class AdventOfCodeConfiguration : Configuration
+    internal class AdventOfCodeConfiguration : Configuration
     {
         string _loginToken;
 

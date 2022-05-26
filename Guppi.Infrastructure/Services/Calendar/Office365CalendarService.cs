@@ -14,6 +14,7 @@ namespace Guppi.Infrastructure.Services.Calendar
     internal sealed class Office365CalendarService : ICalendarService
     {
         const string ClientId = "b4b31f71-ccd0-4161-98d5-30871f959ec5";
+        public string Name => "Office 365 Calendar";
 
         public async Task<IList<Event>> GetCalendarEvents(DateTime? minDate, DateTime? maxDate)
         {

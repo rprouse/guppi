@@ -76,11 +76,18 @@ namespace Guppi.Application
                 ConfigureProperty(prop);
             }
 
+            ConfigureCustomProperties();
+
             Enabled = true;
             Configured = true;
             Save();
             AnsiConsoleHelper.Rule("white");
         }
+
+        /// <summary>
+        /// Override this property to configure non-string properties
+        /// </summary>
+        protected virtual void ConfigureCustomProperties() { }
 
         private void ConfigureProperty(PropertyInfo prop)
         {

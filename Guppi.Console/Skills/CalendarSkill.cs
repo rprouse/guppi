@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.CommandLine;
-using System.CommandLine.NamingConventionBinder;
 using System.Linq;
 using System.Threading.Tasks;
 using Guppi.Application.Commands.Calendar;
@@ -27,33 +26,41 @@ namespace Guppi.Console.Skills
             var markdown = new Option<bool>(new string[] { "--markdown", "-m" }, "Display as Markdown to be copied into Notes");
             var next = new Command("next", "Views next calendar event") { markdown };
             next.AddAlias("view");
-            next.Handler = CommandHandler.Create(async (bool markdown) => await Next(markdown));
+            next.SetHandler(async (bool markdown) => await Next(markdown), markdown);
 
             var today = new Command("today", "Displays today's agenda") { markdown };
             today.AddAlias("agenda");
-            today.Handler = CommandHandler.Create(async (bool markdown) => await Agenda(DateTime.Now, "Today's agenda", markdown));
+            today.SetHandler(async (bool markdown) => await Agenda(DateTime.Now, "Today's agenda", markdown), markdown);
 
             var tomorrow = new Command("tomorrow", "Displays tomorrow's agenda") { markdown };
-            tomorrow.Handler = CommandHandler.Create(async (bool markdown) => 
+            tomorrow.SetHandler(async (bool markdown) => 
             {
                 var now = DateTime.Now.AddDays(1);
                 var midnight = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0, DateTimeKind.Local);
                 await Agenda(midnight, "Tomorrow's agenda", markdown);
-            });
+            }, markdown);
 
             var logout = new Command("logout", "Logs out of the current Google account");
-            logout.Handler = CommandHandler.Create(async () => await Logout());
+            logout.SetHandler(async () => await Logout());
+
+            var configure = new Command("Configure", "Configure calendars");
+            configure.AddAlias("config");
+            configure.SetHandler(async () => await Configure());
 
             var cmd = new Command("calendar", "Display's today's calendar events")
             {
                 next,
                 today,
                 tomorrow,
-                logout
+                logout,
+                configure
             };
             cmd.AddAlias("cal");
             return new[] { cmd };
         }
+
+        private async Task Configure() =>
+            await _mediator.Send(new ConfigureCalendarCommand());
 
         private async Task Logout()
         {

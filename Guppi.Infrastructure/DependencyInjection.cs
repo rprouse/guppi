@@ -24,6 +24,7 @@ namespace Guppi.Infrastructure
                 })
                 .AddTransient<ICalendarService, GoogleCalendarService>()
                 .AddTransient<ICalendarService, Office365CalendarService>()
+                .AddTransient<ICalendarService, ICalCalendarService>()
                 .AddTransient<IGitService, GitService>()
                 .AddTransient<IHttpRestService, HttpRestService>()
                 .AddTransient<IHueService, HueService>()

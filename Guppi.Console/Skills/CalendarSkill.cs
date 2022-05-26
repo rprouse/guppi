@@ -30,7 +30,12 @@ namespace Guppi.Console.Skills
 
             var today = new Command("today", "Displays today's agenda") { markdown };
             today.AddAlias("agenda");
-            today.SetHandler(async (bool markdown) => await Agenda(DateTime.Now, "Today's agenda", markdown), markdown);
+            today.SetHandler(async (bool markdown) =>
+            {
+                var now = DateTime.Now;
+                var midnight = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0, DateTimeKind.Local);
+                await Agenda(midnight, "Today's agenda", markdown);
+            }, markdown);
 
             var tomorrow = new Command("tomorrow", "Displays tomorrow's agenda") { markdown };
             tomorrow.SetHandler(async (bool markdown) => 

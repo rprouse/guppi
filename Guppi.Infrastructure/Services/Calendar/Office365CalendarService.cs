@@ -18,6 +18,53 @@ namespace Guppi.Infrastructure.Services.Calendar
 
         public async Task<IList<Event>> GetCalendarEvents(DateTime? minDate, DateTime? maxDate)
         {
+            string accessToken = await Login();
+
+            var graphClient = new GraphServiceClient(
+                new DelegateAuthenticationProvider((requestMessage) =>
+                {
+                    requestMessage
+                        .Headers
+                        .Authorization = new AuthenticationHeaderValue("bearer", accessToken);
+
+                    return Task.CompletedTask;
+                }));
+
+            var calendars = await graphClient.Me.Calendars
+                .Request()
+                .GetAsync();
+
+            // TODO: Configure which calendar
+            var calendar = calendars.FirstOrDefault(c => c.IsDefaultCalendar == true);
+
+            var start = (minDate.HasValue ? minDate.Value : DateTime.Now).ToString("O");
+            var end = (maxDate.HasValue ? maxDate.Value : DateTime.Now.AddDays(1)).ToString("O");
+            var queryOptions = new List<QueryOption>()
+            {
+                new QueryOption("startDateTime", start),
+                new QueryOption("endDateTime", end),
+                new QueryOption("top", "100"),
+            };
+            var calendarView = await graphClient.Me.Calendars[calendar?.Id].CalendarView
+                .Request(queryOptions)
+                .GetAsync();
+
+            var events = new List<Event>();
+            foreach (var item in calendarView)
+            {
+                events.Add(new Event
+                {
+                    Start = DateTime.Parse(item.Start.DateTime).ToLocalTime(),
+                    End = DateTime.Parse(item.End.DateTime).ToLocalTime(),
+                    Summary = item.Subject
+                }); ;
+            }
+
+            return events;
+        }
+
+        private static async Task<string> Login()
+        {
             IPublicClientApplication publicClientApp = await CreatePublicClientApplication();
 
             var scopes = new[] { "calendars.read" };
@@ -51,48 +98,7 @@ namespace Guppi.Infrastructure.Services.Calendar
             }
 
             var accessToken = result.AccessToken;
-
-            var graphClient = new GraphServiceClient(
-                new DelegateAuthenticationProvider((requestMessage) =>
-                {
-                    requestMessage
-                        .Headers
-                        .Authorization = new AuthenticationHeaderValue("bearer", accessToken);
-
-                    return Task.CompletedTask;
-                }));
-
-            var calendars = await graphClient.Me.Calendars
-                .Request()
-                .GetAsync();
-
-            // TODO: Configure which calendar
-            var calendar = calendars.FirstOrDefault(c => c.Name == "Valsoft");
-
-            var start = (minDate.HasValue ? minDate.Value : DateTime.Now).ToString("O");
-            var end = (maxDate.HasValue ? maxDate.Value : DateTime.Now.AddDays(1)).ToString("O");
-            var queryOptions = new List<QueryOption>()
-            {
-                new QueryOption("startDateTime", start),
-                new QueryOption("endDateTime", end),
-                new QueryOption("top", "100"),
-            };
-            var calendarView = await graphClient.Me.Calendars[calendar?.Id].CalendarView
-                .Request(queryOptions)
-                .GetAsync();
-
-            var events = new List<Event>();
-            foreach (var item in calendarView)
-            {
-                events.Add(new Event
-                {
-                    Start = DateTime.Parse(item.Start.DateTime).ToLocalTime(),
-                    End = DateTime.Parse(item.End.DateTime).ToLocalTime(),
-                    Summary = item.Subject
-                }); ;
-            }
-
-            return events;
+            return accessToken;
         }
 
         public async Task<string> Logout()

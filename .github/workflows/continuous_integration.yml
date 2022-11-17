@@ -42,5 +42,8 @@ jobs:
         with:
           name: nupkg
 
+      - name: Authenticate to GitHub Packages
+        run: dotnet nuget add source --username rprouse --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/rprouse/index.json"
+
       - name: Publish NuGet to GitHub Packages
-        run: dotnet nuget push "**/dotnet-guppi.*.nupkg" -k ${{ secrets.WRITE_PACKAGES }} -s https://nuget.pkg.github.com/rprouse/index.json --skip-duplicate --no-symbols
+        run: dotnet nuget push "**/dotnet-guppi.*.nupkg" --source "github" --skip-duplicate --no-symbols

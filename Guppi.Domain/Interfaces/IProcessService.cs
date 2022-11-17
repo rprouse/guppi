@@ -16,5 +16,19 @@ namespace Guppi.Domain.Interfaces
         /// </summary>
         /// <param name="uri"></param>
         public void Open(string uri);
+
+        /// <summary>
+        /// Kills a process
+        /// </summary>
+        /// <param name="processName">The name of the process to kill</param>
+        /// <returns>True if the process is killed.</returns>
+        public void Kill(string processName);
+
+        /// <summary>
+        /// Determines if a process is running
+        /// </summary>
+        /// <param name="processName">The process</param>
+        /// <returns>True if the process is running</returns>
+        public bool Running(string processName);
     }
 }

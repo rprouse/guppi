@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Install dependencies
       run: dotnet restore
 
@@ -25,7 +25,7 @@ jobs:
       run: dotnet pack --no-build --configuration Release
 
     - name: Upload Artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: nupkg
         path: Guppi.Console/nupkg/*.nupkg
@@ -38,9 +38,9 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
       - name: Download Artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: nupkg
 
       - name: Publish NuGet to GitHub Packages
-        run: dotnet nuget push "**/dotnet-guppi.*.nupkg" -k ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/rprouse/index.json --skip-duplicate --no-symbols
+        run: dotnet nuget push "**/dotnet-guppi.*.nupkg" -k ${{ secrets.WRITE_PACKAGES }} -s https://nuget.pkg.github.com/rprouse/index.json --skip-duplicate --no-symbols

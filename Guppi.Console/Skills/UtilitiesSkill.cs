@@ -2,12 +2,23 @@ using System;
 using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using Guppi.Application.Commands.Utilities;
+using MediatR;
 using Spectre.Console;
 
 namespace Guppi.Console.Skills
 {
     public class UtilitiesSkill : ISkill
     {
+        private readonly IMediator _mediator;
+
+        public UtilitiesSkill(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+
         public IEnumerable<Command> GetCommands()
         {
             var time = new Command("time", "Displays the current date/time")
@@ -27,6 +38,13 @@ namespace Guppi.Console.Skills
             var guid = new Command("guid", "Creates a new Guid");
             guid.Handler = CommandHandler.Create(() => NewGuid());
             yield return guid;
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                var explorer = new Command("reset", "Restarts Windows Explorer");
+                explorer.Handler = CommandHandler.Create(async () => await RestartExplorer());
+                yield return explorer;
+            }
         }
 
         void DisplayTime(bool utc)
@@ -47,6 +65,19 @@ namespace Guppi.Console.Skills
         {
             AnsiConsole.MarkupLine($"[silver][[{Guid.NewGuid():D}]][/]");
             AnsiConsole.WriteLine();
+        }
+
+        async Task RestartExplorer()
+        {
+            try
+            {
+                AnsiConsole.MarkupLine(":firecracker: Restarting Explorer.exe");
+                await _mediator.Send(new RestartExplorerCommand());
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.MarkupLine($"[red][[:cross_mark: {ex.Message}]][/]");
+            }
         }
     }
 }

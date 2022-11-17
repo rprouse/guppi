@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Linq;
 using Guppi.Domain.Interfaces;
 
 namespace Guppi.Infrastructure.Services
@@ -30,5 +31,17 @@ namespace Guppi.Infrastructure.Services
             };
             Process.Start(ps);
         }
+
+        public void Kill(string processName)
+        {
+            var processes = Process.GetProcessesByName(processName);
+            foreach(var process in processes)
+            {
+                process.Kill();
+            }
+        }
+
+        public bool Running(string processName) =>
+            Process.GetProcessesByName(processName).Any();
     }
 }

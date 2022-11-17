@@ -9,13 +9,14 @@ namespace Guppi.Infrastructure.Services
 {
     public class SpeechService : ISpeechService
     {
-        IList<Prompt> _prompts = new List<Prompt>();
+        IList<Prompt> _prompts;
         SpeechSynthesizer _synth;
 
         public SpeechService()
         {
             if (OperatingSystem.IsWindows())
             {
+                _prompts = new List<Prompt>();
                 _synth = new SpeechSynthesizer();
                 _synth.SelectVoiceByHints(VoiceGender.Male);
                 _synth.SetOutputToDefaultAudioDevice();

@@ -6,7 +6,7 @@ namespace Guppi.Domain.Entities.AdventOfCode
     public class Leaderboard
     {
         public string Year { get; init; }
-        public string OwnerId { get; init; }
+        public int OwnerId { get; init; }
 
         public Dictionary<string, Member> Members { get; init; }
     }
@@ -14,7 +14,7 @@ namespace Guppi.Domain.Entities.AdventOfCode
     public class Member
     {
         public string Name { get; init; }
-        public string Id { get; init; }
+        public int Id { get; init; }
         public int GlobalScore { get; init; }
         public int LocalScore { get; init; }
         public int Stars { get; init; }

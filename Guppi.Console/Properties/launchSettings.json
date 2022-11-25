@@ -2,7 +2,7 @@
   "profiles": {
     "Guppi.Console": {
       "commandName": "Project",
-      "commandLineArgs": "reset"
+      "commandLineArgs": "aoc view -y 2021"
     }
   }
 }

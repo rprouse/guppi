@@ -8,7 +8,7 @@ namespace Guppi.Application.Queries.AdventOfCode
     internal class AocLeaderboard
     {
         public string year { get; set; }
-        public string owner_id { get; set; }
+        public int owner_id { get; set; }
 
         public Dictionary<string, Member> members { get; set; }
 
@@ -24,7 +24,7 @@ namespace Guppi.Application.Queries.AdventOfCode
     internal class Member
     {
         public string name { get; set; }
-        public string id { get; set; }
+        public int id { get; set; }
         public int global_score { get; set; }
         public int local_score { get; set; }
         public int stars { get; set; }

@@ -80,7 +80,7 @@ namespace Guppi.Console.Skills
                 int place = 1;
                 foreach (var member in leaders.Members.Values.OrderByDescending(m => m.LocalScore).ThenByDescending(m => m.Stars))
                 {
-                    AnsiConsole.Markup(string.Format("[white]{0,3}) {1,3}[/]  ", place++, member.LocalScore));
+                    AnsiConsole.Markup($"[white]{place++,3}) {member.LocalScore,4}[/]  ");
 
                     for (int d = 1; d <= 25; d++)
                     {

@@ -62,13 +62,13 @@ namespace Guppi.Console.Skills
                     $"[cyan]{data[i].Value}[/]",
                     $"[green]0x{data[i].Value.ToString("X2")}[/]",
                     $"[yellow]&#{data[i].Value};[/]",
-                    $"[white]{data[i].Character.EscapeMarkup()}[/]",
+                    $"[white] {data[i].Character.EscapeMarkup()}[/]",
                     data[i].Description,
 
                     $"[cyan]{data[i + num].Value}[/]",
                     $"[green]0x{data[i + num].Value.ToString("X2")}[/]",
                     $"[yellow]&#{data[i + num].Value};[/]",
-                    $"[white]{data[i + num].Character.EscapeMarkup()}[/]",
+                    $"[white] {data[i + num].Character.EscapeMarkup()}[/]",
                     data[i + num].Description
                     );
             }

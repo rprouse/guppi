@@ -20,7 +20,7 @@ namespace Guppi.Console.Skills
 
         public IEnumerable<Command> GetCommands()
         {
-            var amend = new Command("ammend", "Adds any steged files to the last git commit using the same message");
+            var amend = new Command("ammend", "Adds any staged files to the last git commit using the same message");
             amend.Handler = CommandHandler.Create(async () => await Ammend());
 
             var undo = new Command("undo", "Undo the last git commit. By default, does a soft reset preserving changes.")

@@ -140,6 +140,7 @@ namespace Guppi.Console.Skills
         {
             try
             {
+                if (day == 0) day = DateTime.Now.Day;
                 AnsiConsole.MarkupLine($"[green][[:fast_down_button: Getting data for {year}-12-{day:00}]][/]");
                 var data = await _mediator.Send(new PuzzleDataQuery( year, day ));
                 System.Console.WriteLine();

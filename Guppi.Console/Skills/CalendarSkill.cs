@@ -103,7 +103,7 @@ namespace Guppi.Console.Skills
                             if (markdown)
                                 AnsiConsole.WriteLine($"- **{start}{end}** {eventItem.Summary}");
                             else
-                                AnsiConsole.MarkupLine($"{eventItem.Start.GetEmoji()} [white]{start}{end}\t[/][silver]{eventItem.Summary}[/]");
+                                AnsiConsole.MarkupLine($"{eventItem.Start.GetEmoji()} [cyan]{start}{end}\t[/][silver]{eventItem.Summary}[/]");
                             return;
                         }
                     }
@@ -154,7 +154,7 @@ namespace Guppi.Console.Skills
                             if (markdown)
                                 AnsiConsole.WriteLine($"- {eventItem.Start.GetEmoji()} **{start}{end}** {eventItem.Summary}");
                             else
-                                AnsiConsole.MarkupLine($"{eventItem.Start.GetEmoji()} [white]{start}{end}\t[/][silver]{eventItem.Summary}[/]");
+                                AnsiConsole.MarkupLine($"{eventItem.Start.GetEmoji()} [cyan]{start}{end}\t[/][silver]{eventItem.Summary}[/]");
                             found = true;
                         }
                         if (found) return;

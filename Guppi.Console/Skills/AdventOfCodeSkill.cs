@@ -4,23 +4,21 @@ using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
 using System.Linq;
 using System.Threading.Tasks;
-using Guppi.Application.Commands.AdventOfCode;
 using Guppi.Application.Exceptions;
 using Guppi.Application.Extensions;
-using Guppi.Application.Queries.AdventOfCode;
 using Guppi.Domain.Entities.AdventOfCode;
-using MediatR;
+using Guppi.Application.Services;
 using Spectre.Console;
 
 namespace Guppi.Console.Skills
 {
     public class AdventOfCodeSkill : ISkill
     {
-        private readonly IMediator _mediator;
+        private readonly IAdventOfCodeService _service;
 
-        public AdventOfCodeSkill(IMediator mediator)
+        public AdventOfCodeSkill(IAdventOfCodeService service)
         {
-            _mediator = mediator;
+            _service = service;
         }
 
         public IEnumerable<Command> GetCommands()
@@ -29,7 +27,7 @@ namespace Guppi.Console.Skills
             {
                 new Option<int>(new string[]{"--year", "-y" }, () => DateTime.Now.Year, "Adds a day to the given year. Defaults to this year."),
             };
-            add.Handler = CommandHandler.Create(async (int year) => await AddDayTo(year));
+            add.Handler = CommandHandler.Create((int year) => AddDayTo(year));
 
             var data = new Command("data", "Adds the data for a given day to my Advent of Code solution. The data file for the day must exist and will be overwritten")
             {
@@ -43,7 +41,7 @@ namespace Guppi.Console.Skills
                 new Option<int>(new string[]{"--year", "-y" }, () => DateTime.Now.Year, "Runs tests for the given year. Defaults to this year."),
                 new Option<int>(new string[]{"--day", "-d" }, () => 0, "Runs tests for the given day. If not set, runs all tests for the year."),
             };
-            test.Handler = CommandHandler.Create(async (int year, int day) => await RunTests(year, day));
+            test.Handler = CommandHandler.Create((int year, int day) => RunTests(year, day));
 
             var view = new Command("view", "Views the Advent of Code leaderboard")
             {
@@ -54,7 +52,7 @@ namespace Guppi.Console.Skills
 
             var configure = new Command("configure", "Configures the AdventOfCode provider");
             configure.AddAlias("config");
-            configure.Handler = CommandHandler.Create(async () => await Configure());
+            configure.Handler = CommandHandler.Create(() => Configure());
 
             var command = new Command("aoc", "Work with Advent of Code (AoC)")
             {
@@ -72,7 +70,7 @@ namespace Guppi.Console.Skills
         {
             try
             {
-                var leaders = await _mediator.Send(new LeaderboardQuery { Year = year, Board = board });
+                var leaders = await _service.GetLeaderboard(year, board);
 
                 AnsiConsole.WriteLine();
                 AnsiConsoleHelper.TitleRule($":christmas_tree: Advent of Code Leaderboard {year}");
@@ -116,11 +114,11 @@ namespace Guppi.Console.Skills
             }
         }
 
-        private async Task AddDayTo(int year)
+        private void AddDayTo(int year)
         {
             try
             {
-                var result = await _mediator.Send(new AddDayCommand { Year = year });
+                var result = _service.AddDayTo(year);
 
                 AnsiConsole.MarkupLine($"[green][[:check_mark_button: Adding new day to {result.Directory}]][/]");
                 AnsiConsole.MarkupLine($"[green][[:check_mark_button: Added Day{result.NewDay:00}]][/]");
@@ -136,18 +134,19 @@ namespace Guppi.Console.Skills
                 AnsiConsole.MarkupLine("[silver][[Configure the data provider to set the solution directory.]][/]");
             }
         }
+     
         private async Task AddDataTo(int year, int day)
         {
             try
             {
                 if (day == 0) day = DateTime.Now.Day;
                 AnsiConsole.MarkupLine($"[green][[:fast_down_button: Getting data for {year}-12-{day:00}]][/]");
-                var data = await _mediator.Send(new PuzzleDataQuery( year, day ));
+                var data = await _service.GetPuzzleData(year, day);
                 System.Console.WriteLine();
                 System.Console.WriteLine(data);
 
                 AnsiConsole.MarkupLine($"[green][[:memo: Saving Data for day {day:00}]][/]");
-                await _mediator.Send(new AddDataCommand(year, day, data));
+                await _service.AddPuzzleDataToProject(year, day, data);
             }
             catch (WarningException ex)
             {
@@ -162,13 +161,13 @@ namespace Guppi.Console.Skills
 
         }
 
-        private async Task Configure() => await _mediator.Send(new ConfigureAocCommand());
+        private void Configure() => _service.Configure();
 
-        private async Task RunTests(int year, int day)
+        private void RunTests(int year, int day)
         {
             try
             {
-                await _mediator.Send(new RunTestsCommand { Year = year, Day = day });
+                _service.RunTests(year, day);
             }
             catch (UnconfiguredException ex)
             {

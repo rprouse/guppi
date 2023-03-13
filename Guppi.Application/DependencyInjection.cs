@@ -12,7 +12,8 @@ public static class DependencyInjection
         services
             .AddMediatR(Assembly.GetExecutingAssembly())
             .AddTransient<IAdventOfCodeService, AdventOfCodeService>()
-            .AddTransient<IAsciiService, AsciiService>();
+            .AddTransient<IAsciiService, AsciiService>()
+            .AddTransient<ICalendarService, CalendarService>();
 
         return services;
     }

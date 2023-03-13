@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.CommandLine;
 using System.Linq;
 using System.Threading.Tasks;
-using Guppi.Application.Commands.Calendar;
 using Guppi.Application.Exceptions;
 using Guppi.Application.Extensions;
-using Guppi.Application.Queries.Calendar;
+using Guppi.Application.Services;
 using MediatR;
 using Spectre.Console;
 
@@ -14,11 +13,11 @@ namespace Guppi.Console.Skills
 {
     public class CalendarSkill : ISkill
     {
-        private readonly IMediator _mediator;
+        private readonly ICalendarService _service;
 
-        public CalendarSkill(IMediator mediator)
+        public CalendarSkill(ICalendarService service)
         {
-            _mediator = mediator;
+            _service = service;
         }
 
         public IEnumerable<Command> GetCommands()
@@ -50,7 +49,7 @@ namespace Guppi.Console.Skills
 
             var configure = new Command("Configure", "Configure calendars");
             configure.AddAlias("config");
-            configure.SetHandler(async () => await Configure());
+            configure.SetHandler(() => Configure());
 
             var cmd = new Command("calendar", "Display's today's calendar events")
             {
@@ -64,28 +63,20 @@ namespace Guppi.Console.Skills
             return new[] { cmd };
         }
 
-        private async Task Configure() =>
-            await _mediator.Send(new ConfigureCalendarCommand());
+        private void Configure() => _service.Configure();
 
         private async Task Logout()
         {
-            await _mediator.Send(new CalendarLogoutCommand());
+            await _service.Logout();
             AnsiConsole.MarkupLine("[green][[:check_mark_button: Logged out of Google]][/]");
         }
 
         private async Task Next(bool markdown)
         {
-            var now = DateTime.Now;
-
-            var query = new CalendarEventsQuery
-            {
-                MinDate = now,
-                MaxDate = now.AddDays(7)
-            };
-
             try
             {
-                var events = await _mediator.Send(query);
+                var now = DateTime.Now;
+                var events = await _service.GetCalendarEvents(now, now.AddDays(7));
                 AnsiConsoleHelper.TitleRule(":tear_off_calendar: Next event");
 
                 try
@@ -127,15 +118,10 @@ namespace Guppi.Console.Skills
 
         private async Task Agenda(DateTime now, string title, bool markdown)
         {
-            var query = new CalendarEventsQuery
-            {
-                MinDate = now,
-                MaxDate = new DateTime(now.Year, now.Month, now.Day, 23, 59, 59, DateTimeKind.Local)
-            };
-
             try
             {
-                var events = await _mediator.Send(query);
+                var max = new DateTime(now.Year, now.Month, now.Day, 23, 59, 59, DateTimeKind.Local);
+                var events = await _service.GetCalendarEvents(now, max);
                 AnsiConsoleHelper.TitleRule($":calendar: {title}");
 
                 try

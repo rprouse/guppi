@@ -11,7 +11,8 @@ public static class DependencyInjection
     {
         services
             .AddMediatR(Assembly.GetExecutingAssembly())
-            .AddTransient<IAdventOfCodeService, AdventOfCodeService>();
+            .AddTransient<IAdventOfCodeService, AdventOfCodeService>()
+            .AddTransient<IAsciiService, AsciiService>();
 
         return services;
     }

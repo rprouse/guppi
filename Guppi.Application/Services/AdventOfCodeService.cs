@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -10,7 +10,7 @@ using Guppi.Domain.Interfaces;
 
 namespace Guppi.Application.Services;
 
-public class AdventOfCodeService : IAdventOfCodeService
+internal sealed class AdventOfCodeService : IAdventOfCodeService
 {
     private readonly IHttpRestService _restService;
     private readonly IProcessService _process;

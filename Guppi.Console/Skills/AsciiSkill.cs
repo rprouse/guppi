@@ -1,22 +1,20 @@
 using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
-using System.Threading.Tasks;
 using Guppi.Application.Extensions;
-using Guppi.Application.Queries.Ascii;
+using Guppi.Application.Services;
 using Guppi.Domain.Entities.Ascii;
-using MediatR;
 using Spectre.Console;
 
 namespace Guppi.Console.Skills
 {
     public class AsciiSkill : ISkill
     {
-        private readonly IMediator _mediator;
+        private readonly IAsciiService _service;
 
-        public AsciiSkill(IMediator mediator)
+        public AsciiSkill(IAsciiService service)
         {
-            _mediator = mediator;
+            _service = service;
         }
 
         public IEnumerable<Command> GetCommands() =>
@@ -24,13 +22,13 @@ namespace Guppi.Console.Skills
             {
                 new Command("ascii", "Views an ASCII chart.")
                 {
-                    Handler = CommandHandler.Create(async() => await ViewAsciiTable())
+                    Handler = CommandHandler.Create(() => ViewAsciiTable())
                 }
             };
 
-        private async Task ViewAsciiTable()
+        private void ViewAsciiTable()
         {
-            AsciiData[] data = await _mediator.Send(new AsciiQuery());
+            AsciiData[] data = _service.GetAsciiTable();
 
             AnsiConsoleHelper.TitleRule(":keyboard: ASCII Table");
 

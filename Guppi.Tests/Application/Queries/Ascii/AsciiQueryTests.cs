@@ -1,7 +1,5 @@
-using System.Threading;
-using System.Threading.Tasks;
 using FluentAssertions;
-using Guppi.Application.Queries.Ascii;
+using Guppi.Application.Services;
 using NUnit.Framework;
 
 namespace Guppi.Tests.Application.Queries.Ascii
@@ -9,29 +7,25 @@ namespace Guppi.Tests.Application.Queries.Ascii
     [TestFixture]
     public class AsciiQueryTests
     {
-        AsciiQueryHandler handler;
+        AsciiService service;
 
         [SetUp]
         public void SetUp()
         {
-            handler = new AsciiQueryHandler();
+            service = new AsciiService();
         }
 
         [Test]
-        public async Task AsciiQueryHandler_Handle_Returns128Items()
+        public void AsciiQueryHandler_Handle_Returns128Items()
         {
-            var result = await handler
-                .Handle(new AsciiQuery(), new CancellationToken());
-
+            var result = service.GetAsciiTable();
             result.Should().NotBeNull().And.HaveCount(128);
         }
 
         [Test]
-        public async Task AsciiQueryHandler_Handle_ReturnsUniqueItems()
+        public void AsciiQueryHandler_Handle_ReturnsUniqueItems()
         {
-            var result = await handler
-                .Handle(new AsciiQuery(), new CancellationToken());
-
+            var result = service.GetAsciiTable();
             for (int i = 0; i < 128; i++)
             {
                 result.Should().Contain(a => a.Value == i);

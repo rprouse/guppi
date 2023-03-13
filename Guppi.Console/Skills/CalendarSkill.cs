@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Guppi.Application.Exceptions;
 using Guppi.Application.Extensions;
 using Guppi.Application.Services;
-using MediatR;
 using Spectre.Console;
 
 namespace Guppi.Console.Skills

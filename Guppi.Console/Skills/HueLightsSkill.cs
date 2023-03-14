@@ -9,7 +9,6 @@ using Guppi.Application.Extensions;
 using Guppi.Application.Services;
 using Guppi.Application.Services.Hue;
 using Guppi.Domain.Entities.Hue;
-using MediatR;
 using Spectre.Console;
 
 namespace Guppi.Console.Skills;

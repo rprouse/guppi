@@ -7,7 +7,7 @@ using Spectre.Console;
 
 namespace Guppi.Console.Skills;
 
-public class GitSkill : ISkill
+internal class GitSkill : ISkill
 {
     private readonly IGitService _service;
 

@@ -10,7 +10,7 @@ using Spectre.Console;
 
 namespace Guppi.Console.Skills;
 
-public class CalendarSkill : ISkill
+internal class CalendarSkill : ISkill
 {
     private readonly ICalendarService _service;
 

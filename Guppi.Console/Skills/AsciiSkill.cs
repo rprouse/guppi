@@ -8,7 +8,7 @@ using Spectre.Console;
 
 namespace Guppi.Console.Skills;
 
-public class AsciiSkill : ISkill
+internal class AsciiSkill : ISkill
 {
     private readonly IAsciiService _service;
 

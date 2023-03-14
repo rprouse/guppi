@@ -14,7 +14,7 @@ namespace Guppi.Application.Extensions
         public static void TitleRule(string title, string color = "white")
         {
             var rule = new Rule($"[{color}][[{title}]][/]");
-            rule.Alignment = Justify.Left;
+            rule.LeftJustified();
             rule.RuleStyle(color);
             AnsiConsole.Write(rule);
             AnsiConsole.WriteLine();

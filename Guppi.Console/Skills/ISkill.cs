@@ -1,14 +1,13 @@
 using System.Collections.Generic;
 using System.CommandLine;
 
-namespace Guppi.Console.Skills
+namespace Guppi.Console.Skills;
+
+public interface ISkill
 {
-    public interface ISkill
-    {
-        /// <summary>
-        /// Gets multiple commands that a provider supports
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<Command> GetCommands();
-    }
+    /// <summary>
+    /// Gets multiple commands that a provider supports
+    /// </summary>
+    /// <returns></returns>
+    IEnumerable<Command> GetCommands();
 }

@@ -1,4 +1,4 @@
-namespace Guppi.Application.Queries.Strava
+namespace Guppi.Application.Services.Strava
 {
 #pragma warning disable IDE1006 // Naming Styles
 

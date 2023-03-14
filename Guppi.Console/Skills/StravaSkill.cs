@@ -4,23 +4,21 @@ using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
 using System.Linq;
 using System.Threading.Tasks;
-using Guppi.Application.Commands.Strava;
 using Guppi.Application.Exceptions;
 using Guppi.Application.Extensions;
-using Guppi.Application.Queries.Strava;
+using Guppi.Application.Services;
 using Guppi.Domain.Entities.Strava;
-using MediatR;
 using Spectre.Console;
 
 namespace Guppi.Console.Skills
 {
     public class StravaSkill : ISkill
     {
-        private readonly IMediator _mediator;
+        private readonly IStravaService _service;
 
-        public StravaSkill(IMediator mediator)
+        public StravaSkill(IStravaService service)
         {
-            _mediator = mediator;
+            _service = service;
         }
 
         public IEnumerable<Command> GetCommands()
@@ -34,7 +32,7 @@ namespace Guppi.Console.Skills
 
             var configure = new Command("configure", "Configures the Strava provider");
             configure.AddAlias("config");
-            configure.Handler = CommandHandler.Create(async () => await Configure());
+            configure.Handler = CommandHandler.Create(() => Configure());
 
             var command = new Command("strava", "Displays Strava fitness activities")
             {
@@ -49,7 +47,7 @@ namespace Guppi.Console.Skills
         {
             try
             {
-                IEnumerable<Activity> activities = await _mediator.Send(new GetActivitiesQuery());
+                IEnumerable<Activity> activities = await _service.GetActivities();
 
                 AnsiConsoleHelper.TitleRule($":person_biking: Fitness activities from the last {days} days");
 
@@ -92,6 +90,6 @@ namespace Guppi.Console.Skills
             }
         }
 
-        private async Task Configure() => await _mediator.Send(new ConfigureStravaCommand());
+        private void Configure() => _service.Configure();
     }
 }

@@ -4,12 +4,10 @@ using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
 using System.Linq;
 using System.Threading.Tasks;
-using Guppi.Application.Commands.Weather;
 using Guppi.Application.Exceptions;
 using Guppi.Application.Extensions;
-using Guppi.Application.Queries.Weather;
+using Guppi.Application.Services;
 using Guppi.Domain.Entities.Weather;
-using MediatR;
 using Spectre.Console;
 
 namespace Guppi.Console.Skills
@@ -17,11 +15,11 @@ namespace Guppi.Console.Skills
     public class WeatherSkill : ISkill
     {
         const string Command = "weather";
-        private readonly IMediator _mediator;
+        private readonly IWeatherService _service;
 
-        public WeatherSkill(IMediator mediator)
+        public WeatherSkill(IWeatherService service)
         {
-            _mediator = mediator;
+            _service = service;
         }
 
         public IEnumerable<Command> GetCommands()
@@ -35,7 +33,7 @@ namespace Guppi.Console.Skills
 
             var configure = new Command("configure", "Configures the weather provider");
             configure.AddAlias("config");
-            configure.Handler = CommandHandler.Create(async () => await Configure());
+            configure.Handler = CommandHandler.Create(() => Configure());
 
             return new []
             {
@@ -51,7 +49,7 @@ namespace Guppi.Console.Skills
         {
             try
             {
-                WeatherForecast weather = await _mediator.Send(new WeatherQuery());
+                WeatherForecast weather = await _service.GetWeather();
 
                 if (all)
                     DisplayLong(weather);
@@ -65,7 +63,7 @@ namespace Guppi.Console.Skills
             }
         }
 
-        private async Task Configure() => await _mediator.Send(new ConfigureWeatherCommand());
+        private void Configure() => _service.Configure();
 
         private void DisplayLong(WeatherForecast weather)
         {

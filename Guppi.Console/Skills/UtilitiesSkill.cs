@@ -4,7 +4,7 @@ using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Guppi.Application.Commands.Utilities;
+using Guppi.Application.Services;
 using MediatR;
 using Spectre.Console;
 
@@ -12,11 +12,11 @@ namespace Guppi.Console.Skills
 {
     public class UtilitiesSkill : ISkill
     {
-        private readonly IMediator _mediator;
+        private readonly IUtilitiesService _service;
 
-        public UtilitiesSkill(IMediator mediator)
+        public UtilitiesSkill(IUtilitiesService service)
         {
-            _mediator = mediator;
+            _service = service;
         }
 
         public IEnumerable<Command> GetCommands()
@@ -72,7 +72,7 @@ namespace Guppi.Console.Skills
             try
             {
                 AnsiConsole.MarkupLine(":firecracker: Restarting Explorer.exe");
-                await _mediator.Send(new RestartExplorerCommand());
+                await _service.RestartExplorer();
             }
             catch (Exception ex)
             {

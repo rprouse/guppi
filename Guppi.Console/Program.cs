@@ -12,8 +12,6 @@ await ConfigureServices()
 static IServiceProvider ConfigureServices() =>
     new ServiceCollection()
         .AddTransient<IApplication, Application>()
-        .AddApplication()
-        .AddInfrastructure()
         .AddTransient<ISkill, AdventOfCodeSkill>()
         .AddTransient<ISkill, AsciiSkill>()
         .AddTransient<ISkill, CalendarSkill>()
@@ -23,4 +21,6 @@ static IServiceProvider ConfigureServices() =>
         .AddTransient<ISkill, StravaSkill>()
         .AddTransient<ISkill, WeatherSkill>()
         .AddTransient<ISkill, UtilitiesSkill>()
+        .AddApplication()
+        .AddInfrastructure()
         .BuildServiceProvider();

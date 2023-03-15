@@ -53,7 +53,7 @@ internal class StravaSkill : ISkill
 
             var table = new Table();
             table.Border = TableBorder.Minimal;
-            table.AddColumns("", "Day", ":calendar: Date", ":sports_medal: Distance", ":four_o_clock: Time", ":mount_fuji: Elevaton", ":growing_heart: Suffer", ":compass: Activity");
+            table.AddColumns("", "Day", ":calendar: Date", ":sports_medal: Distance", ":four_o_clock: Duration", ":mount_fuji: Elevaton", ":growing_heart: Suffer", ":compass: Activity");
             table.Columns[0].LeftAligned();
             table.Columns[1].LeftAligned();
             table.Columns[2].LeftAligned();
@@ -68,8 +68,8 @@ internal class StravaSkill : ISkill
             {
                 table.AddRow(
                     act.Icon,
-                    act.StartDate.ToString("ddd"),
-                    act.StartDate.ToString("yyyy-MM-dd"),
+                    act.StartDate.ToLocalTime().ToString("ddd"),
+                    act.StartDate.ToLocalTime().ToString("yyyy-MM-dd"),
                     $"{(act.Distance / 1000):0.0} km",
                     act.MovingTime.ToString(@"hh\:mm\:ss"),
                     $"{act.Elevation:0} m",

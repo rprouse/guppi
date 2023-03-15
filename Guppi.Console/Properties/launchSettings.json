@@ -2,7 +2,7 @@
   "profiles": {
     "Guppi.Console": {
       "commandName": "Project",
-      "commandLineArgs": "strava view"
+      "commandLineArgs": "dict configure"
     }
   }
 }

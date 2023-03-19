@@ -50,7 +50,7 @@ internal class CalendarSkill : ISkill
         configure.AddAlias("config");
         configure.SetHandler(() => Configure());
 
-        var cmd = new Command("calendar", "Display's today's calendar events")
+        var cmd = new Command("calendar", "Displays today's calendar events")
         {
             next,
             today,

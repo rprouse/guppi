@@ -53,6 +53,11 @@ To get the information to configure, follow the instructions at:
 
 To check your API information, see the [API Console](https://console.developers.google.com/).
 
+### Dictionary and Thesaurus
+
+Displays the definition of a word or the synonyms of a word. You must supply a
+dictionary and thesaurus API key from [Merriam-Webster](https://dictionaryapi.com/).
+
 ### Git
 
 Useful git aliases like `ammend`, `undo`, `unstage` and `update` which switches to the

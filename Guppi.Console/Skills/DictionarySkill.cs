@@ -67,12 +67,13 @@ internal class DictionarySkill : ISkill
             //AnsiConsoleHelper.TitleRule(":crossed_swords: Ramscoop Generator: Ready/Standby");
 
             foreach (var response in responses)
-            {                 
+            {
+                AnsiConsoleHelper.TitleRule($":input_latin_letters: {response.Id} <{response.PartOfSpeech}>");
                 foreach (var alternative in response.Alternatives)
                 {
-                    AnsiConsole.MarkupLine($"[cyan]Definition:[/] [green]{alternative.ShortDefinition}[/]");
-                    AnsiConsole.MarkupLine($"[cyan]Synonyms:[/] {string.Join(", ", alternative.Synonyms)}");
-                    AnsiConsole.MarkupLine($"[cyan]Antonyms:[/] {string.Join(", ", alternative.Antonyms)}");
+                    AnsiConsole.MarkupLine($"[cyan]Definition:[/] [white]{alternative.ShortDefinition}[/]");
+                    AnsiConsole.MarkupLine($"[cyan]Synonyms:[/] [green]{string.Join(", ", alternative.Synonyms)}[/]");
+                    AnsiConsole.MarkupLine($"[cyan]Antonyms:[/] [yellow]{string.Join(", ", alternative.Antonyms)}[/]");
                     AnsiConsole.WriteLine();
                 }
             }

@@ -1,10 +1,12 @@
-using System;
 using System.Collections.Generic;
 using System.CommandLine;
+using System.CommandLine.NamingConventionBinder;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Guppi.Application.Exceptions;
+using Guppi.Application.Extensions;
 using Guppi.Application.Services;
+using Spectre.Console;
 
 namespace Guppi.Console.Skills;
 
@@ -19,25 +21,65 @@ internal class DictionarySkill : ISkill
 
     public IEnumerable<Command> GetCommands()
     {
-        var configure = new Command("configure", "Configure calendars");
-        configure.AddAlias("config");
-        configure.SetHandler(() => Configure());
-
-        var dict = new Command("dictionary", "Displays the meanings of words.")
+        var dict = new Command("dictionary", "Lookup the meaning of a word. Use config to configure.")
         {
-            configure,
+            new Argument<string>("word", "The word to lookup. Use 'config' to configure.")
         };
         dict.AddAlias("dict");
+        dict.Handler = CommandHandler.Create<string>(LookupDictionaryFor);
 
-        var thes = new Command("thesaurus", "Displays synonyms of words.")
+        var thes = new Command("thesaurus", "Lookup a word in the Thesaurus. Use config to configure.")
         {
-            configure,
+            new Argument<string>("word", "The word to lookup. Use 'config' to configure.")
         };
-        thes.AddAlias("synonyms");
-        thes.AddAlias("syn");
+        thes.AddAlias("thes");
+        thes.Handler = CommandHandler.Create<string>(LookupThesaurusFor);
 
         return new[] { dict, thes };
     }
 
-    private void Configure() => _service.Configure();
+    private void LookupDictionaryFor(string word)
+    {
+        if (word.ToLowerInvariant() == "config")
+        {
+            _service.Configure();
+            return;
+        }
+        // TODO: Dictionary lookup
+    }
+
+    private async Task LookupThesaurusFor(string word)
+    {
+        if (word.ToLowerInvariant() == "config")
+        {
+            _service.Configure();
+            return;
+        }
+        try
+        {
+            var responses = await _service.LookupThesaurusFor(word);
+            if (responses is null || responses.Count() == 0)
+            {
+                AnsiConsole.MarkupLine($"[yellow]No results found for {word}[/]");
+                return;
+            }
+
+            //AnsiConsoleHelper.TitleRule(":crossed_swords: Ramscoop Generator: Ready/Standby");
+
+            foreach (var response in responses)
+            {                 
+                foreach (var alternative in response.Alternatives)
+                {
+                    AnsiConsole.MarkupLine($"[cyan]Definition:[/] [green]{alternative.ShortDefinition}[/]");
+                    AnsiConsole.MarkupLine($"[cyan]Synonyms:[/] {string.Join(", ", alternative.Synonyms)}");
+                    AnsiConsole.MarkupLine($"[cyan]Antonyms:[/] {string.Join(", ", alternative.Antonyms)}");
+                    AnsiConsole.WriteLine();
+                }
+            }
+        }
+        catch (UnconfiguredException ue)
+        {
+            AnsiConsole.MarkupLine($"[yellow][[:yellow_circle: {ue.Message}]][/]");
+        }
+    }
 }

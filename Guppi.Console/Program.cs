@@ -22,6 +22,7 @@ static IServiceProvider ConfigureServices() =>
         .AddTransient<ISkill, StravaSkill>()
         .AddTransient<ISkill, WeatherSkill>()
         .AddTransient<ISkill, UtilitiesSkill>()
+        .AddTransient<ISkill, VoiceSkill>()
         .AddApplication()
         .AddInfrastructure()
         .BuildServiceProvider();

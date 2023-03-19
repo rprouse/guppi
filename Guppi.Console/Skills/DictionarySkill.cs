@@ -21,16 +21,16 @@ internal class DictionarySkill : ISkill
 
     public IEnumerable<Command> GetCommands()
     {
-        var dict = new Command("dictionary", "Lookup the meaning of a word. Use config to configure.")
+        var dict = new Command("dictionary", "Lookup a word in the Dictionary")
         {
-            new Argument<string>("word", "The word to lookup. Use 'config' to configure.")
+            new Argument<string>("word", "The word to lookup. Use 'config' to configure")
         };
         dict.AddAlias("dict");
         dict.Handler = CommandHandler.Create<string>(LookupDictionaryFor);
 
-        var thes = new Command("thesaurus", "Lookup a word in the Thesaurus. Use config to configure.")
+        var thes = new Command("thesaurus", "Lookup a word in the Thesaurus")
         {
-            new Argument<string>("word", "The word to lookup. Use 'config' to configure.")
+            new Argument<string>("word", "The word to lookup. Use 'config' to configure")
         };
         thes.AddAlias("thes");
         thes.Handler = CommandHandler.Create<string>(LookupThesaurusFor);

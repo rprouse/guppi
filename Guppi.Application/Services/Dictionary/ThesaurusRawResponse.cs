@@ -1,7 +1,42 @@
+using System.Collections.Generic;
+using Guppi.Domain.Entities.Dictionary;
+
 namespace Guppi.Application.Services.Dictionary;
 
 #pragma warning disable IDE1006 // Naming Styles
-using System.Collections.Generic;
+public class ThesaurusRawResponse
+{
+    public ThesaurusMeta meta { get; set; }
+    public Hwi hwi { get; set; }
+    public string fl { get; set; }
+    public List<Def> def { get; set; }
+    public string[] shortdef { get; set; }
+
+    /// <summary>
+    /// Converts a raw JSON response to a clean internal format
+    /// </summary>
+    /// <returns></returns>
+    public ThesaurusResponse GetThesaurusResponse()
+    {
+        var response = new ThesaurusResponse
+        {
+            Id = meta.id,
+            PartOfSpeech = fl
+        };
+        for (int i = 0; i < shortdef.Length; i++)
+        {
+            response.Alternatives.Add(new ThesaurusAlternative
+            {
+                ShortDefinition = shortdef[i],
+                Offensive = meta.offensive,
+                Synonyms = meta.syns[i],
+                Antonyms = meta.ants[i]
+            });
+        }
+        return response;
+    }
+}
+
 
 public class Target
 {
@@ -9,7 +44,7 @@ public class Target
     public string tsrc { get; set; }
 }
 
-public class Meta
+public class ThesaurusMeta
 {
     public string id { get; set; }
     public string uuid { get; set; }
@@ -49,15 +84,6 @@ public class Sense
 public class Def
 {
     public List<List<object>> sseq { get; set; }
-}
-
-public class ThesaurusRawResponse
-{
-    public Meta meta { get; set; }
-    public Hwi hwi { get; set; }
-    public string fl { get; set; }
-    public List<Def> def { get; set; }
-    public string[] shortdef { get; set; }
 }
 
 #pragma warning restore IDE1006 // Naming Styles

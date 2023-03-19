@@ -12,6 +12,7 @@ namespace Guppi.Application.Services;
 public interface IDictionaryService
 {
     void Configure();
+    Task<IEnumerable<DictionaryResponse>> LookupDictionaryFor(string word);
     Task<IEnumerable<ThesaurusResponse>> LookupThesaurusFor(string word);
 }
 
@@ -30,6 +31,19 @@ internal class DictionaryService : IDictionaryService
         configuration.RunConfiguration("Dictionary", "Configure the Dictionary and Thesaurus API keys.");
     }
 
+    public async Task<IEnumerable<DictionaryResponse>> LookupDictionaryFor(string word)
+    {
+        var configuration = Configuration.Load<DictionaryConfiguration>("Dictionary");
+        if (!configuration.Configured)
+        {
+            throw new UnconfiguredException("Please configure the Dictionary provider.");
+        }
+
+        var url = $@"https://www.dictionaryapi.com/api/v3/references/collegiate/json/{word}?key={configuration.DictionaryApiKey}";
+        var result = await _restService.GetData<List<DictionaryRawResponse>>(url);
+        return result.Select(r => r.GetDictionaryResponse());
+    }
+
     public async Task<IEnumerable<ThesaurusResponse>> LookupThesaurusFor(string word)
     {
         var configuration = Configuration.Load<DictionaryConfiguration>("Dictionary");
@@ -40,26 +54,6 @@ internal class DictionaryService : IDictionaryService
 
         var url = $@"https://www.dictionaryapi.com/api/v3/references/thesaurus/json/{word}?key={configuration.ThesaurusApiKey}";
         var result = await _restService.GetData<List<ThesaurusRawResponse>>(url);
-        var responses = new List<ThesaurusResponse>();
-        foreach (var response in result)
-        {
-            var res = new ThesaurusResponse
-            {
-                Id = response.meta.id,
-                PartOfSpeech = response.fl
-            };
-            for (int i = 0; i < response.shortdef.Length; i++)
-            {
-                res.Alternatives.Add(new Alternative
-                {
-                    ShortDefinition = response.shortdef[i],
-                    Offensive = response.meta.offensive,
-                    Synonyms = response.meta.syns[i],
-                    Antonyms = response.meta.ants[i]
-                });
-            }
-            responses.Add(res);
-        }
-        return responses;
+        return result.Select(r => r.GetThesaurusResponse());
     }
 }

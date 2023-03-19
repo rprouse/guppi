@@ -38,14 +38,36 @@ internal class DictionarySkill : ISkill
         return new[] { dict, thes };
     }
 
-    private void LookupDictionaryFor(string word)
+    private async Task LookupDictionaryFor(string word)
     {
         if (word.ToLowerInvariant() == "config")
         {
             _service.Configure();
             return;
         }
-        // TODO: Dictionary lookup
+        try
+        {
+            var responses = await _service.LookupDictionaryFor(word);
+            if (responses is null || responses.Count() == 0)
+            {
+                AnsiConsole.MarkupLine($"[yellow]No results found for {word}[/]");
+                return;
+            }
+
+            foreach (var response in responses)
+            {
+                AnsiConsoleHelper.TitleRule($":input_latin_letters: {response.Id} <{response.PartOfSpeech}>");
+                foreach (var alternative in response.Alternatives)
+                {
+                    AnsiConsole.MarkupLine($"[cyan]Definition:[/] [white]{alternative.ShortDefinition}[/]");
+                }
+                AnsiConsole.WriteLine();
+            }
+        }
+        catch (UnconfiguredException ue)
+        {
+            AnsiConsole.MarkupLine($"[yellow][[:yellow_circle: {ue.Message}]][/]");
+        }
     }
 
     private async Task LookupThesaurusFor(string word)
@@ -63,8 +85,6 @@ internal class DictionarySkill : ISkill
                 AnsiConsole.MarkupLine($"[yellow]No results found for {word}[/]");
                 return;
             }
-
-            //AnsiConsoleHelper.TitleRule(":crossed_swords: Ramscoop Generator: Ready/Standby");
 
             foreach (var response in responses)
             {

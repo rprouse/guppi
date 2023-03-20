@@ -86,6 +86,18 @@ Displays Strava fitness activities.
 
 Displays the date, the time or creates a new Guid.
 
+### Voice
+
+On Windows, you can list the installed voices and set the default voice. To install additional
+voices, 
+
+1. Click on the Start button (the Windows icon) at the bottom left corner of your screen.
+2. Click on the "Settings" (gear icon) to open the Settings app.
+3. In the Settings app, click on "Time & language" in the left-hand menu.
+4. Click on "Speech" in the left-hand submenu under "Time & language."
+5. On the right side, click on "Speech"
+6. Click "Add voices"
+
 ### Weather
 
 Displays today's weather information.

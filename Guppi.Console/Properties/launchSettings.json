@@ -2,7 +2,7 @@
   "profiles": {
     "Guppi.Console": {
       "commandName": "Project",
-      "commandLineArgs": "voice list"
+      "commandLineArgs": "thes tired"
     }
   }
 }

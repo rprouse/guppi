@@ -29,8 +29,8 @@ public class ThesaurusRawResponse
             {
                 ShortDefinition = shortdef[i],
                 Offensive = meta.offensive,
-                Synonyms = meta.syns[i],
-                Antonyms = meta.ants[i]
+                Synonyms = i < meta.syns.Length ? meta.syns[i] : new List<string>(),
+                Antonyms = i < meta.ants.Length ? meta.ants[i] : new List<string>()
             });
         }
         return response;

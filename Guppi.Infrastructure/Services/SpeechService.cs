@@ -1,8 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Speech.Synthesis;
 using System.Threading.Tasks;
+using Guppi.Application;
+using Guppi.Application.Configurations;
+using Guppi.Domain.Entities.Voices;
 using Guppi.Domain.Interfaces;
 
 namespace Guppi.Infrastructure.Services
@@ -11,17 +16,57 @@ namespace Guppi.Infrastructure.Services
     {
         IList<Prompt> _prompts;
         SpeechSynthesizer _synth;
+        VoiceConfiguration _config;
 
         public SpeechService()
         {
             if (OperatingSystem.IsWindows())
             {
+                _config = Configuration.Load<VoiceConfiguration>("voice");
                 _prompts = new List<Prompt>();
                 _synth = new SpeechSynthesizer();
-                _synth.SelectVoiceByHints(VoiceGender.Male);
+                
+                if (!string.IsNullOrWhiteSpace(_config?.Voice) && IsVoiceInstalled(_config.Voice))
+                    _synth.SelectVoice(_config.Voice);
+                else
+                    _synth.SelectVoiceByHints(VoiceGender.Male);
+                
                 _synth.SetOutputToDefaultAudioDevice();
             }
         }
+
+#pragma warning disable CA1416 // Validate platform compatibility
+        bool IsVoiceInstalled(string name)
+        {
+            if (!OperatingSystem.IsWindows())
+                return false;
+
+            return _synth.GetInstalledVoices().Any(v => v.Enabled && v.VoiceInfo.Name == name);
+        }
+        
+        public IEnumerable<Voice> ListVoices()
+        {
+            if (OperatingSystem.IsWindows())
+            {
+                return _synth
+                    .GetInstalledVoices()
+                    .Where(v => v.Enabled)
+                    .Select(v => new Voice
+                {
+                    Id = v.VoiceInfo.Id,
+                    Name = v.VoiceInfo.Name,
+                    Description = v.VoiceInfo.Description,
+                });
+            }
+            return Enumerable.Empty<Voice>();
+        }
+
+        public void SetVoice(Voice voice)
+        {
+            _config.Voice = voice.Name;
+            _config.Save();
+        }
+#pragma warning restore CA1416 // Validate platform compatibility
 
         public void Speak(string textToSpeak)
         {

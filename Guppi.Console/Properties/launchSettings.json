@@ -2,7 +2,7 @@
   "profiles": {
     "Guppi.Console": {
       "commandName": "Project",
-      "commandLineArgs": "thes tired"
+      "commandLineArgs": "cal free 2023-03-21"
     }
   }
 }

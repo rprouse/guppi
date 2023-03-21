@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.CommandLine;
+using System.CommandLine.NamingConventionBinder;
 using System.Linq;
 using System.Threading.Tasks;
 using Guppi.Application.Exceptions;
@@ -43,6 +44,10 @@ internal class CalendarSkill : ISkill
             await Agenda(midnight, "Tomorrow's agenda", markdown);
         }, markdown);
 
+        var free = new Command("free", "Displays free time for a given day");
+        free.AddArgument(new Argument<DateTime>("date", "The date to check"));
+        free.Handler = CommandHandler.Create<DateTime>(FreeTime);
+
         var logout = new Command("logout", "Logs out of the current Google account");
         logout.SetHandler(async () => await Logout());
 
@@ -55,6 +60,7 @@ internal class CalendarSkill : ISkill
             next,
             today,
             tomorrow,
+            free,
             logout,
             configure
         };
@@ -159,6 +165,50 @@ internal class CalendarSkill : ISkill
         catch (UnconfiguredException ue)
         {
             AnsiConsole.MarkupLine($"[yellow][[:yellow_circle: ${ue.Message}]][/]");
+        }
+    }
+
+    private async Task FreeTime(DateTime date)
+    {
+        var start = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Local);
+        var end = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, DateTimeKind.Local);
+        var events = await _service.GetCalendarEvents(start, end);
+        AnsiConsoleHelper.TitleRule($":calendar: Free time for {date:MMM dd}");
+        try
+        {
+            if (events.Count() > 0)
+            {
+                var freeTime = new List<(DateTime? start, DateTime? end)>();
+                // Start at 09:00
+                DateTime? lastEnd = new DateTime(date.Year, date.Month, date.Day, 9, 0, 0, DateTimeKind.Local);
+                // End at 17:00
+                end = new DateTime(date.Year, date.Month, date.Day, 17, 0, 0, DateTimeKind.Local);
+                foreach (var eventItem in events)
+                {
+                    if (eventItem.Start > lastEnd)
+                    {
+                        freeTime.Add((lastEnd, eventItem.Start));
+                    }
+                    lastEnd = eventItem.End;
+                }
+                if (lastEnd < end)
+                {
+                    freeTime.Add((lastEnd, end));
+                }
+                if (freeTime.Count > 0)
+                {
+                    foreach (var (st, en) in freeTime)
+                    {
+                        AnsiConsole.MarkupLine($"[silver]{st:HH:mm} - {en:HH:mm}[/]");
+                    }
+                    return;
+                }
+            }
+            AnsiConsole.MarkupLine("[yellow][[No free time found.]][/]");
+        }
+        finally
+        {
+            AnsiConsoleHelper.Rule("white");
         }
     }
 }

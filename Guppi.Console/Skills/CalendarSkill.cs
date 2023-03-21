@@ -185,13 +185,13 @@ internal class CalendarSkill : ISkill
                 end = new DateTime(date.Year, date.Month, date.Day, 17, 0, 0, DateTimeKind.Local);
                 foreach (var eventItem in events)
                 {
-                    if (eventItem.Start > lastEnd)
+                    if (eventItem.Start > lastEnd && eventItem.Start.Value.Subtract(lastEnd.Value).TotalMinutes >= 30)
                     {
                         freeTime.Add((lastEnd, eventItem.Start));
                     }
                     lastEnd = eventItem.End;
                 }
-                if (lastEnd < end)
+                if (lastEnd < end && end.Subtract(lastEnd.Value).TotalMinutes >= 30)
                 {
                     freeTime.Add((lastEnd, end));
                 }

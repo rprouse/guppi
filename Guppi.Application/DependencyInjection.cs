@@ -13,6 +13,7 @@ public static class DependencyInjection
         .AddTransient<IGitService, GitService>()
         .AddTransient<IHueLightService, HueLightService>()
         .AddTransient<INoteService, NoteService>()
+        .AddTransient<IOpenAIService, OpenAIService>()
         .AddTransient<IStravaService, StravaService>()
         .AddTransient<IUtilitiesService, UtilitiesService>()
         .AddTransient<IWeatherService, WeatherService>();

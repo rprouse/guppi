@@ -25,14 +25,14 @@ internal class OpenAISkill : ISkill
         configure.AddAlias("config");
         configure.Handler = CommandHandler.Create(() => _service.Configure());
 
-        return new[]
+        var openai = new Command("openai", "Chat with Guppi")
         {
-            new Command("openai", "Chat with Guppi")
-            {
-                chat,
-                configure
-            }
+            chat,
+            configure
         };
+        openai.AddAlias("ai");
+
+        return new[] { openai };
     }
 
     private async Task Chat()

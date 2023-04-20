@@ -1,8 +1,8 @@
 {
   "profiles": {
     "Guppi.Console": {
-      "commandName": "Project",
-      "commandLineArgs": "openai chat"
+        "commandName": "Project",
+        "commandLineArgs": "hex \"C:\\Src\\Retro\\Z80\\Agon\\agon-projects\\ASM\\Hello World 16\\Release\\Hello.hex\" COM3"
     }
   }
 }

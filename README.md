@@ -76,6 +76,10 @@ I keep all of my notes as Markdown files. I used to use VS Code, but recently sw
 [Obsidian](https://obsidian.md/) for better linking and formatting. This opens my notes 
 in Obsidian, adds new notes and optionally opens the notes directory in VS Code.
 
+### OpenAI
+
+Adds some true intelligence to Guppi. Allows you to chat with Guppi using the OpenAI API.
+
 ### Strava
 
 Displays Strava fitness activities.

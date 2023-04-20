@@ -80,6 +80,10 @@ in Obsidian, adds new notes and optionally opens the notes directory in VS Code.
 
 Adds some true intelligence to Guppi. Allows you to chat with Guppi using the OpenAI API.
 
+### Serial Ports Skill
+
+Lists the available serial ports and allows you to send data to them.
+
 ### Strava
 
 Displays Strava fitness activities.

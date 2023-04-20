@@ -20,7 +20,9 @@ internal class SerialPortSkill : ISkill
         var ports = new Command("ports", "Lists all available serial ports");
         ports.Handler = CommandHandler.Create(() => ListPorts());
 
-        return new[] { ports };
+        var hex = new Command("hex", "Converts a string to hex");
+
+        return new[] { ports, hex };
     }
 
     private void ListPorts()

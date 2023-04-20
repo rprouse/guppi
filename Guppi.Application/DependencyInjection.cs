@@ -1,3 +1,4 @@
+using System.Linq;
 using Guppi.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +15,7 @@ public static class DependencyInjection
         .AddTransient<IHueLightService, HueLightService>()
         .AddTransient<INoteService, NoteService>()
         .AddTransient<IOpenAIService, OpenAIService>()
+        .AddTransient<ISerialPortService, SerialPortService>()
         .AddTransient<IStravaService, StravaService>()
         .AddTransient<IUtilitiesService, UtilitiesService>()
         .AddTransient<IWeatherService, WeatherService>();

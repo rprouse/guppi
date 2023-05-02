@@ -39,7 +39,7 @@ internal class SerialPortSkill : ISkill
     {
         AnsiConsoleHelper.TitleRule(":electric_plug: Serial Ports");
         var ports = _service.GetPorts();
-        foreach (var port in ports)
+        foreach (var port in ports.OrderBy(p => p))
         {
             System.Console.WriteLine(port);
         }

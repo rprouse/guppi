@@ -13,7 +13,7 @@
     <PackageProjectUrl>https://github.com/rprouse/guppi</PackageProjectUrl>
     <RepositoryUrl>https://github.com/rprouse/guppi</RepositoryUrl>
     <PackageId>dotnet-guppi</PackageId>
-    <Version>4.4.1</Version>
+    <Version>4.5.0</Version>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>guppi</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
@@ -47,6 +47,7 @@
     <PackageReference Include="Spectre.Console" Version="0.46.0" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
     <PackageReference Include="System.CommandLine.NamingConventionBinder" Version="2.0.0-beta4.22272.1" />
+    <PackageReference Include="TextCopy" Version="6.2.1" />
   </ItemGroup>
 
   <ItemGroup>

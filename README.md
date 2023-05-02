@@ -80,6 +80,11 @@ in Obsidian, adds new notes and optionally opens the notes directory in VS Code.
 
 Adds some true intelligence to Guppi. Allows you to chat with Guppi using the OpenAI API.
 
+### RC2014
+
+Allows you to interact with a [RC2014](https://rc2014.co.uk/) computer. `Convert` converts
+a binary file to Intel Hex format. Upload it to the RC2014 using Grante Searle's `DOWNLOAD.COM`.
+
 ### Serial Ports Skill
 
 Lists the available serial ports and allows you to send data to them.

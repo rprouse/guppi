@@ -20,6 +20,7 @@ static IServiceProvider ConfigureServices() =>
         .AddTransient<ISkill, HueLightsSkill>()
         .AddTransient<ISkill, NotesSkill>()
         .AddTransient<ISkill, OpenAISkill>()
+        .AddTransient<ISkill, RC2014Skill>()
         .AddTransient<ISkill, SerialPortSkill>()
         .AddTransient<ISkill, StravaSkill>()
         .AddTransient<ISkill, WeatherSkill>()

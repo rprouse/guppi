@@ -49,18 +49,15 @@ namespace Guppi.Infrastructure.Services.Calendar
                 .Request(queryOptions)
                 .GetAsync();
 
-            var events = new List<Event>();
-            foreach (var item in calendarView)
-            {
-                events.Add(new Event
+            return calendarView
+                .Select(item => new Event
                 {
                     Start = DateTime.Parse(item.Start.DateTime).ToLocalTime(),
                     End = DateTime.Parse(item.End.DateTime).ToLocalTime(),
-                    Summary = item.Subject
-                }); ;
-            }
-
-            return events;
+                    Summary = item.Subject,
+                    MeetingUrl = item.OnlineMeetingUrl,
+                })
+                .ToList();
         }
 
         private static async Task<string> Login()

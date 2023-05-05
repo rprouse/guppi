@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Guppi.Application.Exceptions;
 using Guppi.Application.Extensions;
 using Guppi.Application.Services;
+using Guppi.Application.Services.Dictionary;
 using Spectre.Console;
 
 namespace Guppi.Console.Skills;
@@ -83,6 +85,7 @@ internal class CalendarSkill : ISkill
             var now = DateTime.Now;
             var events = await _service.GetCalendarEvents(now, now.AddDays(7));
             AnsiConsoleHelper.TitleRule(":tear_off_calendar: Next event");
+            StringBuilder sb = new();
 
             try
             {
@@ -97,7 +100,14 @@ internal class CalendarSkill : ISkill
                         }
                         string end = eventItem.End?.ToString("-HH:mm") ?? "";
                         if (markdown)
-                            AnsiConsole.WriteLine($"- **{start}{end}** {eventItem.Summary}");
+                        {
+                            var line = $"- **{start}{end}** {eventItem.Summary}{JoinLink(eventItem)}";
+                            sb.AppendLine(line);
+                            AnsiConsole.WriteLine(line);
+                            TextCopy.ClipboardService.SetText(sb.ToString());
+                            AnsiConsole.MarkupLine("[green]:green_circle: Copied to clipboard[/]");
+                            AnsiConsole.WriteLine();
+                        }
                         else
                             AnsiConsole.MarkupLine($"{eventItem.Start.GetEmoji()} [cyan]{start}{end}\t[/][silver]{eventItem.Summary}[/]");
                         return;
@@ -128,6 +138,7 @@ internal class CalendarSkill : ISkill
             var max = new DateTime(now.Year, now.Month, now.Day, 23, 59, 59, DateTimeKind.Local);
             var events = await _service.GetCalendarEvents(now, max);
             AnsiConsoleHelper.TitleRule($":calendar: {title}");
+            StringBuilder sb = new();
 
             try
             {
@@ -143,17 +154,31 @@ internal class CalendarSkill : ISkill
                         }
                         string end = eventItem.End?.ToString("-HH:mm") ?? "";
                         if (markdown)
-                            AnsiConsole.WriteLine($"- {eventItem.Start.GetEmoji()} **{start}{end}** {eventItem.Summary}");
+                        {
+                            var line = $"- {eventItem.Start.GetEmoji()} **{start}{end}** {eventItem.Summary}{JoinLink(eventItem)}";
+                            sb.AppendLine(line);
+                            AnsiConsole.WriteLine(line);
+                        }
                         else
                             AnsiConsole.MarkupLine($"{eventItem.Start.GetEmoji()} [cyan]{start}{end}\t[/][silver]{eventItem.Summary}[/]");
                         found = true;
                     }
-                    if (found) return;
+                    if (found)
+                    {
+                        if (markdown)
+                        {
+                            TextCopy.ClipboardService.SetText(sb.ToString());
+                            AnsiConsole.WriteLine();
+                            AnsiConsole.MarkupLine("[green]:green_circle: Copied to clipboard[/]");
+                        }
+                        return;
+                    }
                 }
                 AnsiConsole.MarkupLine("[white][[No upcoming events found.]][/]");
             }
             finally
             {
+                AnsiConsole.WriteLine();
                 AnsiConsoleHelper.Rule("white");
             }
         }
@@ -211,4 +236,7 @@ internal class CalendarSkill : ISkill
             AnsiConsoleHelper.Rule("white");
         }
     }
+
+    private string JoinLink(Domain.Entities.Calendar.Event eventItem) =>
+        string.IsNullOrEmpty(eventItem.MeetingUrl) ? "" : $" [Join]({eventItem.MeetingUrl})";
 }

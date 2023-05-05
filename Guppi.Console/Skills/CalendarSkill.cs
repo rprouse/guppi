@@ -97,7 +97,7 @@ internal class CalendarSkill : ISkill
                         }
                         string end = eventItem.End?.ToString("-HH:mm") ?? "";
                         if (markdown)
-                            AnsiConsole.WriteLine($"- **{start}{end}** {eventItem.Summary}");
+                            AnsiConsole.WriteLine($"- **{start}{end}** {eventItem.Summary}{JoinLink(eventItem)}");
                         else
                             AnsiConsole.MarkupLine($"{eventItem.Start.GetEmoji()} [cyan]{start}{end}\t[/][silver]{eventItem.Summary}[/]");
                         return;
@@ -143,7 +143,7 @@ internal class CalendarSkill : ISkill
                         }
                         string end = eventItem.End?.ToString("-HH:mm") ?? "";
                         if (markdown)
-                            AnsiConsole.WriteLine($"- {eventItem.Start.GetEmoji()} **{start}{end}** {eventItem.Summary}");
+                            AnsiConsole.WriteLine($"- {eventItem.Start.GetEmoji()} **{start}{end}** {eventItem.Summary}{JoinLink(eventItem)}");
                         else
                             AnsiConsole.MarkupLine($"{eventItem.Start.GetEmoji()} [cyan]{start}{end}\t[/][silver]{eventItem.Summary}[/]");
                         found = true;
@@ -211,4 +211,7 @@ internal class CalendarSkill : ISkill
             AnsiConsoleHelper.Rule("white");
         }
     }
+
+    private string JoinLink(Domain.Entities.Calendar.Event eventItem) =>
+        string.IsNullOrEmpty(eventItem.MeetingUrl) ? "" : $" [Join]({eventItem.MeetingUrl})";
 }

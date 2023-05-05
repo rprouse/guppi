@@ -2,7 +2,7 @@
   "profiles": {
     "Guppi.Console": {
         "commandName": "Project",
-        "commandLineArgs": "rc2014 convert -u 0 C:\\src\\retro\\Z80\\RC2014\\code\\bin\\lcdtest.com"
+        "commandLineArgs": "cal agenda -m"
     }
   }
 }

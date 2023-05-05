@@ -6,6 +6,7 @@ using Guppi.Application;
 using Guppi.Application.Exceptions;
 using Guppi.Domain.Entities.Calendar;
 using Guppi.Domain.Interfaces;
+using Ical.Net.CalendarComponents;
 using Ical.Net.DataTypes;
 
 namespace Guppi.Infrastructure.Services.Calendar
@@ -61,6 +62,7 @@ namespace Guppi.Infrastructure.Services.Calendar
                     Summary = e.Summary,
                     Start = e.Start.ToTimeZone("Local").Value,
                     End = e.End.ToTimeZone("Local").Value,
+                    MeetingUrl = MeetingUrl(e),
                 })
                 .ToList();
 
@@ -80,6 +82,7 @@ namespace Guppi.Infrastructure.Services.Calendar
                         Summary = e.Summary,
                         Start = period.StartTime.ToTimeZone("Local").Value,
                         End = period.EndTime.ToTimeZone("Local").Value,
+                        MeetingUrl = MeetingUrl(e),
                     };
                 });
 
@@ -89,5 +92,27 @@ namespace Guppi.Infrastructure.Services.Calendar
 
         public Task<string> Logout() =>
             Task.FromResult("Log out of ICal not required");
+
+        private string MeetingUrl(CalendarEvent e)
+        {
+            // URL is in the location
+            if (e.Location?.StartsWith("http", StringComparison.InvariantCultureIgnoreCase) ?? false)
+                return e.Location;
+
+            // URL is in the description
+            if (e.Location?.Contains("Teams") == true)
+            {
+                int start = e.Description.IndexOf("https://teams.microsoft.com/l/meetup-join/");
+                if (start > -1)
+                {
+                    int end = e.Description.IndexOf('>', start);
+                    string url = e.Description.Substring(start, end - start);
+                    return url;
+                }
+            }
+
+            // Couldn't find the URL
+            return null;
+        }
     }
 }

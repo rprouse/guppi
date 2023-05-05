@@ -67,7 +67,15 @@ namespace Guppi.Infrastructure.Services.Calendar
             // List events.
             Events events = await request.ExecuteAsync();
 
-            return events.Items.Select(e => new Domain.Entities.Calendar.Event { Start = e.Start.DateTime, End = e.End.DateTime, Summary = e.Summary }).ToList();
+            return events.Items
+                .Select(e => new Domain.Entities.Calendar.Event 
+                { 
+                    Start = e.Start.DateTime, 
+                    End = e.End.DateTime, 
+                    Summary = e.Summary,
+                    MeetingUrl = e.ConferenceData?.EntryPoints?.FirstOrDefault()?.Uri
+                })
+                .ToList();
         }
 
         public Task<string> Logout()

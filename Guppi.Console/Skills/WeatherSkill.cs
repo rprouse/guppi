@@ -96,7 +96,7 @@ internal class WeatherSkill : ISkill
     private IEnumerable<Markup> WeatherLineTwo(DailyWeather[] daily)
     {
         for (int i = 0; i < 4 && i < daily.Length; i++)
-            yield return new Markup($"{daily[i].AsciiIcon[1]} [silver]↑[/][greenyellow]{daily[i].Temperature.Max}[/][silver]°C ↓[/][lightskyblue1]{daily[i].Temperature.Min}[/][silver]°C[/]");
+            yield return new Markup($"{daily[i].AsciiIcon[1]} [silver]↑[/][{daily[i].Temperature.Max.ToColor()}]{daily[i].Temperature.Max}[/][silver]°C ↓[/][{daily[i].Temperature.Min.ToColor()}]{daily[i].Temperature.Min}[/][silver]°C[/]");
 
     }
 
@@ -156,7 +156,7 @@ internal class WeatherSkill : ISkill
             last = dt;
             string desc = (hour.Description).PadRight(maxDesc);
             AnsiConsole.MarkupLine(
-                $"{dt.GetEmoji()} [silver]{dt:HH:mm}  {hour.Icon} {desc} {hour.Temperature,3}°C FeelsLike {hour.FeelsLike,3}°C {(int)(hour.ProbabilityOfPrecipitation),3}%:droplet:[/]"
+                $"{dt.GetEmoji()} [silver]{dt:HH:mm}  {hour.Icon} {desc} [{hour.Temperature.ToColor()}]{hour.Temperature,3}[/]°C FeelsLike [{hour.FeelsLike.ToColor()}]{hour.FeelsLike,3}[/]°C {(int)(hour.ProbabilityOfPrecipitation),3}%:droplet:[/]"
             );
         }
     }
@@ -168,7 +168,7 @@ internal class WeatherSkill : ISkill
         AnsiConsole.Markup(weather.Current.AsciiIcon[0]);
         AnsiConsole.MarkupLine($" [silver]{weather.Current.Description}[/]");
         AnsiConsole.Markup(weather.Current.AsciiIcon[1]);
-        AnsiConsole.MarkupLine($" [greenyellow]{weather.Current.Temperature}[/][silver]([/][lightskyblue1]{weather.Current.FeelsLike}[/][silver]) °C[/]");
+        AnsiConsole.MarkupLine($" [{weather.Current.Temperature.ToColor()}]{weather.Current.Temperature}[/][silver]([/][{weather.Current.FeelsLike.ToColor()}]{weather.Current.FeelsLike}[/][silver]) °C[/]");
         AnsiConsole.Markup(weather.Current.AsciiIcon[2]);
         AnsiConsole.MarkupLine($" [silver]{WeatherIcon.WindDirection(weather.Current.WindDirection)} [/][gold3_1]{weather.Current.WindSpeed:F0}-{weather.Current.WindGust:F0}[/][silver] km/h[/]");
         AnsiConsole.Markup(weather.Current.AsciiIcon[3]);
@@ -177,6 +177,6 @@ internal class WeatherSkill : ISkill
         DailyWeather today = weather.Daily.FirstOrDefault();
 
         AnsiConsole.Markup(weather.Current.AsciiIcon[4]);
-        AnsiConsole.MarkupLine($" [silver]↑{today.Temperature.Max}°C ↓{today.Temperature.Min}°C[/]");
+        AnsiConsole.MarkupLine($" [silver]↑[{today.Temperature.Max.ToColor()}]{today.Temperature.Max}[/]°C ↓[{today.Temperature.Min.ToColor()}]{today.Temperature.Min}[/]°C[/]");
     }
 }

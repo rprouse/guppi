@@ -55,7 +55,8 @@ namespace Guppi.Application.Services.Weather
                 WindSpeed = wind_speed,
                 WindDirection = wind_deg,
                 Description = weather.FirstOrDefault()?.description ?? "",
-                Icon = WeatherIcon.Icons[weather.FirstOrDefault()?.icon ?? ""]
+                Icon = WeatherIcon.Icons[weather.FirstOrDefault()?.icon ?? ""],
+                AsciiIcon = WeatherIcon.GetAsciiIcon(weather.FirstOrDefault()?.icon ?? ""),
             };
     }
 
@@ -94,7 +95,8 @@ namespace Guppi.Application.Services.Weather
                 WindSpeed = wind_speed,
                 WindDirection = wind_deg,
                 Description = weather.FirstOrDefault()?.description ?? "",
-                Icon = WeatherIcon.Icons[weather.FirstOrDefault()?.icon ?? ""]
+                Icon = WeatherIcon.Icons[weather.FirstOrDefault()?.icon ?? ""],
+                AsciiIcon = WeatherIcon.GetAsciiIcon(weather.FirstOrDefault()?.icon ?? ""),
             };
     }
 
@@ -132,7 +134,8 @@ namespace Guppi.Application.Services.Weather
                 WindSpeed = wind_speed,
                 WindDirection = wind_deg,
                 Description = weather.FirstOrDefault()?.description ?? "",
-                Icon = WeatherIcon.Icons[weather.FirstOrDefault()?.icon ?? ""]
+                Icon = WeatherIcon.Icons[weather.FirstOrDefault()?.icon ?? ""],
+                AsciiIcon = WeatherIcon.GetAsciiIcon(weather.FirstOrDefault()?.icon ?? ""),
             };
     }
 

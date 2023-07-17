@@ -48,6 +48,7 @@ namespace Guppi.Domain.Entities.Weather
 
         public string Description { get; set; }
         public string Icon { get; set; }
+        public string[] AsciiIcon { get; set; }
     }
 
     public class Temperature : BaseTemperature

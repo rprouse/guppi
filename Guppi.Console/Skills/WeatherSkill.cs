@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Guppi.Application.Exceptions;
 using Guppi.Application.Extensions;
 using Guppi.Application.Services;
+using Guppi.Application.Services.Weather;
 using Guppi.Domain.Entities.Weather;
 using Spectre.Console;
 
@@ -24,25 +25,97 @@ internal class WeatherSkill : ISkill
 
     public IEnumerable<Command> GetCommands()
     {
-        var view = new Command("view", "Views the weather")
-        {
-            new Option<bool>(new string[]{"--all", "-a" }, "Displays today's weather and the hourly forecast")
-        };
+        var view = new Command("view", "Views the current weather");
+        view.Handler = CommandHandler.Create(async () => await Execute(false));
 
-        view.Handler = CommandHandler.Create(async (bool all) => await Execute(all));
+        var hourly = new Command("hourly", "Views the hourly weather");
+        hourly.Handler = CommandHandler.Create(async () => await Execute(true));
+
+        var daily = new Command("daily", "Views the daily weather");
+        daily.Handler = CommandHandler.Create(async () => await Daily());
 
         var configure = new Command("configure", "Configures the weather provider");
         configure.AddAlias("config");
         configure.Handler = CommandHandler.Create(() => Configure());
 
-        return new []
+        return new[]
         {
             new Command(Command, "Displays today's weather")
             {
                view,
+               hourly,
+               daily,
                configure
             }
         };
+    }
+
+    private async Task Daily()
+    {
+        try
+        {
+            WeatherForecast weather = await _service.GetWeather();
+
+            DisplayShort(weather);
+
+            AnsiConsole.WriteLine();
+
+            AnsiConsoleHelper.TitleRule(":radio: Communications & External Sensors: Ready/Standby. Future weather is...");
+
+            DailyWeatherTable(weather.Daily);
+            DailyWeatherTable(weather.Daily.Skip(4).ToArray());
+        }
+        catch (UnconfiguredException ue)
+        {
+            AnsiConsole.MarkupLine($"[yellow][[:yellow_circle: {ue.Message}]][/]");
+        }
+    }
+
+    private void DailyWeatherTable(DailyWeather[] daily)
+    {
+        var table = new Table();
+
+        for (int i = 0; i < 4 && i < daily.Length; i++)
+            table.AddColumn(new TableColumn($"[silver]{daily[i].DateTime:ddd MMM dd}[/]"));
+
+        table.AddRow(WeatherLineOne(daily));
+        table.AddRow(WeatherLineTwo(daily));
+        table.AddRow(WeatherLineThree(daily));
+        table.AddRow(WeatherLineFour(daily));
+        table.AddRow(WeatherLineFive(daily));
+
+        AnsiConsole.Write(table);
+    }
+
+    private IEnumerable<Markup> WeatherLineOne(DailyWeather[] daily)
+    {
+        for (int i = 0; i < 4 && i < daily.Length; i++)
+            yield return new Markup($"{daily[i].AsciiIcon[0]} [silver]{daily[i].Description}[/]");
+    }
+
+    private IEnumerable<Markup> WeatherLineTwo(DailyWeather[] daily)
+    {
+        for (int i = 0; i < 4 && i < daily.Length; i++)
+            yield return new Markup($"{daily[i].AsciiIcon[1]} [silver]↑[/][greenyellow]{daily[i].Temperature.Max}[/][silver]°C ↓[/][lightskyblue1]{daily[i].Temperature.Min}[/][silver]°C[/]");
+
+    }
+
+    private IEnumerable<Markup> WeatherLineThree(DailyWeather[] daily)
+    {
+        for (int i = 0; i < 4 && i < daily.Length; i++)
+            yield return new Markup($"{daily[i].AsciiIcon[2]} [silver]{WeatherIcon.WindDirection(daily[i].WindDirection)} [/][gold3_1]{daily[i].WindSpeed:F0}[/][silver] km/h[/]");
+    }
+
+    private IEnumerable<Markup> WeatherLineFour(DailyWeather[] daily)
+    {
+        for (int i = 0; i < 4 && i < daily.Length; i++)
+            yield return new Markup($"{daily[i].AsciiIcon[3]} [skyblue2]:droplet:{daily[i].Rain}mm[/] [grey89]:snowflake:{daily[i].Snow}mm[/]");
+    }
+
+    private IEnumerable<Markup> WeatherLineFive(DailyWeather[] daily)
+    {
+        for (int i = 0; i < 4 && i < daily.Length; i++)
+            yield return new Markup($"{daily[i].AsciiIcon[4]} [silver]{daily[i].Pressure}mb {daily[i].Humidity,3}%[/]");
     }
 
     private async Task Execute(bool all)
@@ -90,15 +163,20 @@ internal class WeatherSkill : ISkill
 
     private void DisplayShort(WeatherForecast weather)
     {
-        AnsiConsoleHelper.TitleRule(":satellite_antenna: Satellite scans complete. Today's weather is...");
+        AnsiConsoleHelper.TitleRule(":satellite_antenna: Satellite scans complete. Today's current weather is...");
 
-        int maxDesc = weather.Hourly.Select(h => h.Description).Max(d => d.Length);
-
-        string desc = (weather.Current.Description).PadRight(maxDesc);
-        AnsiConsole.MarkupLine($"[white]Current:[/][silver]  {weather.Current.Icon} {desc} {weather.Current.Temperature,3}°C FeelsLike {weather.Current.FeelsLike,3}°C[/]");
+        AnsiConsole.Markup(weather.Current.AsciiIcon[0]);
+        AnsiConsole.MarkupLine($" [silver]{weather.Current.Description}[/]");
+        AnsiConsole.Markup(weather.Current.AsciiIcon[1]);
+        AnsiConsole.MarkupLine($" [greenyellow]{weather.Current.Temperature}[/][silver]([/][lightskyblue1]{weather.Current.FeelsLike}[/][silver]) °C[/]");
+        AnsiConsole.Markup(weather.Current.AsciiIcon[2]);
+        AnsiConsole.MarkupLine($" [silver]{WeatherIcon.WindDirection(weather.Current.WindDirection)} [/][gold3_1]{weather.Current.WindSpeed:F0}-{weather.Current.WindGust:F0}[/][silver] km/h[/]");
+        AnsiConsole.Markup(weather.Current.AsciiIcon[3]);
+        AnsiConsole.MarkupLine($" [silver]{weather.Current.Pressure} mb[/]");
 
         DailyWeather today = weather.Daily.FirstOrDefault();
-        desc = (today.Description).PadRight(maxDesc);
-        AnsiConsole.MarkupLine($"[white]Today:[/][silver]    {today.Icon} {desc} {today.Temperature.Max,3}°C/{today.Temperature.Min,3}°C[/][silver] High/Low[/]");
+
+        AnsiConsole.Markup(weather.Current.AsciiIcon[4]);
+        AnsiConsole.MarkupLine($" [silver]↑{today.Temperature.Max}°C ↓{today.Temperature.Min}°C[/]");
     }
 }

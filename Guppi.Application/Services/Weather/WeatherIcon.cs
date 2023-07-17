@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Spectre.Console;
 
@@ -7,9 +8,9 @@ namespace Guppi.Application.Services.Weather
     /// Used for converting OpenWeatherMap icons
     /// into their equivalent emoji
     /// </summary>
-    internal static class WeatherIcon
+    public static class WeatherIcon
     {
-        internal static Dictionary<string, string> Icons { get; } = new Dictionary<string, string>
+        public static Dictionary<string, string> Icons { get; } = new Dictionary<string, string>
         {
             { "01d", Emoji.Known.Sun },  // Day clear sky
             { "02d", Emoji.Known.SunBehindSmallCloud },  // Day few clouds
@@ -30,6 +31,113 @@ namespace Guppi.Application.Services.Weather
             { "13n", Emoji.Known.Snowflake },  // Night snow
             { "50n", Emoji.Known.Fog },  // Night mist
             { "", "" }  // Unknown
+        };
+
+
+        public static string WindDirection(double degrees)
+        {
+            if (degrees < 0 || degrees > 360)
+            {
+                return "Unknown";
+            }
+            return WIND_DIRECTION[(int)Math.Round(degrees / 45) % 8];
+        }
+
+        public static string[] WIND_DIRECTION = new[] {
+            "↓", "↙", "←", "↖", "↑", "↗", "→", "↘",
+        };
+
+        public static string[] MOON_PHASES = new[] {
+            "🌑", "🌒", "🌓", "🌔", "🌕", "🌖", "🌗", "🌘"
+        };
+
+        public static string[] GetAsciiIcon(string icon)
+        {
+            if (AsciiIcons.ContainsKey(icon))
+            {
+                return AsciiIcons[icon];
+            }
+            if (AsciiIcons.ContainsKey(icon.Substring(0, 2)))
+            {
+                return AsciiIcons[icon.Substring(0, 2)];
+            }
+            return AsciiIcons[""];
+        }
+
+        public static Dictionary<string, string[]> AsciiIcons = new Dictionary<string, string[]>
+        {
+            { "01d", new [] {  // Day clear sky
+                "[yellow]    \\   /    [/]",
+                "[yellow]     .-.     [/]",
+                "[yellow]  ― (   ) ―  [/]",
+                "[yellow]     `-’     [/]",
+                "[yellow]    /   \\    [/]" } },
+            { "02d", new [] {  // Day few clouds
+                "[yellow]   \\  /[/]      ",
+                "[yellow] _ /\"\"[/][grey62].-.    [/]",
+                "[yellow]   \\_[/][grey62](   ).  [/]",
+                "[yellow]   /[/][grey62](___(__) [/]",
+                "             " } },
+            { "03", new [] {   // Day/Night scattered clouds
+                "             ",
+                "[grey62]     .--.    [/]",
+                "[grey62]  .-(    ).  [/]",
+                "[grey62] (___.__)__) [/]",
+                "             " } },
+            { "04", new [] {  // Day/Night cloudy
+                "             ",
+                "[grey42]     .--.    [/]",
+                "[grey42]  .-(    ).  [/]",
+                "[grey42] (___.__)__) [/]",
+                "             " } },
+            { "09", new [] { // Day/Night shower rain
+                "[yellow] _`/\"\"[/][grey62].-.    [/]",
+                "[yellow]  ,\\_[/][grey62](   ).  [/]",
+                "[yellow]   /[/][grey62](___(__) [/]",
+                "[skyblue2]     ‘ ‘ ‘ ‘ [/]",
+                "[skyblue2]    ‘ ‘ ‘ ‘  [/]" } },
+            { "10", new [] {  // Day/Night rain
+                "[grey42]      .-.    [/]",
+                "[grey42]     (   ).  [/]",
+                "[grey42]    (___(__) [/]",
+                "[dodgerblue2]   ‚‘‚‘‚‘‚‘  [/]",
+                "[dodgerblue2]   ‚’‚’‚’‚’  [/]" } },
+            { "11", new [] {  // Day/Night thunderstorm
+                "[grey42]     .-.     [/]",
+                "[grey42]    (   ).   [/]",
+                "[grey42]   (___(__)  [/]",
+                "[dodgerblue2]  ‚‘[/][khaki1]⚡[/][dodgerblue2]‘‚[/][khaki1]⚡[/][dodgerblue2]‚‘ [/]",
+                "[dodgerblue2]  ‚’‚’[/][khaki1]⚡[/][dodgerblue2]’‚’  [/]" } },
+            { "13", new [] {  // Day/Night snow
+                "[grey42]      .-.    [/]",
+                "[grey42]     (   ).  [/]",
+                "[grey42]    (___(__) [/]",
+                "[grey89]    * * * *  [/]",
+                "[grey89]   * * * *   [/]" } },
+            { "50", new [] {   // Day/Night mist
+                "             ",
+                "[grey78] _ - _ - _ - [/]",
+                "[grey78]  _ - _ - _  [/]",
+                "[grey78] _ - _ - _ - [/]",
+                "             " } },
+            { "01n", new [] {  // Night clear sky
+                "[lightgoldenrod1]    _.-.     [/]",
+                "[lightgoldenrod1]   /o  o \\   [/]",
+                "[lightgoldenrod1]  |   O   |  [/]",
+                "[lightgoldenrod1]   \\ o O /   [/]",
+                "[lightgoldenrod1]    `-_-’    [/]" } },
+            { "02n", new [] {  // Night few clouds
+                "[lightgoldenrod1]    _.-.     [/]",
+                "[lightgoldenrod1]   /o [/][grey62].-.    [/]",
+                "[lightgoldenrod1]  |  [/][grey62](   ).  [/]",
+                "[lightgoldenrod1]   \\[/][grey62](___(__) [/]",
+                "[lightgoldenrod1]    `-_-’    [/]" } },
+            { "", new [] {  // Unknown
+                "    .-.      ",
+                "     __)     ",
+                "    (        ",
+                "     `-’     ",
+                "      •      " } },
         };
     }
 }

@@ -10,6 +10,7 @@ using Guppi.Application.Services;
 using Guppi.Application.Services.Weather;
 using Guppi.Domain.Entities.Weather;
 using Spectre.Console;
+using Location = Guppi.Domain.Entities.Weather.Location;
 
 namespace Guppi.Console.Skills;
 
@@ -25,14 +26,17 @@ internal class WeatherSkill : ISkill
 
     public IEnumerable<Command> GetCommands()
     {
-        var view = new Command("view", "Views the current weather");
-        view.Handler = CommandHandler.Create(async () => await Execute(false));
+        var location = new Option<string>(new string[] { "--location", "-l" }, () => null, "Location to view weather for");
 
-        var hourly = new Command("hourly", "Views the hourly weather");
-        hourly.Handler = CommandHandler.Create(async () => await Execute(true));
+        var view = new Command("view", "Views the current weather") { location };
+        view.Handler = CommandHandler.Create(async (string location) => await Execute(location, false));
+        view.AddAlias("now");
 
-        var daily = new Command("daily", "Views the daily weather");
-        daily.Handler = CommandHandler.Create(async () => await Daily());
+        var hourly = new Command("hourly", "Views the hourly weather") { location };
+        hourly.Handler = CommandHandler.Create(async (string location) => await Execute(location, true));
+
+        var daily = new Command("daily", "Views the daily weather") { location };
+        daily.Handler = CommandHandler.Create(async (string location) => await Daily(location));
 
         var configure = new Command("configure", "Configures the weather provider");
         configure.AddAlias("config");
@@ -50,11 +54,43 @@ internal class WeatherSkill : ISkill
         };
     }
 
-    private async Task Daily()
+    private async Task<WeatherForecast> GetWeather(string location)
+    {
+        // Default Location
+        if (string.IsNullOrWhiteSpace(location))
+            return await _service.GetWeather();
+
+        var locations = await _service.GetLocations(location);
+
+        if (locations.Count() == 0)
+            throw new UnconfiguredException("Location not found");
+
+        Location selected;
+        if (locations.Count() == 1)
+        {
+            selected = locations.First();
+        }
+        else
+        {
+            selected = AnsiConsole.Prompt(
+                new SelectionPrompt<Location>()
+                    .Title("Select a location")
+                    .PageSize(10)
+                    .MoreChoicesText("[grey](Move up and down to see more locations)[/]")
+                    .AddChoices(locations));
+        }
+
+        AnsiConsole.MarkupLine($":round_pushpin: [cyan]{selected}[/]");
+        AnsiConsole.WriteLine();
+
+        return await _service.GetWeather(selected.Latitude.ToString(), selected.Longitude.ToString());
+    }
+
+    private async Task Daily(string location)
     {
         try
         {
-            WeatherForecast weather = await _service.GetWeather();
+            WeatherForecast weather = await GetWeather(location);
 
             DisplayShort(weather);
 
@@ -118,11 +154,11 @@ internal class WeatherSkill : ISkill
             yield return new Markup($"{daily[i].AsciiIcon[4]} [silver]{daily[i].Pressure}mb {daily[i].Humidity,3}%[/]");
     }
 
-    private async Task Execute(bool all)
+    private async Task Execute(string location, bool all)
     {
         try
         {
-            WeatherForecast weather = await _service.GetWeather();
+            WeatherForecast weather = await GetWeather(location);
 
             if (all)
                 DisplayLong(weather);

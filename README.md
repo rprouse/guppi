@@ -119,6 +119,7 @@ To get the information to configure;
 
 1. Sign up to [OpenWeatherMap](https://openweathermap.org/) and get an API Key.
 2. Use [Google Maps](https://google.ca/maps) to get your Latitude and Longitude.
+3. Once you've configured an initial location, you can use the `--location` option to find the weather for additional locations and to use their latitude and longitude for the configuration.
 
 ## Installation
 

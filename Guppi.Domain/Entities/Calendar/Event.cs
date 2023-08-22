@@ -7,6 +7,6 @@ namespace Guppi.Domain.Entities.Calendar
         public DateTime? Start { get; set; }
         public DateTime? End { get; set; }
         public string Summary { get; set; }
-        public string? MeetingUrl { get; set; }
+        public string MeetingUrl { get; set; }
     }
 }

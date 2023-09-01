@@ -11,16 +11,20 @@ internal class ManifestoSkill : ISkill
     public IEnumerable<Command> GetCommands() =>
         new[]
         {
+            new Command("agile", "Displays the Agile Manifesto.")
+            {
+                Handler = CommandHandler.Create(() => ViewManifesto(AgileManifesto))
+            },
             new Command("hacker", "Displays the Hacker Manifesto.")
             {
-                Handler = CommandHandler.Create(() => ViewManifesto(Manifesto))
+                Handler = CommandHandler.Create(() => ViewManifesto(HackerManifesto))
             }
         };
 
     private void ViewManifesto(string manifesto)
     {
         var rows = System.Console.WindowHeight;
-        var lines = Manifesto.Split(Environment.NewLine);
+        var lines = manifesto.Split(Environment.NewLine);
         for (int i = 0; i < lines.Length; i++)
         {
             AnsiConsole.MarkupLine(lines[i]);
@@ -33,8 +37,24 @@ internal class ManifestoSkill : ISkill
         }
     }
 
+    const string AgileManifesto = @"
+[green]Manifesto for Agile Software Development[/]
 
-    const string Manifesto = @"
+[silver]We are uncovering better ways of developing[/]
+[silver]software by doing it and helping others do it.[/]
+[silver]Through this work we have come to value:[/]
+
+[green]Individuals and interactions[/][silver] over processes and tools[/]
+[green]Working software[/][silver] over comprehensive documentation[/]
+[green]Customer collaboration[/][silver] over contract negotiation[/]
+[green]Responding to change[/][silver] over following a plan[/]
+
+[silver]That is, while there is value in the items on[/]
+[silver]the right, we value the items on the left more.[/]
+";
+
+
+    const string HackerManifesto = @"
 [green]                       \/\The Conscience of a Hacker/\/[/]
 
 [green]                                      by[/]

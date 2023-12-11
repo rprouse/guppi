@@ -57,8 +57,8 @@ namespace Guppi.Infrastructure.Services.Calendar
 
             // Define parameters of request.
             EventsResource.ListRequest request = service.Events.List("primary");
-            request.TimeMin = minDate;
-            request.TimeMax = maxDate;
+            request.TimeMinDateTimeOffset = minDate;
+            request.TimeMaxDateTimeOffset = maxDate;
             request.ShowHiddenInvitations = false;
             request.ShowDeleted = false;
             request.SingleEvents = true;
@@ -70,8 +70,8 @@ namespace Guppi.Infrastructure.Services.Calendar
             return events.Items
                 .Select(e => new Domain.Entities.Calendar.Event 
                 { 
-                    Start = e.Start.DateTime, 
-                    End = e.End.DateTime, 
+                    Start = e.Start.DateTimeDateTimeOffset?.LocalDateTime, 
+                    End = e.End.DateTimeDateTimeOffset?.LocalDateTime, 
                     Summary = e.Summary,
                     MeetingUrl = e.ConferenceData?.EntryPoints?.FirstOrDefault()?.Uri
                 })

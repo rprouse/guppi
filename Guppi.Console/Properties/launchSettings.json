@@ -2,7 +2,7 @@
   "profiles": {
     "Guppi.Console": {
         "commandName": "Project",
-        "commandLineArgs": "hacker"
+        "commandLineArgs": "cal agenda -m"
     }
   }
 }

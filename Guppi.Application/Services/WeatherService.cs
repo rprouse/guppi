@@ -9,16 +9,10 @@ using Guppi.Domain.Interfaces;
 
 namespace Guppi.Application.Services;
 
-internal sealed class WeatherService : IWeatherService
+internal sealed class WeatherService(IHttpRestService restService) : IWeatherService
 {
-    private readonly IHttpRestService _restService;
-    private readonly WeatherConfiguration _configuration;
-
-    public WeatherService(IHttpRestService restService)
-    {
-        _restService = restService;
-        _configuration = Configuration.Load<WeatherConfiguration>("weather");
-    }
+    private readonly IHttpRestService _restService = restService;
+    private readonly WeatherConfiguration _configuration = Configuration.Load<WeatherConfiguration>("weather");
 
     public void Configure()
     {
@@ -41,7 +35,7 @@ internal sealed class WeatherService : IWeatherService
             throw new UnconfiguredException("Please configure the weather provider");
         }
 
-        var weather = await _restService.GetData<WeatherResponse>($"http://api.openweathermap.org/data/2.5/onecall?lat={latitude}&lon={longitude}&appid={_configuration.ApiKey}");
+        var weather = await _restService.GetData<WeatherResponse>($"https://api.openweathermap.org/data/2.5/onecall?lat={latitude}&lon={longitude}&appid={_configuration.ApiKey}");
         return weather.GetWeather();
     }
 
@@ -52,7 +46,7 @@ internal sealed class WeatherService : IWeatherService
             throw new UnconfiguredException("Please configure the weather provider");
         }
 
-        var locations = await _restService.GetData<IEnumerable<LocationResponse>>($"http://api.openweathermap.org/geo/1.0/direct?q={search}&limit=10&appid={_configuration.ApiKey}");
+        var locations = await _restService.GetData<IEnumerable<LocationResponse>>($"https://api.openweathermap.org/geo/1.0/direct?q={search}&limit=10&appid={_configuration.ApiKey}");
         return locations.Select(r => r.GetLocation());
     }
 }

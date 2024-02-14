@@ -4,14 +4,9 @@ using Spectre.Console;
 
 namespace Guppi.Infrastructure.Services.Hue
 {
-    class HueKey
+    class HueKey(string ip)
     {
-        string _ip;
-
-        public HueKey(string ip)
-        {
-            _ip = ip;
-        }
+        readonly string _ip = ip;
 
         public string LoadKey()
         {
@@ -51,7 +46,7 @@ namespace Guppi.Infrastructure.Services.Hue
         string KeyFilename =>
             Path.Combine(GetConfigDirectory(), $"{_ip}.key");
 
-        string GetConfigDirectory()
+        static string GetConfigDirectory()
         {
             string dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData, Environment.SpecialFolderOption.Create), "Guppi", "hue");
             if (!Directory.Exists(dir))

@@ -4,10 +4,10 @@ namespace Guppi.Domain.Common
 {
     public static class Sayings
     {
-        static readonly Random _rand = new Random();
+        static readonly Random _rand = new();
 
-        static readonly string[] _affirmative = new[]
-        {
+        static readonly string[] _affirmative =
+        [
             ":ok_hand: Aye aye sir",
             ":clipboard: Noted",
             ":bellhop_bell: By your command",
@@ -30,10 +30,10 @@ namespace Guppi.Domain.Common
             ":speech_balloon: Understood",
             ":battery: All resources are at maximum",
             ":satellite_antenna: SCUT Link relay has been acquired"
-        };
+        ];
 
-        static readonly string[] _negative = new[]
-        {
+        static readonly string[] _negative =
+        [
             ":orange_circle: Sorry",
             ":hollow_red_circle: There is a problem",
             ":red_circle: Negative",
@@ -53,7 +53,7 @@ namespace Guppi.Domain.Common
             ":high_voltage: Plate AMIs have lost synchronization.",
             ":no_entry: Connection refused.",
             ":prohibited: Recipient indicates he is at max capacity."
-        };
+        ];
 
         public static string Affirmative() => _affirmative[_rand.Next(0, _affirmative.Length)];
 

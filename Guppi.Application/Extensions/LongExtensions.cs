@@ -7,7 +7,7 @@ namespace Guppi.Application.Extensions
         public static DateTime UnixTimeStampToDateTime(this long unixTimeStamp)
         {
             // Unix timestamp is seconds past epoch
-            DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            DateTime dtDateTime = DateTime.UnixEpoch;
             dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
             return dtDateTime;
         }

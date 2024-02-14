@@ -13,14 +13,9 @@ using Spectre.Console;
 
 namespace Guppi.Console.Skills;
 
-internal class CalendarSkill : ISkill
+internal class CalendarSkill(ICalendarService service) : ISkill
 {
-    private readonly ICalendarService _service;
-
-    public CalendarSkill(ICalendarService service)
-    {
-        _service = service;
-    }
+    private readonly ICalendarService _service = service;
 
     public IEnumerable<Command> GetCommands()
     {
@@ -39,7 +34,7 @@ internal class CalendarSkill : ISkill
         }, markdown);
 
         var tomorrow = new Command("tomorrow", "Displays tomorrow's agenda") { markdown };
-        tomorrow.SetHandler(async (bool markdown) => 
+        tomorrow.SetHandler(async (bool markdown) =>
         {
             var now = DateTime.Now.AddDays(1);
             var midnight = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0, DateTimeKind.Local);
@@ -89,7 +84,7 @@ internal class CalendarSkill : ISkill
 
             try
             {
-                if (events.Count() > 0)
+                if (events.Any())
                 {
                     foreach (var eventItem in events)
                     {
@@ -120,12 +115,12 @@ internal class CalendarSkill : ISkill
                 AnsiConsoleHelper.Rule("white");
             }
         }
-        catch(UnauthorizedException ue)
+        catch (UnauthorizedException ue)
         {
             AnsiConsole.MarkupLine($"[red][[:cross_mark: ${ue.Message}]][/]");
             return;
         }
-        catch(UnconfiguredException ue)
+        catch (UnconfiguredException ue)
         {
             AnsiConsole.MarkupLine($"[yellow][[:yellow_circle: ${ue.Message}]][/]");
         }
@@ -142,27 +137,14 @@ internal class CalendarSkill : ISkill
 
             try
             {
-                if (events.Count() > 0)
+                if (events.Any())
                 {
                     bool found = false;
-                    foreach (var eventItem in events)
+                    foreach (var _ in events.Where(eventItem => DisplayEvent(eventItem, markdown, sb)).Select(eventItem => new { }))
                     {
-                        string start = eventItem.Start?.ToString("HH:mm");
-                        if (string.IsNullOrEmpty(start))
-                        {
-                            continue;
-                        }
-                        string end = eventItem.End?.ToString("-HH:mm") ?? "";
-                        if (markdown)
-                        {
-                            var line = $"- {eventItem.Start.GetEmoji()} **{start}{end}** {eventItem.Summary}{JoinLink(eventItem)}";
-                            sb.AppendLine(line);
-                            AnsiConsole.WriteLine(line);
-                        }
-                        else
-                            AnsiConsole.MarkupLine($"{eventItem.Start.GetEmoji()} [cyan]{start}{end}\t[/][silver]{eventItem.Summary}[/]");
                         found = true;
                     }
+
                     if (found)
                     {
                         if (markdown)
@@ -193,6 +175,26 @@ internal class CalendarSkill : ISkill
         }
     }
 
+    private static bool DisplayEvent(Domain.Entities.Calendar.Event eventItem, bool markdown, StringBuilder markdownBuffer)
+    {
+        string start = eventItem.Start?.ToString("HH:mm");
+        if (string.IsNullOrEmpty(start))
+        {
+            return false;
+        }
+        string end = eventItem.End?.ToString("-HH:mm") ?? "";
+        if (markdown)
+        {
+            var line = $"- {eventItem.Start.GetEmoji()} **{start}{end}** {eventItem.Summary}{JoinLink(eventItem)}";
+            markdownBuffer.AppendLine(line);
+            AnsiConsole.WriteLine(line);
+        }
+        else
+            AnsiConsole.MarkupLine($"{eventItem.Start.GetEmoji()} [cyan]{start}{end}\t[/][silver]{eventItem.Summary}[/]");
+
+        return true;
+    }
+
     private async Task FreeTime(DateTime date)
     {
         var start = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Local);
@@ -201,7 +203,7 @@ internal class CalendarSkill : ISkill
         AnsiConsoleHelper.TitleRule($":calendar: Free time for {date:MMM dd}");
         try
         {
-            if (events.Count() > 0)
+            if (events.Any())
             {
                 var freeTime = new List<(DateTime? start, DateTime? end)>();
                 // Start at 09:00
@@ -237,6 +239,6 @@ internal class CalendarSkill : ISkill
         }
     }
 
-    private string JoinLink(Domain.Entities.Calendar.Event eventItem) =>
+    private static string JoinLink(Domain.Entities.Calendar.Event eventItem) =>
         string.IsNullOrEmpty(eventItem.MeetingUrl) ? "" : $" [Join]({eventItem.MeetingUrl})";
 }

@@ -11,14 +11,9 @@ using Spectre.Console;
 
 namespace Guppi.Console.Skills
 {
-    public class VoiceSkill : ISkill
+    public class VoiceSkill(ISpeechService speech) : ISkill
     {
-        private readonly ISpeechService _speech;
-
-        public VoiceSkill(ISpeechService speech)
-        {
-            _speech = speech;
-        }
+        private readonly ISpeechService _speech = speech;
 
         public IEnumerable<Command> GetCommands()
         {

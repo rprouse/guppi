@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Spectre.Console;
 
 namespace Guppi.Application.Services.Weather
@@ -43,28 +44,28 @@ namespace Guppi.Application.Services.Weather
             return WIND_DIRECTION[(int)Math.Round(degrees / 45) % 8];
         }
 
-        public static string[] WIND_DIRECTION = new[] {
+        public static readonly string[] WIND_DIRECTION = [
             "↓", "↙", "←", "↖", "↑", "↗", "→", "↘",
-        };
+        ];
 
-        public static string[] MOON_PHASES = new[] {
+        public static readonly string[] MOON_PHASES = [
             "🌑", "🌒", "🌓", "🌔", "🌕", "🌖", "🌗", "🌘"
-        };
+        ];
 
         public static string[] GetAsciiIcon(string icon)
         {
-            if (AsciiIcons.ContainsKey(icon))
+            if (AsciiIcons.TryGetValue(icon, out string[] value))
             {
-                return AsciiIcons[icon];
+                return value;
             }
-            if (AsciiIcons.ContainsKey(icon.Substring(0, 2)))
+            if (AsciiIcons.ContainsKey(icon[..2]))
             {
-                return AsciiIcons[icon.Substring(0, 2)];
+                return AsciiIcons[icon[..2]];
             }
             return AsciiIcons[""];
         }
 
-        public static Dictionary<string, string[]> AsciiIcons = new Dictionary<string, string[]>
+        public static readonly ReadOnlyDictionary<string, string[]> AsciiIcons = new ( new Dictionary<string, string[]>()
         {
             { "01d", new [] {  // Day clear sky
                 "[yellow]    \\   /    [/]",
@@ -138,6 +139,6 @@ namespace Guppi.Application.Services.Weather
                 "    (        ",
                 "     `-’     ",
                 "      •      " } },
-        };
+        });
     }
 }

@@ -65,7 +65,7 @@ namespace Guppi.Console
             AnsiConsole.WriteLine();
         }
 
-        private string AssemblyDescription =>
+        private static string AssemblyDescription =>
             Assembly.GetExecutingAssembly()
                 .GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false)
                 .OfType<AssemblyDescriptionAttribute>()

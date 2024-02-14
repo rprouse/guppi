@@ -14,15 +14,10 @@ using Location = Guppi.Domain.Entities.Weather.Location;
 
 namespace Guppi.Console.Skills;
 
-internal class WeatherSkill : ISkill
+internal class WeatherSkill(IWeatherService service) : ISkill
 {
     const string Command = "weather";
-    private readonly IWeatherService _service;
-
-    public WeatherSkill(IWeatherService service)
-    {
-        _service = service;
-    }
+    private readonly IWeatherService _service = service;
 
     public IEnumerable<Command> GetCommands()
     {
@@ -62,7 +57,7 @@ internal class WeatherSkill : ISkill
 
         var locations = await _service.GetLocations(location);
 
-        if (locations.Count() == 0)
+        if (!locations.Any())
             throw new UnconfiguredException("Location not found");
 
         Location selected;
@@ -107,7 +102,7 @@ internal class WeatherSkill : ISkill
         }
     }
 
-    private void DailyWeatherTable(DailyWeather[] daily)
+    private static void DailyWeatherTable(DailyWeather[] daily)
     {
         var table = new Table();
 
@@ -123,32 +118,32 @@ internal class WeatherSkill : ISkill
         AnsiConsole.Write(table);
     }
 
-    private IEnumerable<Markup> WeatherLineOne(DailyWeather[] daily)
+    private static IEnumerable<Markup> WeatherLineOne(DailyWeather[] daily)
     {
         for (int i = 0; i < 4 && i < daily.Length; i++)
             yield return new Markup($"{daily[i].AsciiIcon[0]} [silver]{daily[i].Description}[/]");
     }
 
-    private IEnumerable<Markup> WeatherLineTwo(DailyWeather[] daily)
+    private static IEnumerable<Markup> WeatherLineTwo(DailyWeather[] daily)
     {
         for (int i = 0; i < 4 && i < daily.Length; i++)
             yield return new Markup($"{daily[i].AsciiIcon[1]} [silver]↑[/][{daily[i].Temperature.Max.ToColor()}]{daily[i].Temperature.Max}[/][silver]°C ↓[/][{daily[i].Temperature.Min.ToColor()}]{daily[i].Temperature.Min}[/][silver]°C[/]");
 
     }
 
-    private IEnumerable<Markup> WeatherLineThree(DailyWeather[] daily)
+    private static IEnumerable<Markup> WeatherLineThree(DailyWeather[] daily)
     {
         for (int i = 0; i < 4 && i < daily.Length; i++)
             yield return new Markup($"{daily[i].AsciiIcon[2]} [silver]{WeatherIcon.WindDirection(daily[i].WindDirection)} [/][gold3_1]{daily[i].WindSpeed:F0}[/][silver] km/h[/]");
     }
 
-    private IEnumerable<Markup> WeatherLineFour(DailyWeather[] daily)
+    private static IEnumerable<Markup> WeatherLineFour(DailyWeather[] daily)
     {
         for (int i = 0; i < 4 && i < daily.Length; i++)
             yield return new Markup($"{daily[i].AsciiIcon[3]} [skyblue2]:droplet:{daily[i].Rain}mm[/] [grey89]:snowflake:{daily[i].Snow}mm[/]");
     }
 
-    private IEnumerable<Markup> WeatherLineFive(DailyWeather[] daily)
+    private static IEnumerable<Markup> WeatherLineFive(DailyWeather[] daily)
     {
         for (int i = 0; i < 4 && i < daily.Length; i++)
             yield return new Markup($"{daily[i].AsciiIcon[4]} [silver]{daily[i].Pressure}mb {daily[i].Humidity,3}%[/]");
@@ -174,7 +169,7 @@ internal class WeatherSkill : ISkill
 
     private void Configure() => _service.Configure();
 
-    private void DisplayLong(WeatherForecast weather)
+    private static void DisplayLong(WeatherForecast weather)
     {
         DisplayShort(weather);
 
@@ -197,7 +192,7 @@ internal class WeatherSkill : ISkill
         }
     }
 
-    private void DisplayShort(WeatherForecast weather)
+    private static void DisplayShort(WeatherForecast weather)
     {
         AnsiConsoleHelper.TitleRule(":satellite_antenna: Satellite scans complete. Today's current weather is...");
 
@@ -211,6 +206,7 @@ internal class WeatherSkill : ISkill
         AnsiConsole.MarkupLine($" [silver]{weather.Current.Pressure} mb[/]");
 
         DailyWeather today = weather.Daily.FirstOrDefault();
+        if (today is null) return;
 
         AnsiConsole.Markup(weather.Current.AsciiIcon[4]);
         AnsiConsole.MarkupLine($" [silver]↑[{today.Temperature.Max.ToColor()}]{today.Temperature.Max}[/]°C ↓[{today.Temperature.Min.ToColor()}]{today.Temperature.Min}[/]°C[/]");

@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection.Metadata;
 using Guppi.Application.Attributes;
 using Guppi.Domain.Interfaces;
 using Spectre.Console;
@@ -8,12 +10,10 @@ namespace Guppi.Application.Configurations
     public class CalendarConfiguration : Configuration
     {
         [Display("Enabled Calendars")]
-        public List<EnabledCalendar> EnabledCalendars { get; set; }
-            = new List<EnabledCalendar>();
+        public List<EnabledCalendar> EnabledCalendars { get; set; } = [];
 
         [Display("ICal Urls")]
-        public List<string> ICalUrls { get; set; }
-            = new List<string>();
+        public List<string> ICalUrls { get; set; } = [];
 
         IEnumerable<ICalendarService> _calendarServices;
         public void SetCalendarServices(IEnumerable<ICalendarService> calendarServices)
@@ -27,23 +27,23 @@ namespace Guppi.Application.Configurations
             ConfigureICalUrls();
         }
 
+        private static readonly char[] YES_NO = [ 'y', 'Y', 'n', 'N' ];
+
         private void ConfigureEnabledCalendars()
         {
-            var enabledCalendars = new List<EnabledCalendar>();
-            foreach (var service in _calendarServices)
+            EnabledCalendars = _calendarServices.Select(service => 
             {
                 var yesno = AnsiConsole.Prompt<char>(
                     new TextPrompt<char>($"[green]Enable {service.Name} (y/N)?[/]")
-                        .AddChoices(new[] { 'y', 'Y', 'n', 'N' })
+                        .AddChoices(YES_NO)
                         .DefaultValue('n')
                         .ShowDefaultValue(false)
                         .ShowChoices(false)
                         .AllowEmpty()
                     );
                 bool enabled = yesno == 'y' || yesno == 'Y';
-                enabledCalendars.Add(new EnabledCalendar { Name = service.Name, Enabled = enabled });
-            }
-            EnabledCalendars = enabledCalendars;
+                return new EnabledCalendar { Name = service.Name, Enabled = enabled };
+            }).ToList();
         }
 
         private void ConfigureICalUrls()
@@ -54,7 +54,7 @@ namespace Guppi.Application.Configurations
             {
                 var yesno = AnsiConsole.Prompt<char>(
                     new TextPrompt<char>($"[green]Delete {url} (y/N)?[/]")
-                        .AddChoices(new[] { 'y', 'Y', 'n', 'N' })
+                        .AddChoices(YES_NO)
                         .DefaultValue('n')
                         .ShowDefaultValue(false)
                         .ShowChoices(false)

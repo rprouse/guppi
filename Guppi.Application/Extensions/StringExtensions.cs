@@ -2,9 +2,9 @@ using System.Text.RegularExpressions;
 
 namespace Guppi.Application.Extensions
 {
-    public static class StringExtensions
+    public static partial class StringExtensions
     {
-        static readonly Regex emojiRegex = new Regex(@"(:[a-z_]+:)", RegexOptions.Compiled);
+        static readonly Regex emojiRegex = EmojiRegex();
 
         public static string StripEmoji(this string str)
         {
@@ -17,5 +17,8 @@ namespace Guppi.Application.Extensions
             }
             return str;
         }
+
+        [GeneratedRegex(@"(:[a-z_]+:)", RegexOptions.Compiled)]
+        private static partial Regex EmojiRegex();
     }
 }

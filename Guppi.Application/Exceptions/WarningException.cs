@@ -2,10 +2,7 @@ using System;
 
 namespace Guppi.Application.Exceptions
 {
-    public class WarningException : Exception
+    public class WarningException(string message) : Exception(message)
     {
-        public WarningException(string message) : base(message)
-        {
-        }
     }
 }

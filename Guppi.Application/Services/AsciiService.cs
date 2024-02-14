@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Guppi.Domain.Entities.Ascii;
 
 namespace Guppi.Application.Services;
@@ -9,96 +10,95 @@ internal sealed class AsciiService : IAsciiService
     {
         var result = new List<AsciiData>(128)
         {
-            new AsciiData(0, "NUL", "Null"),
-            new AsciiData(1, "SOH", "Start of Header"),
-            new AsciiData(2, "STX", "Start of Text"),
-            new AsciiData(3, "ETX", "End of Text"),
-            new AsciiData(4, "EOT", "End of Transmission"),
-            new AsciiData(5, "ENQ", "Enquiry"),
-            new AsciiData(6, "ACK", "Acknowledge"),
-            new AsciiData(7, "BEL", "Bell"),
-            new AsciiData(8, "BS", "Backspace"),
-            new AsciiData(9, "HT", "Horizontal Tab"),
-            new AsciiData(10, "LF", "Line Feed"),
-            new AsciiData(11, "VT", "Vertical Tab"),
-            new AsciiData(12, "FF", "Form Feed"),
-            new AsciiData(13, "CR", "Carriage Return"),
-            new AsciiData(14, "SO", "Shift Out"),
-            new AsciiData(15, "SI", "Shift In"),
-            new AsciiData(16, "DLE", "Data Link Escape"),
-            new AsciiData(17, "DC1", "Device Control 1"),
-            new AsciiData(18, "DC2", "Device Control 2"),
-            new AsciiData(19, "DC3", "Device Control 3"),
-            new AsciiData(20, "DC4", "Device Control 4"),
-            new AsciiData(21, "NAK", "Negative Acknowledge"),
-            new AsciiData(22, "SYN", "Synchronize"),
-            new AsciiData(23, "ETB", "End of Transmission Block"),
-            new AsciiData(24, "CAN", "Cancel"),
-            new AsciiData(25, "EM", "End of Medium"),
-            new AsciiData(26, "SUB", "Substitute"),
-            new AsciiData(27, "ESC", "Escape"),
-            new AsciiData(28, "FS", "File Separator"),
-            new AsciiData(29, "GS", "Group Separator"),
-            new AsciiData(30, "RS", "Record Separator"),
-            new AsciiData(31, "US", "Unit Separator"),
-            new AsciiData(32, "SPACE", "Space"),
-            new AsciiData(33, "!", "Exclamation Point"),
-            new AsciiData(34, "\"", "Double Quote"),
-            new AsciiData(35, "#", "Hash"),
-            new AsciiData(36, "$", "Dollar"),
-            new AsciiData(37, "%", "Percent"),
-            new AsciiData(38, "&", "Ampersand"),
-            new AsciiData(39, "'", "Single Quote"),
-            new AsciiData(40, "(", "Left Parenthesis"),
-            new AsciiData(41, ")", "Right Parenthesis"),
-            new AsciiData(42, "*", "Asterisk"),
-            new AsciiData(43, "+", "Plus"),
-            new AsciiData(44, ",", "Comma"),
-            new AsciiData(45, "-", "Minus"),
-            new AsciiData(46, ".", "Period"),
-            new AsciiData(47, "/", "Slash"),
+            new (0, "NUL", "Null"),
+            new (1, "SOH", "Start of Header"),
+            new (2, "STX", "Start of Text"),
+            new (3, "ETX", "End of Text"),
+            new (4, "EOT", "End of Transmission"),
+            new (5, "ENQ", "Enquiry"),
+            new (6, "ACK", "Acknowledge"),
+            new (7, "BEL", "Bell"),
+            new (8, "BS", "Backspace"),
+            new (9, "HT", "Horizontal Tab"),
+            new (10, "LF", "Line Feed"),
+            new (11, "VT", "Vertical Tab"),
+            new (12, "FF", "Form Feed"),
+            new (13, "CR", "Carriage Return"),
+            new (14, "SO", "Shift Out"),
+            new (15, "SI", "Shift In"),
+            new (16, "DLE", "Data Link Escape"),
+            new (17, "DC1", "Device Control 1"),
+            new (18, "DC2", "Device Control 2"),
+            new (19, "DC3", "Device Control 3"),
+            new (20, "DC4", "Device Control 4"),
+            new (21, "NAK", "Negative Acknowledge"),
+            new (22, "SYN", "Synchronize"),
+            new (23, "ETB", "End of Transmission Block"),
+            new (24, "CAN", "Cancel"),
+            new (25, "EM", "End of Medium"),
+            new (26, "SUB", "Substitute"),
+            new (27, "ESC", "Escape"),
+            new (28, "FS", "File Separator"),
+            new (29, "GS", "Group Separator"),
+            new (30, "RS", "Record Separator"),
+            new (31, "US", "Unit Separator"),
+            new (32, "SPACE", "Space"),
+            new (33, "!", "Exclamation Point"),
+            new (34, "\"", "Double Quote"),
+            new (35, "#", "Hash"),
+            new (36, "$", "Dollar"),
+            new (37, "%", "Percent"),
+            new (38, "&", "Ampersand"),
+            new (39, "'", "Single Quote"),
+            new (40, "(", "Left Parenthesis"),
+            new (41, ")", "Right Parenthesis"),
+            new (42, "*", "Asterisk"),
+            new (43, "+", "Plus"),
+            new (44, ",", "Comma"),
+            new (45, "-", "Minus"),
+            new (46, ".", "Period"),
+            new (47, "/", "Slash"),
         };
 
-        for (char c = '0'; c <= '9'; c++)
-        {
-            result.Add(new AsciiData(c, $"{c}", ""));
-        }
+        result.AddRange(CreateAsciiDataFor('0', '9'));
 
-        result.AddRange(new[] {
-            new AsciiData(58, ":", "Colon"),
-            new AsciiData(59, ";", "Semicolon"),
-            new AsciiData(60, "<", "Less Than"),
-            new AsciiData(61, "=", "Equals"),
-            new AsciiData(62, ">", "Greater Than"),
-            new AsciiData(63, "?", "Question Mark"),
-            new AsciiData(64, "@", "At Sign"),
+        result.AddRange(new AsciiData[] {
+            new (58, ":", "Colon"),
+            new (59, ";", "Semicolon"),
+            new (60, "<", "Less Than"),
+            new (61, "=", "Equals"),
+            new (62, ">", "Greater Than"),
+            new (63, "?", "Question Mark"),
+            new (64, "@", "At Sign"),
         });
 
-        for (char c = 'A'; c <= 'Z'; c++)
-        {
-            result.Add(new AsciiData(c, $"{c}", ""));
-        }
+        result.AddRange(CreateAsciiDataFor('A', 'Z'));
 
-        result.AddRange(new[] {
-            new AsciiData(91, "[", "Left Square Bracket"),
-            new AsciiData(92, "\\", "Backslash"),
-            new AsciiData(93, "]", "Right Square Bracket"),
-            new AsciiData(94, "^", "Circumflex"),
-            new AsciiData(95, "_", "Underscore"),
-            new AsciiData(96, "`", "Grave/Accent"),
+        result.AddRange(new AsciiData[] {
+            new (91, "[", "Left Square Bracket"),
+            new (92, "\\", "Backslash"),
+            new (93, "]", "Right Square Bracket"),
+            new (94, "^", "Circumflex"),
+            new (95, "_", "Underscore"),
+            new (96, "`", "Grave/Accent"),
         });
 
-        for (char c = 'a'; c <= 'z'; c++)
-        {
-            result.Add(new AsciiData(c, $"{c}", ""));
-        }
+        result.AddRange(CreateAsciiDataFor('a', 'z'));
 
-        result.Add(new AsciiData(123, "{", "Left Curly Brace"));
-        result.Add(new AsciiData(124, "|", "Vertical Bar"));
-        result.Add(new AsciiData(125, "}", "Right Curly Brace"));
-        result.Add(new AsciiData(126, "~", "Tilde"));
-        result.Add(new AsciiData(127, "DEL", "Delete"));
+        result.Add(new (123, "{", "Left Curly Brace"));
+        result.Add(new (124, "|", "Vertical Bar"));
+        result.Add(new (125, "}", "Right Curly Brace"));
+        result.Add(new (126, "~", "Tilde"));
+        result.Add(new (127, "DEL", "Delete"));
 
         return result.ToArray();
+    }
+
+    private static IEnumerable<AsciiData> CreateAsciiDataFor(char start, char end)
+    {
+        for (char c = start; c <= end; c++)
+        {
+            yield return new (c, $"{c}", "");
+        }
     }
 }

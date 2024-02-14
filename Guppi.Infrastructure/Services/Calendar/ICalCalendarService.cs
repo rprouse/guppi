@@ -11,15 +11,10 @@ using Ical.Net.DataTypes;
 
 namespace Guppi.Infrastructure.Services.Calendar
 {
-    internal sealed class ICalCalendarService : ICalendarService
+    internal sealed class ICalCalendarService(IHttpRestService httpService) : ICalendarService
     {
-        private readonly IHttpRestService _httpService;
+        private readonly IHttpRestService _httpService = httpService;
         public string Name => "iCal Calendars";
-
-        public ICalCalendarService(IHttpRestService httpService)
-        {
-            _httpService = httpService;
-        }
 
         public async Task<IList<Event>> GetCalendarEvents(DateTime? minDate, DateTime? maxDate)
         {
@@ -35,7 +30,7 @@ namespace Guppi.Infrastructure.Services.Calendar
             if (!configuration.Enabled)
                 throw new UnconfiguredException("Please configure calendars");
 
-            List<Event> events = new List<Event>();
+            var events = new List<Event>();
             foreach (var icalUrl in configuration.ICalUrls)
             {
                 var e = await GetEventsFromCalendar(icalUrl, start, end);
@@ -93,7 +88,7 @@ namespace Guppi.Infrastructure.Services.Calendar
         public Task<string> Logout() =>
             Task.FromResult("Log out of ICal not required");
 
-        private string MeetingUrl(CalendarEvent e)
+        private static string MeetingUrl(CalendarEvent e)
         {
             // URL is in the location
             if (e.Location?.StartsWith("http", StringComparison.InvariantCultureIgnoreCase) ?? false)
@@ -106,7 +101,7 @@ namespace Guppi.Infrastructure.Services.Calendar
                 if (start > -1)
                 {
                     int end = e.Description.IndexOf('>', start);
-                    string url = e.Description.Substring(start, end - start);
+                    string url = e.Description[start..end];
                     return url;
                 }
             }

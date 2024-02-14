@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using Guppi.Application.Configurations;
@@ -7,14 +7,9 @@ using Guppi.Domain.Interfaces;
 
 namespace Guppi.Application.Services;
 
-internal sealed class NoteService : INoteService
+internal sealed class NoteService(IProcessService process) : INoteService
 {
-    private readonly IProcessService _process;
-
-    public NoteService(IProcessService process)
-    {
-        _process = process;
-    }
+    private readonly IProcessService _process = process;
 
     public void AddFile(string title, string vault)
     {
@@ -46,7 +41,7 @@ internal sealed class NoteService : INoteService
         _process.Open(uri);
     }
 
-    internal string GetUriHandler(string vault, string filename) =>
+    internal static string GetUriHandler(string vault, string filename) =>
         string.IsNullOrWhiteSpace(filename) ?
             $"obsidian://open?vault={vault}" :
             $"obsidian://open?vault={vault}&file={filename}";

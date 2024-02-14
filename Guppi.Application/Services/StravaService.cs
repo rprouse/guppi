@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -16,18 +16,11 @@ using Guppi.Domain.Interfaces;
 
 namespace Guppi.Application.Services;
 
-internal sealed class StravaService : IStravaService
+internal sealed class StravaService(IHttpRestService restService, IProcessService processService) : IStravaService
 {
-    private readonly IHttpRestService _restService;
-    private readonly IProcessService _processService;
-    private readonly StravaConfiguration _configuration;
-
-    public StravaService(IHttpRestService restService, IProcessService processService)
-    {
-        _restService = restService;
-        _processService = processService;
-        _configuration = Configuration.Load<StravaConfiguration>("strava");
-    }
+    private readonly IHttpRestService _restService = restService;
+    private readonly IProcessService _processService = processService;
+    private readonly StravaConfiguration _configuration = Configuration.Load<StravaConfiguration>("strava");
 
     public void Configure()
     {
@@ -54,7 +47,7 @@ internal sealed class StravaService : IStravaService
 
         _restService.AddHeader("Authorization", $"Bearer {access_token}");
 
-        TimeSpan t = DateTime.UtcNow.AddDays(-90) - new DateTime(1970, 1, 1);
+        TimeSpan t = DateTime.UtcNow.AddDays(-90) - DateTime.UnixEpoch;
         int epoch = (int)t.TotalSeconds;
         var activities = await _restService.GetData<List<StravaActivity>>($"https://www.strava.com/api/v3/athlete/activities?after={epoch}&per_page=200");
         return activities.Select(a => a.GetActivity());
@@ -63,7 +56,7 @@ internal sealed class StravaService : IStravaService
     private async Task<string> Authorize()
     {
         int port = 39428;
-        string url = $"http://www.strava.com/oauth/authorize?client_id={_configuration.ClientId}&response_type=code&redirect_uri=http://localhost:{port}&approval_prompt=auto&scope=read,activity:read_all";
+        string url = $"https://www.strava.com/oauth/authorize?client_id={_configuration.ClientId}&response_type=code&redirect_uri=http://localhost:{port}&approval_prompt=auto&scope=read,activity:read_all";
         OpenUrl(url);
 
         using var listener = new HttpListener();

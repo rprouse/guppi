@@ -4,15 +4,10 @@ using LibGit2Sharp;
 
 namespace Guppi.Infrastructure.Services.Git
 {
-    public class GitService : IGitService
+    public class GitService(IProcessService process) : IGitService
     {
         const string WorkingDirectory = ".";
-        private readonly IProcessService _process;
-
-        public GitService(IProcessService process)
-        {
-            _process = process;
-        }
+        private readonly IProcessService _process = process;
 
         public void RunGit(string args)
         {
@@ -23,16 +18,9 @@ namespace Guppi.Infrastructure.Services.Git
         {
             try
             {
-                using (var repo = new Repository(WorkingDirectory))
-                {
-                    var branch = repo.Branches[branchName];
-                    if (branch == null)
-                    {
-                        throw new WarningException($"The branch {branchName} does not exist.");
-                    }
-
-                    Commands.Checkout(repo, branch);
-                }
+                using var repo = new Repository(WorkingDirectory);
+                var branch = repo.Branches[branchName] ?? throw new WarningException($"The branch {branchName} does not exist.");
+                Commands.Checkout(repo, branch);
             }
             catch (RepositoryNotFoundException)
             {

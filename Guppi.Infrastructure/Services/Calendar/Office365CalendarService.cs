@@ -37,13 +37,13 @@ namespace Guppi.Infrastructure.Services.Calendar
             // TODO: Configure which calendar
             var calendar = calendars.FirstOrDefault(c => c.IsDefaultCalendar == true);
 
-            var start = (minDate.HasValue ? minDate.Value : DateTime.Now).ToString("O");
-            var end = (maxDate.HasValue ? maxDate.Value : DateTime.Now.AddDays(1)).ToString("O");
+            var start = (minDate ?? DateTime.Now).ToString("O");
+            var end = (maxDate ?? DateTime.Now.AddDays(1)).ToString("O");
             var queryOptions = new List<QueryOption>()
             {
-                new QueryOption("startDateTime", start),
-                new QueryOption("endDateTime", end),
-                new QueryOption("top", "100"),
+                new ("startDateTime", start),
+                new ("endDateTime", end),
+                new ("top", "100"),
             };
             var calendarView = await graphClient.Me.Calendars[calendar?.Id].CalendarView
                 .Request(queryOptions)

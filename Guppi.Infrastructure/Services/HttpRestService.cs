@@ -7,14 +7,9 @@ using Guppi.Domain.Interfaces;
 
 namespace Guppi.Infrastructure.Services
 {
-    public class HttpRestService : IHttpRestService
+    public class HttpRestService(HttpClient client) : IHttpRestService
     {
-        public HttpClient Client { get; }
-
-        public HttpRestService(HttpClient client)
-        {
-            Client = client;
-        }
+        public HttpClient Client { get; } = client;
 
         public async Task<T?> GetData<T>(string url)
         {

@@ -12,14 +12,9 @@ using Spectre.Console;
 
 namespace Guppi.Console.Skills;
 
-internal class AdventOfCodeSkill : ISkill
+internal class AdventOfCodeSkill(IAdventOfCodeService service) : ISkill
 {
-    private readonly IAdventOfCodeService _service;
-
-    public AdventOfCodeSkill(IAdventOfCodeService service)
-    {
-        _service = service;
-    }
+    private readonly IAdventOfCodeService _service = service;
 
     public IEnumerable<Command> GetCommands()
     {
@@ -78,33 +73,7 @@ internal class AdventOfCodeSkill : ISkill
             int place = 1;
             foreach (var member in leaders.Members.Values.OrderByDescending(m => m.LocalScore).ThenByDescending(m => m.Stars))
             {
-                AnsiConsole.Markup($"[white]{place++,3}) {member.LocalScore,4}[/]  ");
-
-                for (int d = 1; d <= 25; d++)
-                {
-                    if (DateTime.Now.Date < new DateTime(year, 12, d))
-                    {
-                        AnsiConsole.Markup("[grey]·[/]");
-                        continue;
-                    }
-
-                    string day = d.ToString();
-                    string star;
-                    if (member.CompletionDayLevel.ContainsKey(day))
-                    {
-                        Day completed = member.CompletionDayLevel[day];
-                        if (completed.PartOneComplete && completed.PartTwoComplete)
-                            star = "[yellow]*[/]";
-                        else
-                            star = "[white]*[/]";
-                    }
-                    else
-                    {
-                        star = "[grey]*[/]";
-                    }
-                    AnsiConsole.Markup(star);
-                }
-                AnsiConsole.MarkupLine($"[green]  {member.Name}[/]");
+                place = DisplayMember(year, place, member);
             }
             AnsiConsoleHelper.Rule("white");
         }
@@ -112,6 +81,43 @@ internal class AdventOfCodeSkill : ISkill
         {
             AnsiConsole.MarkupLine($"[yellow][[:yellow_circle: {ex.Message}]][/]");
         }
+    }
+
+    private static int DisplayMember(int year, int place, Member member)
+    {
+        AnsiConsole.Markup($"[white]{place++,3}) {member.LocalScore,4}[/]  ");
+
+        for (int d = 1; d <= 25; d++)
+        {
+            DisplayDayForMember(year, d, member);
+        }
+        AnsiConsole.MarkupLine($"[green]  {member.Name}[/]");
+        return place;
+    }
+
+    private static void DisplayDayForMember(int year, int d, Member member)
+    {
+        if (DateTime.Now.Date < new DateTime(year, 12, d))
+        {
+            AnsiConsole.Markup("[grey]·[/]");
+            return;
+        }
+
+        string day = d.ToString();
+        string star;
+        if (member.CompletionDayLevel.TryGetValue(day, out Day value))
+        {
+            Day completed = value;
+            if (completed.PartOneComplete && completed.PartTwoComplete)
+                star = "[yellow]*[/]";
+            else
+                star = "[white]*[/]";
+        }
+        else
+        {
+            star = "[grey]*[/]";
+        }
+        AnsiConsole.Markup(star);
     }
 
     private void AddDayTo(int year)
@@ -173,7 +179,6 @@ internal class AdventOfCodeSkill : ISkill
         {
             AnsiConsole.MarkupLine($"[red][[:cross_mark: {ex.Message}]][/]");
             AnsiConsole.MarkupLine("[silver][[Configure the data provider to set the solution directory.]][/]");
-            return;
         }
     }
 }

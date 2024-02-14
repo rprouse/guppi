@@ -14,16 +14,16 @@ namespace Guppi.Infrastructure.Services
 {
     public class SpeechService : ISpeechService
     {
-        IList<Prompt> _prompts;
-        SpeechSynthesizer _synth;
-        VoiceConfiguration _config;
+        readonly List<Prompt> _prompts;
+        readonly SpeechSynthesizer _synth;
+        readonly VoiceConfiguration _config;
 
         public SpeechService()
         {
             if (OperatingSystem.IsWindows())
             {
                 _config = Configuration.Load<VoiceConfiguration>("voice");
-                _prompts = new List<Prompt>();
+                _prompts = [];
                 _synth = new SpeechSynthesizer();
                 
                 if (!string.IsNullOrWhiteSpace(_config?.Voice) && IsVoiceInstalled(_config.Voice))
@@ -91,7 +91,7 @@ namespace Guppi.Infrastructure.Services
             if (OperatingSystem.IsWindows())
             {
 #pragma warning disable CA1416 // Validate platform compatibility
-                while (_prompts.Any(p => !p.IsCompleted))
+                while (_prompts.Exists(p => !p.IsCompleted))
                 {
                     await Task.Delay(50);
                 }

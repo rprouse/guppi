@@ -1,16 +1,9 @@
 namespace Guppi.Domain.Entities.Ascii
 {
-    public struct AsciiData
+    public readonly struct AsciiData(int value, string character, string description)
     {
-        public int Value { get; }
-        public string Character { get; }
-        public string Description { get; }
-
-        public AsciiData(int value, string character, string description)
-        {
-            Value = value;
-            Character = character;
-            Description = description;
-        }
+        public int Value { get; } = value;
+        public string Character { get; } = character;
+        public string Description { get; } = description;
     }
 }

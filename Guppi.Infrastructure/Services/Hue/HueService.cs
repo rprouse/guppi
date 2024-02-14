@@ -15,17 +15,17 @@ using Q42.HueApi.Models.Groups;
 
 namespace Guppi.Infrastructure.Services.Hue
 {
-    internal class HueService : IHueService
+    internal partial class HueService : IHueService
     {
         string _key;
         ILocalHueClient _client;
-        readonly RGBColor _black = new RGBColor("000000");
+        readonly RGBColor _black = new ("000000");
 
         public Action<string> WaitForUserInput { get; set; } = null;
 
         public async Task<IEnumerable<HueBridge>> ListBridges()
         {
-            IBridgeLocator locator = new HttpBridgeLocator();
+            var locator = new HttpBridgeLocator();
             IEnumerable<LocatedBridge> bridges = await locator.LocateBridgesAsync(TimeSpan.FromSeconds(5));
             return bridges.Select(b => new HueBridge { BridgeId = b.BridgeId, IpAddress = b.IpAddress });
         }
@@ -33,7 +33,7 @@ namespace Guppi.Infrastructure.Services.Hue
         public async Task<IEnumerable<HueLight>> ListLights(string ip)
         {
             if (await ConnectToBridge(ip) == false)
-                return Enumerable.Empty<HueLight>(); ;
+                return Enumerable.Empty<HueLight>();
 
             var lights = await _client.GetLightsAsync();
             return lights.Select(l => new HueLight { Id = l.Id, Name = l.Name, On = l.State.On, Brightness = l.State.Brightness, Color = l.ToHex(), Type = l.Type });
@@ -56,7 +56,7 @@ namespace Guppi.Infrastructure.Services.Hue
 
         public async Task<bool> ConnectToBridge(string ip = null, bool loadKey = true)
         {
-            IBridgeLocator locator = new HttpBridgeLocator();
+            var locator = new HttpBridgeLocator();
             IEnumerable<LocatedBridge> bridges = await locator.LocateBridgesAsync(TimeSpan.FromSeconds(5));
             LocatedBridge bridge = null;
             if (ip == null)
@@ -96,7 +96,7 @@ namespace Guppi.Infrastructure.Services.Hue
             WaitForUserInput("Press the button on your bridge then press ENTER");
             try
             {
-                ILocalHueClient client = new LocalHueClient(bridge.IpAddress);
+                var client = new LocalHueClient(bridge.IpAddress);
                 return await client.RegisterAsync("Alteridem.Hue.CLI", Environment.MachineName);
             }
             catch(Exception e)
@@ -141,7 +141,7 @@ namespace Guppi.Infrastructure.Services.Hue
             return command;
         }
 
-        IEnumerable<string> GetLights(uint light)
+        static IEnumerable<string> GetLights(uint light)
         {
             if (light > 0)
                 return new[] { light.ToString() };
@@ -152,10 +152,10 @@ namespace Guppi.Infrastructure.Services.Hue
         Task<HueResults> SendCommand(LightCommand command, IEnumerable<string> lights = null) =>
             _client.SendCommandAsync(command, lights);
 
-        RGBColor GetColor(string color)
+        static RGBColor GetColor(string color)
         {
             // Is it an RGB Color?
-            var r = new Regex("^#?[0-9a-fA-F]{6}$", RegexOptions.CultureInvariant);
+            var r = ColorRegex();
             if (r.IsMatch(color))
                 return new RGBColor(color);
 
@@ -163,5 +163,8 @@ namespace Guppi.Infrastructure.Services.Hue
             var c = System.Drawing.Color.FromName(color);
             return new RGBColor(c.R, c.G, c.B);
         }
+
+        [GeneratedRegex("^#?[0-9a-fA-F]{6}$", RegexOptions.CultureInvariant)]
+        private static partial Regex ColorRegex();
     }
 }

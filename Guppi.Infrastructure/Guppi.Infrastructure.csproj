@@ -16,7 +16,7 @@
     <PackageReference Include="Microsoft.Identity.Client" Version="4.58.1" />
     <PackageReference Include="Spectre.Console" Version="0.48.0" />
     <PackageReference Include="System.Speech" Version="8.0.0" />
-    <PackageReference Include="System.Text.Json" Version="8.0.0" />
+    <PackageReference Include="System.Text.Json" Version="8.0.4" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
     <PackageReference Include="Google.Apis.Calendar.v3" Version="1.64.0.3248" />
     <PackageReference Include="LibGit2Sharp" Version="0.29.0" />

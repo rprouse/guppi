@@ -1,8 +1,8 @@
 {
   "profiles": {
     "Guppi.Console": {
-        "commandName": "Project",
-        "commandLineArgs": "weather daily"
+      "commandName": "Project",
+      "commandLineArgs": "cal agenda"
     }
   }
 }

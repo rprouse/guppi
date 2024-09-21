@@ -5,13 +5,13 @@
     <Authors>Rob Prouse</Authors>
     <Company>Alteridem Consulting</Company>
     <Product>Guppi command line utility</Product>
-    <Copyright>Copyright (c) 2023 Rob Prouse</Copyright>
+    <Copyright>Copyright (c) 2024 Rob Prouse</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    <PackageReference Include="OpenAI" Version="1.8.0" />
-    <PackageReference Include="Spectre.Console" Version="0.48.0" />
+    <PackageReference Include="OpenAI" Version="1.11.0" />
+    <PackageReference Include="Spectre.Console" Version="0.49.1" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
     <PackageReference Include="System.CommandLine.NamingConventionBinder" Version="2.0.0-beta4.22272.1" />
     <PackageReference Include="System.IO.Ports" Version="8.0.0" />

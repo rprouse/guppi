@@ -36,7 +36,7 @@ public class TodoService(IMediator mediator, ITaskConfiguration configuration) :
 
     public async Task Sync()
     {
-        LogIntoGoogle();
+        await LogIntoGoogle();
 
         GoogleTaskList taskList = await GetTaskListFromGoogle();
         AnsiConsole.WriteLine($"Retrieved task list {taskList.Title}");
@@ -50,7 +50,10 @@ public class TodoService(IMediator mediator, ITaskConfiguration configuration) :
             request.PageToken = nextPageToken;
             request.ShowCompleted = false;
             var tasks = await request.ExecuteAsync();
-            googleTasks.AddRange(tasks.Items);
+            if (tasks.Items is not null)
+            {
+                googleTasks.AddRange(tasks.Items);
+            }
             nextPageToken = tasks.NextPageToken;
         } while (!string.IsNullOrEmpty(nextPageToken));
         AnsiConsole.WriteLine($"{googleTasks.Count} tasks retrieved from Google");
@@ -85,7 +88,10 @@ public class TodoService(IMediator mediator, ITaskConfiguration configuration) :
         }
 
         // Tasks in Google that are not in the local list need to be added to the local list
-        var notLocal = googleTasks.Where(t => string.IsNullOrEmpty(t.Completed) && !todo.Any(l => l.SpecialTags.ContainsKey(IdTag) && l.SpecialTags[IdTag] == t.Id)).ToList();
+        var notLocal = googleTasks
+            .Where(t => string.IsNullOrEmpty(t.Completed))
+            .Where(t => !todo.Any(l => l.SpecialTags.ContainsKey(IdTag) && l.SpecialTags[IdTag] == t.Id))
+            .ToList();
         foreach (var task in notLocal)
         {
             string taskStr = $"{task.Updated.GetRfc3339Date().ToString("yyyy-MM-dd")} {task.Title}";
@@ -104,7 +110,7 @@ public class TodoService(IMediator mediator, ITaskConfiguration configuration) :
         // Google tasks that are newer than the local tasks need to be updated in the local tasks
     }
 
-    private void LogIntoGoogle()
+    private async Task LogIntoGoogle()
     {
         string credentials = Application.Configuration.GetConfigurationFile("task_credentials");
         if (!File.Exists(credentials))
@@ -117,12 +123,12 @@ public class TodoService(IMediator mediator, ITaskConfiguration configuration) :
         using (var stream = new FileStream(credentials, FileMode.Open, FileAccess.Read))
         {
             string token = Application.Configuration.GetConfigurationFile("task_token");
-            credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                GoogleClientSecrets.FromStream(stream).Secrets,
+            credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+                (await GoogleClientSecrets.FromStreamAsync(stream)).Secrets,
                 Scopes,
                 "user",
                 CancellationToken.None,
-                new FileDataStore(token, true)).Result;
+                new FileDataStore(token, true));
         }
 
         if (credential is null)
@@ -143,7 +149,7 @@ public class TodoService(IMediator mediator, ITaskConfiguration configuration) :
 
         var lists = await listRequest.ExecuteAsync();
 
-        var work = lists.Items.FirstOrDefault(x => x.Title == TaskListName);
+        var work = lists.Items?.FirstOrDefault(x => x.Title == TaskListName);
 
         // If the list does not exist, create it
         if (work is null)

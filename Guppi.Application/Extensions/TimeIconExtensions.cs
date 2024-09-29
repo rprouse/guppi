@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using Spectre.Console;
 
 namespace Guppi.Application.Extensions;
 
 public static class TimeIconExtensions
 {
-    private static string[] Clocks = new[]
-    {
+    private static readonly string[] Clocks =
+    [
         Emoji.Known.TwelveOClock,
         Emoji.Known.OneOClock,
         Emoji.Known.TwoOClock,
@@ -19,10 +19,10 @@ public static class TimeIconExtensions
         Emoji.Known.NineOClock,
         Emoji.Known.TenOClock,
         Emoji.Known.ElevenOClock,
-    };
+    ];
 
-    private static string[] HalfClocks = new[]
-    {
+    private static readonly string[] HalfClocks =
+    [
         Emoji.Known.TwelveThirty,
         Emoji.Known.OneThirty,
         Emoji.Known.TwoThirty,
@@ -35,7 +35,7 @@ public static class TimeIconExtensions
         Emoji.Known.NineThirty,
         Emoji.Known.TenThirty,
         Emoji.Known.ElevenThirty,
-    };
+    ];
 
     /// <summary>
     /// Gets the clock emoji that matches the given time

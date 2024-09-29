@@ -17,6 +17,7 @@ public static class DependencyInjection
         .AddTransient<IOpenAIService, OpenAIService>()
         .AddTransient<ISerialPortService, SerialPortService>()
         .AddTransient<IStravaService, StravaService>()
+        .AddSingleton<ITodoService, TodoService>()
         .AddTransient<IUtilitiesService, UtilitiesService>()
         .AddTransient<IWeatherService, WeatherService>();
 }

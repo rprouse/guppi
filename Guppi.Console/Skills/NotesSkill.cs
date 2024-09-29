@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
-using System.Threading.Tasks;
 using Guppi.Application.Services;
 
 namespace Guppi.Console.Skills;
@@ -43,7 +42,7 @@ internal class NotesSkill(INoteService service) : ISkill
             code,
             config
         };
-        return new[] { notes };
+        return [notes];
     }
 
     private void Add(string title, string vault) =>

@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Apis.Tasks.v1" Version="1.68.0.3468" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="OpenAI" Version="1.11.0" />
     <PackageReference Include="Spectre.Console" Version="0.49.1" />

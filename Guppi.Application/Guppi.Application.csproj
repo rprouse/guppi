@@ -22,6 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\dotnet-todo\src\todo.application\todo.application.csproj" />
+    <ProjectReference Include="..\dotnet-todo\src\todo.infrastructure\todo.infrastructure.csproj" />
     <ProjectReference Include="..\Guppi.Domain\Guppi.Domain.csproj" />
   </ItemGroup>
 

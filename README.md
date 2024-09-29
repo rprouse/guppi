@@ -25,24 +25,25 @@ To configure:
 4. In the browser dev tools, copy the session cookie minus the `session=`
 5. Set the `src` directory for the Visual Studio AoC solution
 
+### Sync Todo.txt to Google Tasks
+
+Syncs the [Todo.txt](https://github.com/rprouse/dotnet-todo) tasks to/from Google Tasks.
+
+To get the information to configure, follow the instructions at:
+
+1. [Enable the Google Tasks API](https://developers.google.com/tasks/reference/rest)
+2. Configure the API as a Desktop App
+3. Download client configuration and save to `C:\Users\rob\AppData\Local\Guppi\task_credentials.json`
+4. Run and log in using OAuth2.
+
+To check your API information, see the [API Console](https://console.developers.google.com/).
+
 ### Calendar
 
 Displays your next calendar event or today's agenda from Google Calendar and Office 365. Right
 now it gets both and both must be configured.
 
 #### Google Calendar
-
-To get the information to configure:
-
-1. Sign in to the [Azure portal](https://portal.azure.com/)
-2. In the left-hand navigation pane, select the `Azure Active Directory` service, and then select `Add application registration`
-3. Set a name and appropriate account types, then set the redirect URL to native with the url `http://localhost:39428`
-3. Download client configuration and save to `C:\Users\rob\AppData\Local\Guppi\calendar_credentials.json`
-4. Run and log in using OAuth2.
-
-To check your API information, see the [API Console](https://console.developers.google.com/).
-
-#### Office 365
 
 To get the information to configure, follow the instructions at:
 

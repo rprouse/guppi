@@ -1,0 +1,3 @@
+[submodule "dotnet-todo"]
+	path = dotnet-todo
+	url = git@github.com:rprouse/dotnet-todo.git

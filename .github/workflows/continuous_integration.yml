@@ -1,4 +1,4 @@
-﻿name: Continuous Integration
+name: Continuous Integration
 
 on:
   push:
@@ -13,6 +13,9 @@ jobs:
     steps:
     - name: 📥 Checkout Code
       uses: actions/checkout@v3
+      with:
+        submodules: true   # Fetch and checkout submodules
+        fetch-depth: 0     # Ensure the full history is fetched, useful when dealing with submodules
 
     - name: 💉 Install dependencies
       run: dotnet restore

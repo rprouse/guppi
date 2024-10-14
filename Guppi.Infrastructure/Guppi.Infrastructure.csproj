@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Guppi.Application\Guppi.Application.csproj" />
+    <ProjectReference Include="..\Guppi.Core\Guppi.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

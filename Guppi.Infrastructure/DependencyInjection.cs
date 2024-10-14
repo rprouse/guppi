@@ -1,10 +1,10 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Guppi.Core.Interfaces;
-using Guppi.Infrastructure.Services;
-using Guppi.Infrastructure.Services.Calendar;
-using Guppi.Infrastructure.Services.Git;
-using Guppi.Infrastructure.Services.Hue;
+using Guppi.Core.Providers;
+using Guppi.Core.Providers.Calendar;
+using Guppi.Core.Providers.Git;
+using Guppi.Core.Providers.Hue;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Guppi.Infrastructure

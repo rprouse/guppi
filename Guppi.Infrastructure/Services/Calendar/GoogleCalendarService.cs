@@ -11,7 +11,7 @@ using Google.Apis.Services;
 using Google.Apis.Util.Store;
 using Guppi.Core;
 using Guppi.Core.Exceptions;
-using Guppi.Domain.Interfaces;
+using Guppi.Core.Interfaces;
 
 namespace Guppi.Infrastructure.Services.Calendar
 {
@@ -22,7 +22,7 @@ namespace Guppi.Infrastructure.Services.Calendar
 
         public string Name => "Google Calendar";
 
-        public async Task<IList<Domain.Entities.Calendar.Event>> GetCalendarEvents(DateTime? minDate, DateTime? maxDate)
+        public async Task<IList<Core.Entities.Calendar.Event>> GetCalendarEvents(DateTime? minDate, DateTime? maxDate)
         {
             string credentials = Configuration.GetConfigurationFile("calendar_credentials");
             if (!File.Exists(credentials))
@@ -68,7 +68,7 @@ namespace Guppi.Infrastructure.Services.Calendar
             Events events = await request.ExecuteAsync();
 
             return events.Items
-                .Select(e => new Domain.Entities.Calendar.Event 
+                .Select(e => new Core.Entities.Calendar.Event 
                 { 
                     Start = e.Start.DateTimeDateTimeOffset?.LocalDateTime, 
                     End = e.End.DateTimeDateTimeOffset?.LocalDateTime, 

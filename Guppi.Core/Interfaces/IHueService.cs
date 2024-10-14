@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Guppi.Domain.Entities.Hue;
+using Guppi.Core.Entities.Hue;
 
-namespace Guppi.Domain.Interfaces
+namespace Guppi.Core.Interfaces
 {
     public interface IHueService
     {

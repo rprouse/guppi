@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Guppi.Core.Exceptions;
 using Guppi.Core.Extensions;
-using Guppi.Domain.Entities.AdventOfCode;
+using Guppi.Core.Entities.AdventOfCode;
 using Guppi.Core.Services;
 using Spectre.Console;
 

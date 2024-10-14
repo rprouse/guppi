@@ -10,7 +10,7 @@ public class LocationResponse
     public float lon { get; set; }
 #pragma warning restore IDE1006 // Naming Styles
 
-    public Domain.Entities.Weather.Location GetLocation() => new()
+    public Entities.Weather.Location GetLocation() => new()
     {
         Name = name,
         State = state,

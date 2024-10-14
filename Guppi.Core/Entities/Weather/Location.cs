@@ -1,4 +1,4 @@
-namespace Guppi.Domain.Entities.Weather;
+namespace Guppi.Core.Entities.Weather;
 
 /// <summary>
 /// A location response from the weather provider for a geocode lookup

@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Guppi.Core.Configurations;
 using Guppi.Core.Exceptions;
 using Guppi.Core.Services.Weather;
-using Guppi.Domain.Entities.Weather;
-using Guppi.Domain.Interfaces;
+using Guppi.Core.Entities.Weather;
+using Guppi.Core.Interfaces;
 
 namespace Guppi.Core.Services;
 
@@ -39,7 +39,7 @@ internal sealed class WeatherService(IHttpRestService restService) : IWeatherSer
         return weather.GetWeather();
     }
 
-    public async Task<IEnumerable<Domain.Entities.Weather.Location>> GetLocations(string search)
+    public async Task<IEnumerable<Entities.Weather.Location>> GetLocations(string search)
     {
         if (!_configuration.Configured)
         {

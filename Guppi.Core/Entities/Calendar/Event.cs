@@ -1,6 +1,6 @@
 using System;
 
-namespace Guppi.Domain.Entities.Calendar
+namespace Guppi.Core.Entities.Calendar
 {
     public class Event
     {

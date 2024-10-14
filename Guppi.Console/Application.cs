@@ -7,8 +7,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Guppi.Core.Extensions;
 using Guppi.Console.Skills;
-using Guppi.Domain.Common;
-using Guppi.Domain.Interfaces;
+using Guppi.Core.Common;
+using Guppi.Core.Interfaces;
 using Spectre.Console;
 
 namespace Guppi.Console

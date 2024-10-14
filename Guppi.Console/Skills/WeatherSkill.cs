@@ -8,9 +8,9 @@ using Guppi.Core.Exceptions;
 using Guppi.Core.Extensions;
 using Guppi.Core.Services;
 using Guppi.Core.Services.Weather;
-using Guppi.Domain.Entities.Weather;
+using Guppi.Core.Entities.Weather;
 using Spectre.Console;
-using Location = Guppi.Domain.Entities.Weather.Location;
+using Location = Guppi.Core.Entities.Weather.Location;
 
 namespace Guppi.Console.Skills;
 

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Guppi.Domain.Entities.Weather;
+using Guppi.Core.Entities.Weather;
 
 namespace Guppi.Core.Services;
 
@@ -12,5 +12,5 @@ public interface IWeatherService
 
     Task<WeatherForecast> GetWeather(string latitude, string longitude);
 
-    Task<IEnumerable<Domain.Entities.Weather.Location>> GetLocations(string search);
+    Task<IEnumerable<Entities.Weather.Location>> GetLocations(string search);
 }

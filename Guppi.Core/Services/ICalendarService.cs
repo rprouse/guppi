@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Guppi.Domain.Entities.Calendar;
+using Guppi.Core.Entities.Calendar;
 
 namespace Guppi.Core.Services;
 

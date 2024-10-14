@@ -1,6 +1,6 @@
 using System.Linq;
 using Guppi.Core.Extensions;
-using Guppi.Domain.Entities.Weather;
+using Guppi.Core.Entities.Weather;
 
 namespace Guppi.Core.Services.Weather
 {

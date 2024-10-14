@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Guppi.Core.Exceptions;
 using Guppi.Core.Extensions;
 using Guppi.Core.Services;
-using Guppi.Domain.Entities.Strava;
+using Guppi.Core.Entities.Strava;
 using Spectre.Console;
 
 namespace Guppi.Console.Skills;

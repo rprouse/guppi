@@ -1,4 +1,4 @@
-namespace Guppi.Domain.Entities.Hue
+namespace Guppi.Core.Entities.Hue
 {
     public class HueBridge
     {

@@ -1,4 +1,4 @@
-using Guppi.Domain.Entities.Dictionary;
+using Guppi.Core.Entities.Dictionary;
 
 namespace Guppi.Core.Services.Dictionary;
 

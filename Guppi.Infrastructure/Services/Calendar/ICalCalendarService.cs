@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Guppi.Core;
 using Guppi.Core.Exceptions;
-using Guppi.Domain.Entities.Calendar;
-using Guppi.Domain.Interfaces;
+using Guppi.Core.Entities.Calendar;
+using Guppi.Core.Interfaces;
 using Ical.Net.CalendarComponents;
 using Ical.Net.DataTypes;
 

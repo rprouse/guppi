@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Guppi.Domain.Entities.Dictionary;
+using Guppi.Core.Entities.Dictionary;
 
 namespace Guppi.Core.Services;
 

@@ -1,4 +1,4 @@
-namespace Guppi.Domain.Interfaces
+namespace Guppi.Core.Interfaces
 {
     public interface IProcessService
     {

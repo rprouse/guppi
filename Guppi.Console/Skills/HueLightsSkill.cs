@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Guppi.Core.Extensions;
 using Guppi.Core.Services;
 using Guppi.Core.Services.Hue;
-using Guppi.Domain.Entities.Hue;
+using Guppi.Core.Entities.Hue;
 using Spectre.Console;
 
 namespace Guppi.Console.Skills;

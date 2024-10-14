@@ -1,6 +1,6 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
-using Guppi.Domain.Interfaces;
+using Guppi.Core.Interfaces;
 using Guppi.Infrastructure.Services;
 using Guppi.Infrastructure.Services.Calendar;
 using Guppi.Infrastructure.Services.Git;

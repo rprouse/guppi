@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Guppi.Domain.Entities.AdventOfCode
+namespace Guppi.Core.Entities.AdventOfCode
 {
     public class Leaderboard
     {

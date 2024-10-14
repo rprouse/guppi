@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Guppi.Core.Configurations;
 using Guppi.Core.Exceptions;
 using Guppi.Core.Services.Dictionary;
-using Guppi.Domain.Entities.Dictionary;
-using Guppi.Domain.Interfaces;
+using Guppi.Core.Entities.Dictionary;
+using Guppi.Core.Interfaces;
 
 namespace Guppi.Core.Services;
 

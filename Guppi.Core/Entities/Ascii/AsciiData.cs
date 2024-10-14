@@ -1,4 +1,4 @@
-namespace Guppi.Domain.Entities.Ascii
+namespace Guppi.Core.Entities.Ascii
 {
     public readonly struct AsciiData(int value, string character, string description)
     {

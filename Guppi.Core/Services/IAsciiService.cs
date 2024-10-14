@@ -1,4 +1,4 @@
-﻿using Guppi.Domain.Entities.Ascii;
+﻿using Guppi.Core.Entities.Ascii;
 
 namespace Guppi.Core.Services;
 

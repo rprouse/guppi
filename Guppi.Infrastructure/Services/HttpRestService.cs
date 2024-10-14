@@ -1,7 +1,7 @@
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Guppi.Domain.Interfaces;
+using Guppi.Core.Interfaces;
 
 #nullable enable
 

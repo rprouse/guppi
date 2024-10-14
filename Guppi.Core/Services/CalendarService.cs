@@ -1,18 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Guppi.Core.Configurations;
 using Guppi.Core.Exceptions;
-using Guppi.Domain.Entities.Calendar;
+using Guppi.Core.Entities.Calendar;
 
 namespace Guppi.Core.Services;
 
 internal sealed class CalendarService : ICalendarService
 {
-    private readonly IEnumerable<Guppi.Domain.Interfaces.ICalendarService> _calendarServices;
+    private readonly IEnumerable<Interfaces.ICalendarService> _calendarServices;
 
-    public CalendarService(IEnumerable<Domain.Interfaces.ICalendarService> calendarServices)
+    public CalendarService(IEnumerable<Interfaces.ICalendarService> calendarServices)
     {
         _calendarServices = calendarServices;
     }

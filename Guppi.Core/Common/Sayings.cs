@@ -1,6 +1,6 @@
 using System;
 
-namespace Guppi.Domain.Common
+namespace Guppi.Core.Common
 {
     public static class Sayings
     {

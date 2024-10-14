@@ -7,8 +7,8 @@ using System.Speech.Synthesis;
 using System.Threading.Tasks;
 using Guppi.Core;
 using Guppi.Core.Configurations;
-using Guppi.Domain.Entities.Voices;
-using Guppi.Domain.Interfaces;
+using Guppi.Core.Entities.Voices;
+using Guppi.Core.Interfaces;
 
 namespace Guppi.Infrastructure.Services
 {

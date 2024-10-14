@@ -1,6 +1,6 @@
 using System;
 
-namespace Guppi.Domain.Entities.Weather
+namespace Guppi.Core.Entities.Weather
 {
     public class WeatherForecast
     {

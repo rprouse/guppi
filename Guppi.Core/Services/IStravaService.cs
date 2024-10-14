@@ -6,5 +6,5 @@ namespace Guppi.Core.Services;
 public interface IStravaService
 {
     void Configure();
-    Task<IEnumerable<Domain.Entities.Strava.Activity>> GetActivities();
+    Task<IEnumerable<Entities.Strava.Activity>> GetActivities();
 }

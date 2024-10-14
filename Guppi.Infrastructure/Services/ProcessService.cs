@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using System.Linq;
-using Guppi.Domain.Interfaces;
+using Guppi.Core.Interfaces;
 
 namespace Guppi.Infrastructure.Services
 {

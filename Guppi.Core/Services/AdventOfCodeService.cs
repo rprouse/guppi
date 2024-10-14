@@ -5,8 +5,8 @@ using System.Xml.Linq;
 using Guppi.Core.Configurations;
 using Guppi.Core.Exceptions;
 using Guppi.Core.Services.AdventOfCode;
-using Guppi.Domain.Entities.AdventOfCode;
-using Guppi.Domain.Interfaces;
+using Guppi.Core.Entities.AdventOfCode;
+using Guppi.Core.Interfaces;
 
 namespace Guppi.Core.Services;
 

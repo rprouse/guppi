@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Guppi.Domain.Interfaces
+namespace Guppi.Core.Interfaces
 {
     public interface IHttpRestService
     {

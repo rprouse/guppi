@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Guppi.Core.Services.AdventOfCode;
-using Guppi.Domain.Entities.AdventOfCode;
+using Guppi.Core.Entities.AdventOfCode;
 
 namespace Guppi.Core.Services;
 

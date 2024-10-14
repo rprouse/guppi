@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Guppi.Core.Services.Hue;
-using Guppi.Domain.Entities.Hue;
+using Guppi.Core.Entities.Hue;
 
 namespace Guppi.Core.Services;
 

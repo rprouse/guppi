@@ -1,5 +1,5 @@
 using System;
-using Guppi.Domain.Entities.Strava;
+using Guppi.Core.Entities.Strava;
 
 namespace Guppi.Core.Services.Strava
 {

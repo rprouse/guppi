@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Guppi.Domain.Entities.Dictionary;
+namespace Guppi.Core.Entities.Dictionary;
 
 public class ThesaurusResponse
 {

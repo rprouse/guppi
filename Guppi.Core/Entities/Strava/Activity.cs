@@ -1,6 +1,6 @@
 using System;
 
-namespace Guppi.Domain.Entities.Strava
+namespace Guppi.Core.Entities.Strava
 {
     public record Activity
     {

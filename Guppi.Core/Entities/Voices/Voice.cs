@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Guppi.Domain.Entities.Voices
+namespace Guppi.Core.Entities.Voices
 {
     public class Voice
     {

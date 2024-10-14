@@ -12,8 +12,8 @@ internal class AocLeaderboard
 
     public Dictionary<string, Member> members { get; set; }
 
-    public Domain.Entities.AdventOfCode.Leaderboard GetLeaderboard() =>
-        new Domain.Entities.AdventOfCode.Leaderboard
+    public Entities.AdventOfCode.Leaderboard GetLeaderboard() =>
+        new Entities.AdventOfCode.Leaderboard
         {
             Year = year,
             OwnerId = owner_id,
@@ -30,8 +30,8 @@ internal class Member
     public int stars { get; set; }
     public Dictionary<string, Day> completion_day_level { get; set; }
 
-    public Domain.Entities.AdventOfCode.Member GetMember() =>
-        new Domain.Entities.AdventOfCode.Member
+    public Entities.AdventOfCode.Member GetMember() =>
+        new Entities.AdventOfCode.Member
         {
             Name = name,
             Id = id,
@@ -54,8 +54,8 @@ internal class Day
     [JsonPropertyName("2")]
     public Part PartTwo { get; set; }
 
-    public Domain.Entities.AdventOfCode.Day GetDay() =>
-        new Domain.Entities.AdventOfCode.Day
+    public Entities.AdventOfCode.Day GetDay() =>
+        new Entities.AdventOfCode.Day
         {
             PartOneComplete = PartOne != null,
             PartTwoComplete = PartTwo != null

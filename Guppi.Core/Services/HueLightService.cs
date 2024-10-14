@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Guppi.Core.Configurations;
 using Guppi.Core.Services.Hue;
-using Guppi.Domain.Entities.Hue;
-using Guppi.Domain.Interfaces;
+using Guppi.Core.Entities.Hue;
+using Guppi.Core.Interfaces;
 
 namespace Guppi.Core.Services;
 
 internal sealed class HueLightService : IHueLightService
 {
-    private readonly Guppi.Domain.Interfaces.IHueService _hueService;
+    private readonly Guppi.Core.Interfaces.IHueService _hueService;
 
     public HueLightService(IHueService hueService)
     {

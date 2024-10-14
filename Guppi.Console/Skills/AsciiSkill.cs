@@ -3,7 +3,7 @@ using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
 using Guppi.Core.Extensions;
 using Guppi.Core.Services;
-using Guppi.Domain.Entities.Ascii;
+using Guppi.Core.Entities.Ascii;
 using Spectre.Console;
 
 namespace Guppi.Console.Skills;

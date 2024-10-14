@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Guppi.Application;
-using Guppi.Application.Exceptions;
+using Guppi.Core;
+using Guppi.Core.Exceptions;
 using Guppi.Domain.Entities.Calendar;
 using Guppi.Domain.Interfaces;
 using Ical.Net.CalendarComponents;
@@ -26,7 +26,7 @@ namespace Guppi.Infrastructure.Services.Calendar
                 new CalDateTime(maxDate.Value, "Local") :
                 CalDateTime.Now.AddDays(1);
 
-            var configuration = Configuration.Load<Application.Configurations.CalendarConfiguration>("Calendar");
+            var configuration = Configuration.Load<Core.Configurations.CalendarConfiguration>("Calendar");
             if (!configuration.Enabled)
                 throw new UnconfiguredException("Please configure calendars");
 

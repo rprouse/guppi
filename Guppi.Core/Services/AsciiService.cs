@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Guppi.Domain.Entities.Ascii;
 
-namespace Guppi.Application.Services;
+namespace Guppi.Core.Services;
 
 internal sealed class AsciiService : IAsciiService
 {

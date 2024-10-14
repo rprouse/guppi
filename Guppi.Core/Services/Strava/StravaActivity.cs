@@ -1,7 +1,7 @@
 using System;
 using Guppi.Domain.Entities.Strava;
 
-namespace Guppi.Application.Services.Strava
+namespace Guppi.Core.Services.Strava
 {
 #pragma warning disable IDE1006 // Naming Styles
     public class StravaActivity

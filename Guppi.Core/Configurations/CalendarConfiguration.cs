@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata;
-using Guppi.Application.Attributes;
+using Guppi.Core.Attributes;
 using Guppi.Domain.Interfaces;
 using Spectre.Console;
 
-namespace Guppi.Application.Configurations
+namespace Guppi.Core.Configurations
 {
     public class CalendarConfiguration : Configuration
     {

@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
 using System.Threading.Tasks;
-using Guppi.Application.Extensions;
-using Guppi.Application.Services;
+using Guppi.Core.Extensions;
+using Guppi.Core.Services;
 
 namespace Guppi.Console.Skills;
 

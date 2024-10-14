@@ -3,12 +3,12 @@ using System.ClientModel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Guppi.Application.Configurations;
-using Guppi.Application.Exceptions;
+using Guppi.Core.Configurations;
+using Guppi.Core.Exceptions;
 using OpenAI;
 using OpenAI.Chat;
 
-namespace Guppi.Application.Services;
+namespace Guppi.Core.Services;
 
 internal class OpenAIService : IOpenAIService
 {

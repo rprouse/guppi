@@ -3,7 +3,7 @@ using System.Linq;
 using Alteridem.Todo.Domain.Common;
 using ColoredConsole;
 
-namespace Guppi.Application.Extensions;
+namespace Guppi.Core.Extensions;
 
 public static class ColoredStringExtensions
 {

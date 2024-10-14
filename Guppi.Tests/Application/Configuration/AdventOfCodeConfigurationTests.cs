@@ -1,5 +1,5 @@
 using FluentAssertions;
-using Guppi.Application.Configurations;
+using Guppi.Core.Configurations;
 using NUnit.Framework;
 
 namespace Guppi.Tests.Application.Configuration

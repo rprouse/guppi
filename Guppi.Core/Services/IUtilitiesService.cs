@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Guppi.Application.Services;
+namespace Guppi.Core.Services;
 
 public interface IUtilitiesService
 {

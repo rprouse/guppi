@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Guppi.Application.Configurations;
-using Guppi.Application.Exceptions;
+using Guppi.Core.Configurations;
+using Guppi.Core.Exceptions;
 using Guppi.Domain.Entities.Calendar;
 
-namespace Guppi.Application.Services;
+namespace Guppi.Core.Services;
 
 internal sealed class CalendarService : ICalendarService
 {

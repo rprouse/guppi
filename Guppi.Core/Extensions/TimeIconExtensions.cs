@@ -1,7 +1,7 @@
 using System;
 using Spectre.Console;
 
-namespace Guppi.Application.Extensions;
+namespace Guppi.Core.Extensions;
 
 public static class TimeIconExtensions
 {

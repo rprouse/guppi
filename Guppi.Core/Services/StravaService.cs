@@ -8,13 +8,13 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Guppi.Application.Configurations;
-using Guppi.Application.Exceptions;
-using Guppi.Application.Services.Strava;
+using Guppi.Core.Configurations;
+using Guppi.Core.Exceptions;
+using Guppi.Core.Services.Strava;
 using Guppi.Domain.Entities.Strava;
 using Guppi.Domain.Interfaces;
 
-namespace Guppi.Application.Services;
+namespace Guppi.Core.Services;
 
 internal sealed class StravaService(IHttpRestService restService, IProcessService processService) : IStravaService
 {

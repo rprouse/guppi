@@ -5,10 +5,10 @@ using System.CommandLine.NamingConventionBinder;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Guppi.Application.Exceptions;
-using Guppi.Application.Extensions;
-using Guppi.Application.Services;
-using Guppi.Application.Services.Dictionary;
+using Guppi.Core.Exceptions;
+using Guppi.Core.Extensions;
+using Guppi.Core.Services;
+using Guppi.Core.Services.Dictionary;
 using Spectre.Console;
 
 namespace Guppi.Console.Skills;

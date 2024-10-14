@@ -1,5 +1,5 @@
 using FluentAssertions;
-using Guppi.Application.Services;
+using Guppi.Core.Services;
 using NUnit.Framework;
 
 namespace Guppi.Tests.Application.Queries.Ascii

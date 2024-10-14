@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
-using Guppi.Application.Services.AdventOfCode;
+using Guppi.Core.Services.AdventOfCode;
 using Guppi.Domain.Entities.AdventOfCode;
 
-namespace Guppi.Application.Services;
+namespace Guppi.Core.Services;
 
 public interface IAdventOfCodeService
 {

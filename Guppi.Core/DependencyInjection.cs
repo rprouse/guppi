@@ -1,9 +1,9 @@
 using System.IO;
 using System;
-using Guppi.Application.Services;
+using Guppi.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Guppi.Application;
+namespace Guppi.Core;
 
 public static class DependencyInjection
 {

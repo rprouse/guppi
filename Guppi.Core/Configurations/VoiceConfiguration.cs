@@ -1,4 +1,4 @@
-namespace Guppi.Application.Configurations
+namespace Guppi.Core.Configurations
 {
     public class VoiceConfiguration : Configuration
     {

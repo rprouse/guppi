@@ -1,8 +1,8 @@
 using System.Linq;
-using Guppi.Application.Extensions;
+using Guppi.Core.Extensions;
 using Guppi.Domain.Entities.Weather;
 
-namespace Guppi.Application.Services.Weather
+namespace Guppi.Core.Services.Weather
 {
 #pragma warning disable IDE1006 // Naming Styles
     internal class WeatherResponse

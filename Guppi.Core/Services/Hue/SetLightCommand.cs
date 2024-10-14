@@ -1,6 +1,6 @@
 using System;
 
-namespace Guppi.Application.Services.Hue;
+namespace Guppi.Core.Services.Hue;
 
 public sealed class SetLightCommand
 {

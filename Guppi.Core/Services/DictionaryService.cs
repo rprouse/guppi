@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Guppi.Application.Configurations;
-using Guppi.Application.Exceptions;
-using Guppi.Application.Services.Dictionary;
+using Guppi.Core.Configurations;
+using Guppi.Core.Exceptions;
+using Guppi.Core.Services.Dictionary;
 using Guppi.Domain.Entities.Dictionary;
 using Guppi.Domain.Interfaces;
 
-namespace Guppi.Application.Services;
+namespace Guppi.Core.Services;
 
 internal class DictionaryService : IDictionaryService
 {

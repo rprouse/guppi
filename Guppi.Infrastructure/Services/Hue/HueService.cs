@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Guppi.Application;
+using Guppi.Core;
 using Guppi.Domain.Entities.Hue;
 using Guppi.Domain.Interfaces;
 using Q42.HueApi;

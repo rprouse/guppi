@@ -1,4 +1,4 @@
-using Guppi.Application.Exceptions;
+using Guppi.Core.Exceptions;
 using Guppi.Domain.Interfaces;
 using LibGit2Sharp;
 

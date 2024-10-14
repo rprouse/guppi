@@ -5,9 +5,9 @@ using System.CommandLine.NamingConventionBinder;
 using System.CommandLine.Parsing;
 using System.Linq;
 using System.Threading.Tasks;
-using Guppi.Application.Extensions;
-using Guppi.Application.Services;
-using Guppi.Application.Services.Hue;
+using Guppi.Core.Extensions;
+using Guppi.Core.Services;
+using Guppi.Core.Services.Hue;
 using Guppi.Domain.Entities.Hue;
 using Spectre.Console;
 

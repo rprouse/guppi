@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace Guppi.Application.Extensions
+namespace Guppi.Core.Extensions
 {
     public static partial class StringExtensions
     {

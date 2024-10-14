@@ -10,14 +10,14 @@ using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
 using Google.Apis.Tasks.v1;
 using Google.Apis.Util.Store;
-using Guppi.Application.Exceptions;
-using Guppi.Application.Extensions;
+using Guppi.Core.Exceptions;
+using Guppi.Core.Extensions;
 using MediatR;
 using Spectre.Console;
 using GoogleTask = Google.Apis.Tasks.v1.Data.Task;
 using GoogleTaskList = Google.Apis.Tasks.v1.Data.TaskList;
 
-namespace Guppi.Application.Services;
+namespace Guppi.Core.Services;
 
 public class TodoService(IMediator mediator, ITaskConfiguration configuration) : ITodoService
 {
@@ -28,7 +28,7 @@ public class TodoService(IMediator mediator, ITaskConfiguration configuration) :
     const string IdTag = "id";
     const string UpdatedTag = "updated";
 
-    public string Name => "Google Tasks";
+    public static string Name => "Google Tasks";
 
     TasksService _service;
     private IMediator Mediator { get; } = mediator;
@@ -112,7 +112,7 @@ public class TodoService(IMediator mediator, ITaskConfiguration configuration) :
 
     private async Task LogIntoGoogle()
     {
-        string credentials = Application.Configuration.GetConfigurationFile("task_credentials");
+        string credentials = Core.Configuration.GetConfigurationFile("task_credentials");
         if (!File.Exists(credentials))
         {
             throw new UnconfiguredException("Please download the credentials. See the Readme.");
@@ -122,7 +122,7 @@ public class TodoService(IMediator mediator, ITaskConfiguration configuration) :
 
         using (var stream = new FileStream(credentials, FileMode.Open, FileAccess.Read))
         {
-            string token = Application.Configuration.GetConfigurationFile("task_token");
+            string token = Core.Configuration.GetConfigurationFile("task_token");
             credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
                 (await GoogleClientSecrets.FromStreamAsync(stream)).Secrets,
                 Scopes,

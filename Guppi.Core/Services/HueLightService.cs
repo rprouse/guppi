@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Guppi.Application.Configurations;
-using Guppi.Application.Services.Hue;
+using Guppi.Core.Configurations;
+using Guppi.Core.Services.Hue;
 using Guppi.Domain.Entities.Hue;
 using Guppi.Domain.Interfaces;
 
-namespace Guppi.Application.Services;
+namespace Guppi.Core.Services;
 
 internal sealed class HueLightService : IHueLightService
 {

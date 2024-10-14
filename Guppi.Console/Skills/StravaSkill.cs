@@ -4,9 +4,9 @@ using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
 using System.Linq;
 using System.Threading.Tasks;
-using Guppi.Application.Exceptions;
-using Guppi.Application.Extensions;
-using Guppi.Application.Services;
+using Guppi.Core.Exceptions;
+using Guppi.Core.Extensions;
+using Guppi.Core.Services;
 using Guppi.Domain.Entities.Strava;
 using Spectre.Console;
 

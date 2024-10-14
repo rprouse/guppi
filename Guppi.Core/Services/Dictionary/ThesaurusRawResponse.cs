@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Guppi.Domain.Entities.Dictionary;
 
-namespace Guppi.Application.Services.Dictionary;
+namespace Guppi.Core.Services.Dictionary;
 
 #pragma warning disable IDE1006 // Naming Styles
 public class ThesaurusRawResponse

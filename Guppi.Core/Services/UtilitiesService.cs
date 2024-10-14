@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Guppi.Domain.Interfaces;
 
-namespace Guppi.Application.Services;
+namespace Guppi.Core.Services;
 
 internal sealed class UtilitiesService : IUtilitiesService
 {

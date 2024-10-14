@@ -1,4 +1,4 @@
-﻿namespace Guppi.Application.Services;
+﻿namespace Guppi.Core.Services;
 
 internal sealed class GitService : IGitService
 {

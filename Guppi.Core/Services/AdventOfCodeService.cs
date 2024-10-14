@@ -2,13 +2,13 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Guppi.Application.Configurations;
-using Guppi.Application.Exceptions;
-using Guppi.Application.Services.AdventOfCode;
+using Guppi.Core.Configurations;
+using Guppi.Core.Exceptions;
+using Guppi.Core.Services.AdventOfCode;
 using Guppi.Domain.Entities.AdventOfCode;
 using Guppi.Domain.Interfaces;
 
-namespace Guppi.Application.Services;
+namespace Guppi.Core.Services;
 
 internal sealed class AdventOfCodeService : IAdventOfCodeService
 {

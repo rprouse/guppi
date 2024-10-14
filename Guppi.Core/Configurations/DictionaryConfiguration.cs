@@ -1,6 +1,6 @@
-﻿using Guppi.Application.Attributes;
+﻿using Guppi.Core.Attributes;
 
-namespace Guppi.Application.Configurations;
+namespace Guppi.Core.Configurations;
 
 public class DictionaryConfiguration : Configuration
 {

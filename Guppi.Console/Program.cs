@@ -1,6 +1,6 @@
 using System;
 using Guppi.Console.Skills;
-using Guppi.Application;
+using Guppi.Core;
 using Guppi.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Guppi.Console;

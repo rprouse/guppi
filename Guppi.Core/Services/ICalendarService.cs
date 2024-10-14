@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Guppi.Domain.Entities.Calendar;
 
-namespace Guppi.Application.Services;
+namespace Guppi.Core.Services;
 
 public interface ICalendarService
 {

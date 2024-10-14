@@ -9,8 +9,8 @@ using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
-using Guppi.Application;
-using Guppi.Application.Exceptions;
+using Guppi.Core;
+using Guppi.Core.Exceptions;
 using Guppi.Domain.Interfaces;
 
 namespace Guppi.Infrastructure.Services.Calendar

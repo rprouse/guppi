@@ -1,4 +1,4 @@
-namespace Guppi.Application.Services.AdventOfCode
+namespace Guppi.Core.Services.AdventOfCode
 {
     public class AddDayDto
     {

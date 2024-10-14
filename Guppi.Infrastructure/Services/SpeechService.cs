@@ -5,8 +5,8 @@ using System.Globalization;
 using System.Linq;
 using System.Speech.Synthesis;
 using System.Threading.Tasks;
-using Guppi.Application;
-using Guppi.Application.Configurations;
+using Guppi.Core;
+using Guppi.Core.Configurations;
 using Guppi.Domain.Entities.Voices;
 using Guppi.Domain.Interfaces;
 

@@ -3,11 +3,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
-using Guppi.Application.Attributes;
-using Guppi.Application.Extensions;
+using Guppi.Core.Attributes;
+using Guppi.Core.Extensions;
 using Spectre.Console;
 
-namespace Guppi.Application
+namespace Guppi.Core
 {
     public class Configuration
     {

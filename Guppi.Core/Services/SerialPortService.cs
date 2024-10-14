@@ -7,7 +7,7 @@ using System.Management;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Guppi.Application.Services;
+namespace Guppi.Core.Services;
 
 internal class SerialPortService : ISerialPortService
 {

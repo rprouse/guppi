@@ -1,4 +1,4 @@
-namespace Guppi.Application.Extensions
+namespace Guppi.Core.Extensions
 {
     public static class FloatExtensions
     {

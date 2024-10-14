@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Guppi.Application.Configurations;
-using Guppi.Application.Exceptions;
-using Guppi.Application.Services.Weather;
+using Guppi.Core.Configurations;
+using Guppi.Core.Exceptions;
+using Guppi.Core.Services.Weather;
 using Guppi.Domain.Entities.Weather;
 using Guppi.Domain.Interfaces;
 
-namespace Guppi.Application.Services;
+namespace Guppi.Core.Services;
 
 internal sealed class WeatherService(IHttpRestService restService) : IWeatherService
 {

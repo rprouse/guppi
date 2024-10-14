@@ -5,7 +5,7 @@ using System.CommandLine.Parsing;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Guppi.Application.Extensions;
+using Guppi.Core.Extensions;
 using Guppi.Console.Skills;
 using Guppi.Domain.Common;
 using Guppi.Domain.Interfaces;

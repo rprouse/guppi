@@ -5,7 +5,7 @@ using System.CommandLine.NamingConventionBinder;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Guppi.Application.Extensions;
+using Guppi.Core.Extensions;
 using Guppi.Domain.Interfaces;
 using Spectre.Console;
 

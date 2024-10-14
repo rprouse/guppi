@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
-using Guppi.Application.Extensions;
-using Guppi.Application.Services;
+using Guppi.Core.Extensions;
+using Guppi.Core.Services;
 using Guppi.Domain.Entities.Ascii;
 using Spectre.Console;
 

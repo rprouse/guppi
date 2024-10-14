@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Spectre.Console;
 
-namespace Guppi.Application.Services.Strava
+namespace Guppi.Core.Services.Strava
 {
     internal static class FitnessIcon
     {

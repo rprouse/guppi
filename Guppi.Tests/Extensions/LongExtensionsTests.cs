@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 
-using Guppi.Application.Extensions;
+using Guppi.Core.Extensions;
 
 namespace Guppi.Tests.Extensions
 {

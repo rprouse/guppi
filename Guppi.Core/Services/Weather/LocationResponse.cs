@@ -1,4 +1,4 @@
-namespace Guppi.Application.Services.Weather;
+namespace Guppi.Core.Services.Weather;
 
 public class LocationResponse
 {

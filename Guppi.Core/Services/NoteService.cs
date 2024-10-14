@@ -1,11 +1,11 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using Guppi.Application.Configurations;
-using Guppi.Application.Exceptions;
+using Guppi.Core.Configurations;
+using Guppi.Core.Exceptions;
 using Guppi.Domain.Interfaces;
 
-namespace Guppi.Application.Services;
+namespace Guppi.Core.Services;
 
 internal sealed class NoteService(IProcessService process) : INoteService
 {

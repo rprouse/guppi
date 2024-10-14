@@ -1,6 +1,6 @@
 using System;
 
-namespace Guppi.Application.Exceptions;
+namespace Guppi.Core.Exceptions;
 
 public class WarningException(string message) : Exception(message)
 {

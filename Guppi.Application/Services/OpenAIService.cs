@@ -1,8 +1,12 @@
-﻿using System;
+using System;
+using System.ClientModel;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Guppi.Application.Configurations;
 using Guppi.Application.Exceptions;
-using OpenAI_API;
+using OpenAI;
+using OpenAI.Chat;
 
 namespace Guppi.Application.Services;
 
@@ -22,19 +26,21 @@ internal class OpenAIService : IOpenAIService
             throw new UnconfiguredException("Please configure the OpenAI provider");
         }
 
-        OpenAIAPI api = new OpenAIAPI(configuration.ApiKey);
-        var chat = api.Chat.CreateConversation();
+        OpenAIClient client = new (configuration.ApiKey);
+        var chat = client.GetChatClient("gpt-4o");
 
         write("> ");
         string input = readline();
         while (input.ToLowerInvariant() != "exit")
         {
-            chat.AppendUserInput(input);
-
             write(Environment.NewLine);
-            await foreach (var res in chat.StreamResponseEnumerableFromChatbotAsync())
+            AsyncCollectionResult<StreamingChatCompletionUpdate> completionUpdates = chat.CompleteChatStreamingAsync(input);
+            await foreach (StreamingChatCompletionUpdate completionUpdate in completionUpdates)
             {
-                write(res);
+                if (completionUpdate.ContentUpdate.Count > 0)
+                {
+                    write(completionUpdate.ContentUpdate[0].Text);
+                }
             }
 
             write(Environment.NewLine);

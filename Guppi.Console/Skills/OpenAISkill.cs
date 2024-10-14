@@ -9,7 +9,7 @@ namespace Guppi.Console.Skills;
 
 internal class OpenAISkill : ISkill
 {
-    IOpenAIService _service;
+    readonly IOpenAIService _service;
 
     public OpenAISkill(IOpenAIService service)
     {

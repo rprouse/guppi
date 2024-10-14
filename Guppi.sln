@@ -24,8 +24,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\continuous_integration.yml = .github\workflows\continuous_integration.yml
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Guppi.Domain", "Guppi.Domain\Guppi.Domain.csproj", "{90BCB62A-B6E4-4A53-A116-4C1D714A2B84}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Guppi.Infrastructure", "Guppi.Infrastructure\Guppi.Infrastructure.csproj", "{CC52D05B-B0C7-49C4-9E8E-95E34FF320AA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "todo.infrastructure", "dotnet-todo\src\todo.infrastructure\todo.infrastructure.csproj", "{9877E299-A30B-4D43-BF39-BC25531900E4}"
@@ -72,18 +70,6 @@ Global
 		{AF90312A-5A42-4B2E-B513-6DCE9BB869BE}.Release|x64.Build.0 = Release|Any CPU
 		{AF90312A-5A42-4B2E-B513-6DCE9BB869BE}.Release|x86.ActiveCfg = Release|Any CPU
 		{AF90312A-5A42-4B2E-B513-6DCE9BB869BE}.Release|x86.Build.0 = Release|Any CPU
-		{90BCB62A-B6E4-4A53-A116-4C1D714A2B84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{90BCB62A-B6E4-4A53-A116-4C1D714A2B84}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{90BCB62A-B6E4-4A53-A116-4C1D714A2B84}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{90BCB62A-B6E4-4A53-A116-4C1D714A2B84}.Debug|x64.Build.0 = Debug|Any CPU
-		{90BCB62A-B6E4-4A53-A116-4C1D714A2B84}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{90BCB62A-B6E4-4A53-A116-4C1D714A2B84}.Debug|x86.Build.0 = Debug|Any CPU
-		{90BCB62A-B6E4-4A53-A116-4C1D714A2B84}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{90BCB62A-B6E4-4A53-A116-4C1D714A2B84}.Release|Any CPU.Build.0 = Release|Any CPU
-		{90BCB62A-B6E4-4A53-A116-4C1D714A2B84}.Release|x64.ActiveCfg = Release|Any CPU
-		{90BCB62A-B6E4-4A53-A116-4C1D714A2B84}.Release|x64.Build.0 = Release|Any CPU
-		{90BCB62A-B6E4-4A53-A116-4C1D714A2B84}.Release|x86.ActiveCfg = Release|Any CPU
-		{90BCB62A-B6E4-4A53-A116-4C1D714A2B84}.Release|x86.Build.0 = Release|Any CPU
 		{CC52D05B-B0C7-49C4-9E8E-95E34FF320AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CC52D05B-B0C7-49C4-9E8E-95E34FF320AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC52D05B-B0C7-49C4-9E8E-95E34FF320AA}.Debug|x64.ActiveCfg = Debug|Any CPU

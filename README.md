@@ -71,6 +71,10 @@ it finds. If there are more than one bridge, list the bridges and register using
 
 You can have one default light which is set using the configure command.
 
+### IP Address
+
+Displays your local and public IP addresses.
+
 ### Notes
 
 I keep all of my notes as Markdown files. I used to use VS Code, but recently switched to 

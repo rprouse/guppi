@@ -17,14 +17,12 @@ internal class AsciiSkill : ISkill
         _service = service;
     }
 
-    public IEnumerable<Command> GetCommands() =>
-        new[]
+    public IEnumerable<Command> GetCommands() => [
+        new Command("ascii", "Views an ASCII chart.")
         {
-            new Command("ascii", "Views an ASCII chart.")
-            {
-                Handler = CommandHandler.Create(() => ViewAsciiTable())
-            }
-        };
+            Handler = CommandHandler.Create(() => ViewAsciiTable())
+        }
+    ];
 
     private void ViewAsciiTable()
     {

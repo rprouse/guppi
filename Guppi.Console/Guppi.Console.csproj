@@ -52,7 +52,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Guppi.Core\Guppi.Core.csproj" />
-    <ProjectReference Include="..\Guppi.Infrastructure\Guppi.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

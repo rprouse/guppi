@@ -10,6 +10,9 @@
 
   <ItemGroup>
     <PackageReference Include="Google.Apis.Tasks.v1" Version="1.68.0.3468" />
+    <PackageReference Include="Google.Apis.Calendar.v3" Version="1.68.0.3557" />
+    <PackageReference Include="Ical.Net" Version="4.3.0" />
+    <PackageReference Include="LibGit2Sharp" Version="0.30.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
     <PackageReference Include="OpenAI" Version="2.0.0" />
     <PackageReference Include="Spectre.Console" Version="0.49.1" />
@@ -18,13 +21,17 @@
     <PackageReference Include="System.IO.Ports" Version="8.0.0" />
     <PackageReference Include="System.Linq" Version="4.3.0" />
     <PackageReference Include="System.Management" Version="8.0.0" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
+    <PackageReference Include="System.Speech" Version="8.0.0" />
     <PackageReference Include="System.Text.Json" Version="8.0.5" />
+    <PackageReference Include="Q42.HueApi" Version="3.23.1" />
+    <PackageReference Include="Q42.HueApi.ColorConverters" Version="3.23.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\dotnet-todo\src\todo.application\todo.application.csproj" />
-    <ProjectReference Include="..\dotnet-todo\src\todo.infrastructure\todo.infrastructure.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\dotnet-todo\src\todo.application\todo.application.csproj" />
+        <ProjectReference Include="..\dotnet-todo\src\todo.infrastructure\todo.infrastructure.csproj" />
+    </ItemGroup>
 
   <!-- Make Internals visible to the unit tests -->
   <ItemGroup>

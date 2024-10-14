@@ -3,6 +3,12 @@ using System;
 using Guppi.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Guppi.Core.Interfaces;
+using Guppi.Core.Providers.Calendar;
+using Guppi.Core.Providers.Git;
+using Guppi.Core.Providers.Hue;
+using Guppi.Core.Providers;
+using System.Net.Http.Headers;
+using System.Net.Http;
 
 namespace Guppi.Core;
 
@@ -17,6 +23,25 @@ public static class DependencyInjection
         Alteridem.Todo.Infrastructure.DependencyInjection.AddInfrastructure(services, configFile);
 
         return services
+            // Add the providers
+            .AddSingleton<HttpClient>(serviceProvider =>
+            {
+                var client = new HttpClient();
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/html"));
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Add("User-Agent", "Guppi CLI (https://github.com/rprouse/guppi)");
+                return client;
+            })
+            .AddTransient<ICalendarProvider, GoogleCalendarProvider>()
+            .AddTransient<ICalendarProvider, ICalCalendarProvider>()
+            .AddTransient<IGitProvider, GitProvider>()
+            .AddTransient<IHttpRestProvider, HttpRestProvider>()
+            .AddTransient<IHueProvider, HueProvider>()
+            .AddTransient<IProcessProvider, ProcessProvider>()
+            .AddSingleton<ISpeechProvider, SpeechProvider>()
+
+            // Add the services
             .AddTransient<IAdventOfCodeService, AdventOfCodeService>()
             .AddTransient<IAsciiService, AsciiService>()
             .AddTransient<ICalendarService, CalendarService>()

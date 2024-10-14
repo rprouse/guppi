@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
-using Guppi.Core.Services;
+using Guppi.Core.Interfaces;
 
 namespace Guppi.Console.Skills;
 

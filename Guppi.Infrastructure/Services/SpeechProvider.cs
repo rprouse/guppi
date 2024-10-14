@@ -12,13 +12,13 @@ using Guppi.Core.Interfaces;
 
 namespace Guppi.Infrastructure.Services
 {
-    public class SpeechService : ISpeechService
+    public class SpeechProvider : ISpeechProvider
     {
         readonly List<Prompt> _prompts;
         readonly SpeechSynthesizer _synth;
         readonly VoiceConfiguration _config;
 
-        public SpeechService()
+        public SpeechProvider()
         {
             if (OperatingSystem.IsWindows())
             {

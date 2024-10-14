@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Guppi.Core.Exceptions;
 using Guppi.Core.Extensions;
-using Guppi.Core.Services;
+using Guppi.Core.Interfaces;
 using Guppi.Core.Services.Dictionary;
 using Spectre.Console;
 

@@ -4,7 +4,7 @@ using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Guppi.Core.Services;
+using Guppi.Core.Interfaces;
 using Spectre.Console;
 
 namespace Guppi.Console.Skills;

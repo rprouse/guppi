@@ -4,7 +4,7 @@ using Guppi.Core.Interfaces;
 
 namespace Guppi.Infrastructure.Services
 {
-    public class ProcessService : IProcessService
+    public class ProcessProvider : IProcessProvider
     {
         public void Start(string filename, string arguments = "", string workingDirectory = ".", bool waitForExit = false)
         {

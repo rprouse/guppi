@@ -2,12 +2,13 @@ using System.IO;
 using System;
 using Guppi.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Guppi.Core.Interfaces;
 
 namespace Guppi.Core;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApplication(this IServiceCollection services)
+    public static IServiceCollection AddCore(this IServiceCollection services)
     {
         // Setup the Todo application's services
         string configFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".todo.json");

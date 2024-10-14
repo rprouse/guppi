@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Guppi.Core.Entities.Ascii;
+using Guppi.Core.Interfaces;
 
 namespace Guppi.Core.Services;
 

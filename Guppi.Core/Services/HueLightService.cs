@@ -10,9 +10,9 @@ namespace Guppi.Core.Services;
 
 internal sealed class HueLightService : IHueLightService
 {
-    private readonly Guppi.Core.Interfaces.IHueService _hueService;
+    private readonly Guppi.Core.Interfaces.IHueProvider _hueService;
 
-    public HueLightService(IHueService hueService)
+    public HueLightService(IHueProvider hueService)
     {
         _hueService = hueService;
     }

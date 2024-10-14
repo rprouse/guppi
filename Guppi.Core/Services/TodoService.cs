@@ -12,6 +12,7 @@ using Google.Apis.Tasks.v1;
 using Google.Apis.Util.Store;
 using Guppi.Core.Exceptions;
 using Guppi.Core.Extensions;
+using Guppi.Core.Interfaces;
 using MediatR;
 using Spectre.Console;
 using GoogleTask = Google.Apis.Tasks.v1.Data.Task;

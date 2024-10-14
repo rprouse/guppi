@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Guppi.Core.Services.AdventOfCode;
 using Guppi.Core.Entities.AdventOfCode;
 
-namespace Guppi.Core.Services;
+namespace Guppi.Core.Interfaces;
 
 public interface IAdventOfCodeService
 {

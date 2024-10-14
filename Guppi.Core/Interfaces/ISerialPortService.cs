@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Guppi.Core.Services;
+namespace Guppi.Core.Interfaces;
 
 public interface ISerialPortService
 {

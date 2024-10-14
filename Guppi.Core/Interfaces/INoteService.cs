@@ -1,4 +1,4 @@
-namespace Guppi.Core.Services;
+namespace Guppi.Core.Interfaces;
 
 public interface INoteService
 {

@@ -11,9 +11,9 @@ using Ical.Net.DataTypes;
 
 namespace Guppi.Infrastructure.Services.Calendar
 {
-    internal sealed class ICalCalendarService(IHttpRestService httpService) : ICalendarService
+    internal sealed class ICalCalendarProvider(IHttpRestProvider httpService) : ICalendarProvider
     {
-        private readonly IHttpRestService _httpService = httpService;
+        private readonly IHttpRestProvider _httpService = httpService;
         public string Name => "iCal Calendars";
 
         public async Task<IList<Event>> GetCalendarEvents(DateTime? minDate, DateTime? maxDate)

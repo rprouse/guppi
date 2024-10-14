@@ -9,9 +9,9 @@ using Guppi.Core.Interfaces;
 
 namespace Guppi.Core.Services;
 
-internal sealed class WeatherService(IHttpRestService restService) : IWeatherService
+internal sealed class WeatherService(IHttpRestProvider restService) : IWeatherService
 {
-    private readonly IHttpRestService _restService = restService;
+    private readonly IHttpRestProvider _restService = restService;
     private readonly WeatherConfiguration _configuration = Configuration.Load<WeatherConfiguration>("weather");
 
     public void Configure()

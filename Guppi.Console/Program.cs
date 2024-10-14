@@ -28,6 +28,6 @@ static IServiceProvider ConfigureServices() =>
         .AddTransient<ISkill, WeatherSkill>()
         .AddTransient<ISkill, UtilitiesSkill>()
         .AddTransient<ISkill, VoiceSkill>()
-        .AddApplication()
+        .AddCore()
         .AddInfrastructure()
         .BuildServiceProvider();

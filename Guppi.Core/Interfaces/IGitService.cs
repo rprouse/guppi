@@ -1,8 +1,9 @@
-namespace Guppi.Core.Interfaces
+namespace Guppi.Core.Interfaces;
+
+public interface IGitService
 {
-    public interface IGitService
-    {
-        void SwitchToBranch(string branchName);
-        void RunGit(string args);
-    }
+    void Ammend();
+    void Undo(bool hard);
+    void Unstage();
+    void Update(string branch);
 }

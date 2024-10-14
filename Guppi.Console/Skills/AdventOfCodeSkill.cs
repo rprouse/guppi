@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using Guppi.Core.Exceptions;
 using Guppi.Core.Extensions;
 using Guppi.Core.Entities.AdventOfCode;
-using Guppi.Core.Services;
 using Spectre.Console;
+using Guppi.Core.Interfaces;
 
 namespace Guppi.Console.Skills;
 

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Guppi.Core.Configurations;
 using Guppi.Core.Exceptions;
+using Guppi.Core.Interfaces;
 using OpenAI;
 using OpenAI.Chat;
 

@@ -7,9 +7,9 @@ internal sealed class UtilitiesService : IUtilitiesService
 {
     const string Explorer = "explorer";
 
-    readonly IProcessService _process;
+    readonly IProcessProvider _process;
 
-    public UtilitiesService(IProcessService process)
+    public UtilitiesService(IProcessProvider process)
     {
         _process = process;
     }

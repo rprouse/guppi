@@ -15,8 +15,8 @@ namespace Guppi.Core.Configurations
         [Display("ICal Urls")]
         public List<string> ICalUrls { get; set; } = [];
 
-        IEnumerable<ICalendarService> _calendarServices;
-        public void SetCalendarServices(IEnumerable<ICalendarService> calendarServices)
+        IEnumerable<ICalendarProvider> _calendarServices;
+        public void SetCalendarServices(IEnumerable<ICalendarProvider> calendarServices)
         {
             _calendarServices = calendarServices;
         }

@@ -6,11 +6,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Guppi.Core.Exceptions;
 using Guppi.Core.Extensions;
-using Guppi.Core.Services;
 using Guppi.Core.Services.Weather;
 using Guppi.Core.Entities.Weather;
 using Spectre.Console;
 using Location = Guppi.Core.Entities.Weather.Location;
+using Guppi.Core.Interfaces;
 
 namespace Guppi.Console.Skills;
 

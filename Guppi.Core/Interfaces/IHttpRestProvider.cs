@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Guppi.Core.Interfaces
 {
-    public interface IHttpRestService
+    public interface IHttpRestProvider
     {
         HttpClient Client { get; }
 

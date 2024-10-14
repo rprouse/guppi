@@ -6,10 +6,10 @@ using System.CommandLine.Parsing;
 using System.Linq;
 using System.Threading.Tasks;
 using Guppi.Core.Extensions;
-using Guppi.Core.Services;
 using Guppi.Core.Services.Hue;
 using Guppi.Core.Entities.Hue;
 using Spectre.Console;
+using Guppi.Core.Interfaces;
 
 namespace Guppi.Console.Skills;
 

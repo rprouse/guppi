@@ -15,7 +15,7 @@ using Q42.HueApi.Models.Groups;
 
 namespace Guppi.Infrastructure.Services.Hue
 {
-    internal partial class HueService : IHueService
+    internal partial class HueProvider : IHueProvider
     {
         string _key;
         ILocalHueClient _client;

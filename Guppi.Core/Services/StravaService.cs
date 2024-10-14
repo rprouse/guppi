@@ -16,10 +16,10 @@ using Guppi.Core.Interfaces;
 
 namespace Guppi.Core.Services;
 
-internal sealed class StravaService(IHttpRestService restService, IProcessService processService) : IStravaService
+internal sealed class StravaService(IHttpRestProvider restService, IProcessProvider processService) : IStravaService
 {
-    private readonly IHttpRestService _restService = restService;
-    private readonly IProcessService _processService = processService;
+    private readonly IHttpRestProvider _restService = restService;
+    private readonly IProcessProvider _processService = processService;
     private readonly StravaConfiguration _configuration = Configuration.Load<StravaConfiguration>("strava");
 
     public void Configure()

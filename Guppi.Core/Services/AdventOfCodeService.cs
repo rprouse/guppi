@@ -12,10 +12,10 @@ namespace Guppi.Core.Services;
 
 internal sealed class AdventOfCodeService : IAdventOfCodeService
 {
-    private readonly IHttpRestService _restService;
-    private readonly IProcessService _process;
+    private readonly IHttpRestProvider _restService;
+    private readonly IProcessProvider _process;
 
-    public AdventOfCodeService(IHttpRestService restService, IProcessService process)
+    public AdventOfCodeService(IHttpRestProvider restService, IProcessProvider process)
     {
         _restService = restService;
         _process = process;

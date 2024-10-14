@@ -7,9 +7,9 @@ using Guppi.Core.Interfaces;
 
 namespace Guppi.Core.Services;
 
-internal sealed class NoteService(IProcessService process) : INoteService
+internal sealed class NoteService(IProcessProvider process) : INoteService
 {
-    private readonly IProcessService _process = process;
+    private readonly IProcessProvider _process = process;
 
     public void AddFile(string title, string vault)
     {

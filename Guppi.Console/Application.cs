@@ -16,9 +16,9 @@ namespace Guppi.Console
     internal class Application : IApplication
     {
         private readonly Parser _parser;
-        private readonly ISpeechService _speech;
+        private readonly ISpeechProvider _speech;
 
-        public Application(IEnumerable<ISkill> skills, ISpeechService speech)
+        public Application(IEnumerable<ISkill> skills, ISpeechProvider speech)
         {
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
             _speech = speech;

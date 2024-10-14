@@ -15,7 +15,7 @@ using Guppi.Core.Interfaces;
 
 namespace Guppi.Infrastructure.Services.Calendar
 {
-    internal sealed class GoogleCalendarService : ICalendarService
+    internal sealed class GoogleCalendarProvider : ICalendarProvider
     {
         static string[] Scopes = { CalendarService.Scope.CalendarReadonly };
         static string ApplicationName = "Guppi ActionProvider.Calendar";

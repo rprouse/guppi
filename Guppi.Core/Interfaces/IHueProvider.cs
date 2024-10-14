@@ -5,7 +5,7 @@ using Guppi.Core.Entities.Hue;
 
 namespace Guppi.Core.Interfaces
 {
-    public interface IHueService
+    public interface IHueProvider
     {
         Task<IEnumerable<HueBridge>> ListBridges();
 

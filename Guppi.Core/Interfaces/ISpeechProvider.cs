@@ -4,7 +4,7 @@ using Guppi.Core.Entities.Voices;
 
 namespace Guppi.Core.Interfaces
 {
-    public interface ISpeechService
+    public interface ISpeechProvider
     {
         void Speak(string textToSpeak);
 

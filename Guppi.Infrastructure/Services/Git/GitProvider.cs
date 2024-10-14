@@ -4,10 +4,10 @@ using LibGit2Sharp;
 
 namespace Guppi.Infrastructure.Services.Git
 {
-    public class GitService(IProcessService process) : IGitService
+    public class GitProvider(IProcessProvider process) : IGitProvider
     {
         const string WorkingDirectory = ".";
-        private readonly IProcessService _process = process;
+        private readonly IProcessProvider _process = process;
 
         public void RunGit(string args)
         {

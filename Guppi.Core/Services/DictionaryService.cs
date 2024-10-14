@@ -11,9 +11,9 @@ namespace Guppi.Core.Services;
 
 internal class DictionaryService : IDictionaryService
 {
-    private readonly IHttpRestService _restService;
+    private readonly IHttpRestProvider _restService;
 
-    public DictionaryService(IHttpRestService restService)
+    public DictionaryService(IHttpRestProvider restService)
     {
         _restService = restService;
     }

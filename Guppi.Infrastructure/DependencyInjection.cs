@@ -22,12 +22,12 @@ namespace Guppi.Infrastructure
                     client.DefaultRequestHeaders.Add("User-Agent", "Guppi CLI (https://github.com/rprouse/guppi)");
                     return client;
                 })
-                .AddTransient<ICalendarService, GoogleCalendarService>()
-                .AddTransient<ICalendarService, ICalCalendarService>()
-                .AddTransient<IGitService, GitService>()
-                .AddTransient<IHttpRestService, HttpRestService>()
-                .AddTransient<IHueService, HueService>()
-                .AddTransient<IProcessService, ProcessService>()
-                .AddSingleton<ISpeechService, SpeechService>();
+                .AddTransient<ICalendarProvider, GoogleCalendarProvider>()
+                .AddTransient<ICalendarProvider, ICalCalendarProvider>()
+                .AddTransient<IGitProvider, GitProvider>()
+                .AddTransient<IHttpRestProvider, HttpRestProvider>()
+                .AddTransient<IHueProvider, HueProvider>()
+                .AddTransient<IProcessProvider, ProcessProvider>()
+                .AddSingleton<ISpeechProvider, SpeechProvider>();
     }
 }

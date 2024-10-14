@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Guppi.Core.Services.Hue;
 using Guppi.Core.Entities.Hue;
 
-namespace Guppi.Core.Services;
+namespace Guppi.Core.Interfaces;
 
 public interface IHueLightService
 {

@@ -1,6 +1,6 @@
 namespace Guppi.Core.Interfaces
 {
-    public interface IProcessService
+    public interface IProcessProvider
     {
         /// <summary>
         /// Launches a Process

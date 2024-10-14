@@ -7,7 +7,7 @@ using Guppi.Core.Interfaces;
 
 namespace Guppi.Infrastructure.Services
 {
-    public class HttpRestService(HttpClient client) : IHttpRestService
+    public class HttpRestProvider(HttpClient client) : IHttpRestProvider
     {
         public HttpClient Client { get; } = client;
 

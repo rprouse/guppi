@@ -5,15 +5,15 @@ using System.CommandLine.NamingConventionBinder;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Guppi.Application.Extensions;
-using Guppi.Domain.Interfaces;
+using Guppi.Core.Extensions;
+using Guppi.Core.Interfaces.Providers;
 using Spectre.Console;
 
 namespace Guppi.Console.Skills
 {
-    public class VoiceSkill(ISpeechService speech) : ISkill
+    public class VoiceSkill(ISpeechProvider speech) : ISkill
     {
-        private readonly ISpeechService _speech = speech;
+        private readonly ISpeechProvider _speech = speech;
 
         public IEnumerable<Command> GetCommands()
         {

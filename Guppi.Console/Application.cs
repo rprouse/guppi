@@ -5,20 +5,20 @@ using System.CommandLine.Parsing;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Guppi.Application.Extensions;
+using Guppi.Core.Extensions;
 using Guppi.Console.Skills;
-using Guppi.Domain.Common;
-using Guppi.Domain.Interfaces;
+using Guppi.Core.Common;
 using Spectre.Console;
+using Guppi.Core.Interfaces.Providers;
 
 namespace Guppi.Console
 {
     internal class Application : IApplication
     {
         private readonly Parser _parser;
-        private readonly ISpeechService _speech;
+        private readonly ISpeechProvider _speech;
 
-        public Application(IEnumerable<ISkill> skills, ISpeechService speech)
+        public Application(IEnumerable<ISkill> skills, ISpeechProvider speech)
         {
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
             _speech = speech;

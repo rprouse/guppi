@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
-using Guppi.Application.Exceptions;
-using Guppi.Application.Services;
+using Guppi.Core.Exceptions;
+using Guppi.Core.Interfaces.Services;
 using Spectre.Console;
 
 namespace Guppi.Console.Skills;

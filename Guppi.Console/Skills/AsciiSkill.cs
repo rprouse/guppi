@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
-using Guppi.Application.Extensions;
-using Guppi.Application.Services;
-using Guppi.Domain.Entities.Ascii;
+using Guppi.Core.Extensions;
+using Guppi.Core.Entities.Ascii;
 using Spectre.Console;
+using Guppi.Core.Interfaces.Services;
 
 namespace Guppi.Console.Skills;
 

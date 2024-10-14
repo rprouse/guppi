@@ -4,8 +4,8 @@ using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
 using System.IO;
 using System.Linq;
-using Guppi.Application.Extensions;
-using Guppi.Application.Services;
+using Guppi.Core.Extensions;
+using Guppi.Core.Interfaces.Services;
 using Spectre.Console;
 
 namespace Guppi.Console.Skills;

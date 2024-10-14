@@ -2,14 +2,14 @@ using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
 using System.Threading.Tasks;
-using Guppi.Application.Extensions;
-using Guppi.Application.Services;
+using Guppi.Core.Extensions;
+using Guppi.Core.Interfaces.Services;
 
 namespace Guppi.Console.Skills;
 
 internal class OpenAISkill : ISkill
 {
-    IOpenAIService _service;
+    readonly IOpenAIService _service;
 
     public OpenAISkill(IOpenAIService service)
     {

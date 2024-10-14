@@ -5,10 +5,10 @@ using System.CommandLine.NamingConventionBinder;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Guppi.Application.Exceptions;
-using Guppi.Application.Extensions;
-using Guppi.Application.Services;
-using Guppi.Application.Services.Dictionary;
+using Guppi.Core.Exceptions;
+using Guppi.Core.Extensions;
+using Guppi.Core.Interfaces.Services;
+using Guppi.Core.Services.Dictionary;
 using Spectre.Console;
 
 namespace Guppi.Console.Skills;
@@ -175,7 +175,7 @@ internal class CalendarSkill(ICalendarService service) : ISkill
         }
     }
 
-    private static bool DisplayEvent(Domain.Entities.Calendar.Event eventItem, bool markdown, StringBuilder markdownBuffer)
+    private static bool DisplayEvent(Core.Entities.Calendar.Event eventItem, bool markdown, StringBuilder markdownBuffer)
     {
         string start = eventItem.Start?.ToString("HH:mm");
         if (string.IsNullOrEmpty(start))
@@ -239,6 +239,6 @@ internal class CalendarSkill(ICalendarService service) : ISkill
         }
     }
 
-    private static string JoinLink(Domain.Entities.Calendar.Event eventItem) =>
+    private static string JoinLink(Core.Entities.Calendar.Event eventItem) =>
         string.IsNullOrEmpty(eventItem.MeetingUrl) ? "" : $" [Join]({eventItem.MeetingUrl})";
 }

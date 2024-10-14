@@ -4,11 +4,11 @@ using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
 using System.Linq;
 using System.Threading.Tasks;
-using Guppi.Application.Exceptions;
-using Guppi.Application.Extensions;
-using Guppi.Domain.Entities.AdventOfCode;
-using Guppi.Application.Services;
+using Guppi.Core.Exceptions;
+using Guppi.Core.Extensions;
+using Guppi.Core.Entities.AdventOfCode;
 using Spectre.Console;
+using Guppi.Core.Interfaces.Services;
 
 namespace Guppi.Console.Skills;
 

@@ -1,7 +1,6 @@
 using System;
 using Guppi.Console.Skills;
-using Guppi.Application;
-using Guppi.Infrastructure;
+using Guppi.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Guppi.Console;
 
@@ -28,6 +27,5 @@ static IServiceProvider ConfigureServices() =>
         .AddTransient<ISkill, WeatherSkill>()
         .AddTransient<ISkill, UtilitiesSkill>()
         .AddTransient<ISkill, VoiceSkill>()
-        .AddApplication()
-        .AddInfrastructure()
+        .AddCore()
         .BuildServiceProvider();

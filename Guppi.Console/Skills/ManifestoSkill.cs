@@ -21,7 +21,7 @@ internal class ManifestoSkill : ISkill
             }
         };
 
-    private void ViewManifesto(string manifesto)
+    private static void ViewManifesto(string manifesto)
     {
         var rows = System.Console.WindowHeight - 5;
         var lines = manifesto.Split(Environment.NewLine);

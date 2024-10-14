@@ -49,6 +49,7 @@ public static class DependencyInjection
             .AddTransient<IDictionaryService, DictionaryService>()
             .AddTransient<IGitService, GitService>()
             .AddTransient<IHueLightService, HueLightService>()
+            .AddTransient<IIPService, IPService>()
             .AddTransient<INoteService, NoteService>()
             .AddTransient<IOpenAIService, OpenAIService>()
             .AddTransient<ISerialPortService, SerialPortService>()

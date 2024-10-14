@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Guppi.Core.Interfaces;
+namespace Guppi.Core.Interfaces.Services;
 
 public interface IOpenAIService
 {

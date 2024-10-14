@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 using Guppi.Core.Extensions;
 using Guppi.Console.Skills;
 using Guppi.Core.Common;
-using Guppi.Core.Interfaces;
 using Spectre.Console;
+using Guppi.Core.Interfaces.Providers;
 
 namespace Guppi.Console
 {

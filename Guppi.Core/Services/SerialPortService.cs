@@ -6,7 +6,7 @@ using System.Linq;
 using System.Management;
 using System.Text;
 using System.Threading.Tasks;
-using Guppi.Core.Interfaces;
+using Guppi.Core.Interfaces.Services;
 
 namespace Guppi.Core.Services;
 

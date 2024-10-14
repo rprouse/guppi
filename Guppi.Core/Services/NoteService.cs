@@ -3,7 +3,8 @@ using System.IO;
 using System.Runtime.InteropServices;
 using Guppi.Core.Configurations;
 using Guppi.Core.Exceptions;
-using Guppi.Core.Interfaces;
+using Guppi.Core.Interfaces.Providers;
+using Guppi.Core.Interfaces.Services;
 
 namespace Guppi.Core.Services;
 

@@ -1,5 +1,5 @@
 using Guppi.Core.Exceptions;
-using Guppi.Core.Interfaces;
+using Guppi.Core.Interfaces.Providers;
 using LibGit2Sharp;
 
 namespace Guppi.Core.Providers.Git;

@@ -1,12 +1,13 @@
-using Guppi.Core.Interfaces;
+using Guppi.Core.Interfaces.Providers;
+using Guppi.Core.Interfaces.Services;
 
 namespace Guppi.Core.Services;
 
 internal sealed class GitService : IGitService
 {
-    private readonly Guppi.Core.Interfaces.IGitProvider _gitService;
+    private readonly IGitProvider _gitService;
 
-    public GitService(Interfaces.IGitProvider gitService)
+    public GitService(IGitProvider gitService)
     {
         _gitService = gitService;
     }

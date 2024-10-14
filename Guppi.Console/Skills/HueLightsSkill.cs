@@ -9,7 +9,7 @@ using Guppi.Core.Extensions;
 using Guppi.Core.Services.Hue;
 using Guppi.Core.Entities.Hue;
 using Spectre.Console;
-using Guppi.Core.Interfaces;
+using Guppi.Core.Interfaces.Services;
 
 namespace Guppi.Console.Skills;
 

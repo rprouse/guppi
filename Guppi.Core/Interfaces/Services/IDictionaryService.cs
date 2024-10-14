@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Guppi.Core.Entities.Dictionary;
 
-namespace Guppi.Core.Interfaces;
+namespace Guppi.Core.Interfaces.Services;
 
 public interface IDictionaryService
 {

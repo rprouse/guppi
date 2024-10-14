@@ -2,13 +2,14 @@ using System.IO;
 using System;
 using Guppi.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
-using Guppi.Core.Interfaces;
 using Guppi.Core.Providers.Calendar;
 using Guppi.Core.Providers.Git;
 using Guppi.Core.Providers.Hue;
 using Guppi.Core.Providers;
 using System.Net.Http.Headers;
 using System.Net.Http;
+using Guppi.Core.Interfaces.Services;
+using Guppi.Core.Interfaces.Providers;
 
 namespace Guppi.Core;
 

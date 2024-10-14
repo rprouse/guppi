@@ -11,7 +11,7 @@ using Google.Apis.Services;
 using Google.Apis.Util.Store;
 using Guppi.Core;
 using Guppi.Core.Exceptions;
-using Guppi.Core.Interfaces;
+using Guppi.Core.Interfaces.Providers;
 
 namespace Guppi.Core.Providers.Calendar;
 

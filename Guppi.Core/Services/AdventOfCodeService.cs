@@ -6,7 +6,8 @@ using Guppi.Core.Configurations;
 using Guppi.Core.Exceptions;
 using Guppi.Core.Services.AdventOfCode;
 using Guppi.Core.Entities.AdventOfCode;
-using Guppi.Core.Interfaces;
+using Guppi.Core.Interfaces.Services;
+using Guppi.Core.Interfaces.Providers;
 
 namespace Guppi.Core.Services;
 

@@ -3,7 +3,7 @@ using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
 using System.Threading.Tasks;
 using Guppi.Core.Extensions;
-using Guppi.Core.Interfaces;
+using Guppi.Core.Interfaces.Services;
 
 namespace Guppi.Console.Skills;
 

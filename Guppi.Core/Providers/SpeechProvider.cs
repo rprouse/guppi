@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Guppi.Core;
 using Guppi.Core.Configurations;
 using Guppi.Core.Entities.Voices;
-using Guppi.Core.Interfaces;
+using Guppi.Core.Interfaces.Providers;
 
 namespace Guppi.Core.Providers;
 

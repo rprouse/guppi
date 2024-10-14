@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata;
 using Guppi.Core.Attributes;
-using Guppi.Core.Interfaces;
+using Guppi.Core.Interfaces.Providers;
 using Spectre.Console;
 
 namespace Guppi.Core.Configurations

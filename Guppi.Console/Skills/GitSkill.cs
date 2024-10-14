@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
 using Guppi.Core.Exceptions;
-using Guppi.Core.Interfaces;
+using Guppi.Core.Interfaces.Services;
 using Spectre.Console;
 
 namespace Guppi.Console.Skills;

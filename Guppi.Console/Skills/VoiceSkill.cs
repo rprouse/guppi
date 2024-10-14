@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Guppi.Core.Extensions;
-using Guppi.Core.Interfaces;
+using Guppi.Core.Interfaces.Providers;
 using Spectre.Console;
 
 namespace Guppi.Console.Skills

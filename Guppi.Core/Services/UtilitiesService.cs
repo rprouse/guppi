@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Guppi.Core.Interfaces;
+using Guppi.Core.Interfaces.Providers;
+using Guppi.Core.Interfaces.Services;
 
 namespace Guppi.Core.Services;
 

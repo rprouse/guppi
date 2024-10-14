@@ -12,7 +12,8 @@ using Guppi.Core.Configurations;
 using Guppi.Core.Exceptions;
 using Guppi.Core.Services.Strava;
 using Guppi.Core.Entities.Strava;
-using Guppi.Core.Interfaces;
+using Guppi.Core.Interfaces.Providers;
+using Guppi.Core.Interfaces.Services;
 
 namespace Guppi.Core.Services;
 

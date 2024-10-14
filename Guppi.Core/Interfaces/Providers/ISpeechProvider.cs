@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Guppi.Core.Entities.Voices;
 
-namespace Guppi.Core.Interfaces
+namespace Guppi.Core.Interfaces.Providers
 {
     public interface ISpeechProvider
     {

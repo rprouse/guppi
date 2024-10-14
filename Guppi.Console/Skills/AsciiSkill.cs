@@ -4,7 +4,7 @@ using System.CommandLine.NamingConventionBinder;
 using Guppi.Core.Extensions;
 using Guppi.Core.Entities.Ascii;
 using Spectre.Console;
-using Guppi.Core.Interfaces;
+using Guppi.Core.Interfaces.Services;
 
 namespace Guppi.Console.Skills;
 

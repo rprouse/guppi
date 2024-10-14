@@ -10,7 +10,7 @@ using Guppi.Core.Services.Weather;
 using Guppi.Core.Entities.Weather;
 using Spectre.Console;
 using Location = Guppi.Core.Entities.Weather.Location;
-using Guppi.Core.Interfaces;
+using Guppi.Core.Interfaces.Services;
 
 namespace Guppi.Console.Skills;
 

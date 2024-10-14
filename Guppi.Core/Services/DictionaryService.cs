@@ -5,7 +5,8 @@ using Guppi.Core.Configurations;
 using Guppi.Core.Exceptions;
 using Guppi.Core.Services.Dictionary;
 using Guppi.Core.Entities.Dictionary;
-using Guppi.Core.Interfaces;
+using Guppi.Core.Interfaces.Services;
+using Guppi.Core.Interfaces.Providers;
 
 namespace Guppi.Core.Services;
 

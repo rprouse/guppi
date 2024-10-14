@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Guppi.Core;
 using Guppi.Core.Entities.Hue;
-using Guppi.Core.Interfaces;
+using Guppi.Core.Interfaces.Providers;
 using Q42.HueApi;
 using Q42.HueApi.ColorConverters;
 using Q42.HueApi.ColorConverters.Original;

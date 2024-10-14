@@ -1,4 +1,4 @@
-namespace Guppi.Core.Interfaces
+namespace Guppi.Core.Interfaces.Providers
 {
     public interface IGitProvider
     {

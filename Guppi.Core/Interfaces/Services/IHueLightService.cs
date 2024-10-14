@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Guppi.Core.Services.Hue;
 using Guppi.Core.Entities.Hue;
 
-namespace Guppi.Core.Interfaces;
+namespace Guppi.Core.Interfaces.Services;
 
 public interface IHueLightService
 {

@@ -5,15 +5,16 @@ using System.Threading.Tasks;
 using Guppi.Core.Configurations;
 using Guppi.Core.Exceptions;
 using Guppi.Core.Entities.Calendar;
-using Guppi.Core.Interfaces;
+using Guppi.Core.Interfaces.Providers;
+using Guppi.Core.Interfaces.Services;
 
 namespace Guppi.Core.Services;
 
 internal sealed class CalendarService : ICalendarService
 {
-    private readonly IEnumerable<Interfaces.ICalendarProvider> _calendarServices;
+    private readonly IEnumerable<ICalendarProvider> _calendarServices;
 
-    public CalendarService(IEnumerable<Interfaces.ICalendarProvider> calendarServices)
+    public CalendarService(IEnumerable<ICalendarProvider> calendarServices)
     {
         _calendarServices = calendarServices;
     }

@@ -19,27 +19,29 @@ internal class CalendarSkill(ICalendarService service) : ISkill
 
     public IEnumerable<Command> GetCommands()
     {
-        var markdown = new Option<bool>(new string[] { "--markdown", "-m" }, "Display as Markdown to be copied into Notes");
+        var markdown = new Option<bool>(["--markdown", "-m"], "Display as Markdown to be copied into Notes");
+        var table = new Option<bool>(["--table", "-t"], "Display as a markdown table");
+
         var next = new Command("next", "Views next calendar event") { markdown };
         next.AddAlias("view");
         next.SetHandler(async (bool markdown) => await Next(markdown), markdown);
 
-        var today = new Command("today", "Displays today's agenda") { markdown };
+        var today = new Command("today", "Displays today's agenda") { markdown, table };
         today.AddAlias("agenda");
-        today.SetHandler(async (bool markdown) =>
+        today.SetHandler(async (bool markdown, bool table) =>
         {
             var now = DateTime.Now;
             var midnight = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0, DateTimeKind.Local);
-            await Agenda(midnight, "Today's agenda", markdown);
-        }, markdown);
+            await Agenda(midnight, "Today's agenda", markdown, table);
+        }, markdown, table);
 
-        var tomorrow = new Command("tomorrow", "Displays tomorrow's agenda") { markdown };
-        tomorrow.SetHandler(async (bool markdown) =>
+        var tomorrow = new Command("tomorrow", "Displays tomorrow's agenda") { markdown, table };
+        tomorrow.SetHandler(async (bool markdown, bool table) =>
         {
             var now = DateTime.Now.AddDays(1);
             var midnight = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0, DateTimeKind.Local);
-            await Agenda(midnight, "Tomorrow's agenda", markdown);
-        }, markdown);
+            await Agenda(midnight, "Tomorrow's agenda", markdown, table);
+        }, markdown, table);
 
         var free = new Command("free", "Displays free time for a given day");
         free.AddArgument(new Argument<DateTime>("date", "The date to check"));
@@ -99,7 +101,7 @@ internal class CalendarSkill(ICalendarService service) : ISkill
                             var line = $"- **{start}{end}** {eventItem.Summary}{JoinLink(eventItem)}";
                             sb.AppendLine(line);
                             AnsiConsole.WriteLine(line);
-                            TextCopy.ClipboardService.SetText(sb.ToString());
+                            await TextCopy.ClipboardService.SetTextAsync(sb.ToString());
                             AnsiConsole.MarkupLine("[green]:green_circle: Copied to clipboard[/]");
                             AnsiConsole.WriteLine();
                         }
@@ -126,7 +128,7 @@ internal class CalendarSkill(ICalendarService service) : ISkill
         }
     }
 
-    private async Task Agenda(DateTime now, string title, bool markdown)
+    private async Task Agenda(DateTime now, string title, bool markdown, bool table)
     {
         try
         {
@@ -135,21 +137,27 @@ internal class CalendarSkill(ICalendarService service) : ISkill
             AnsiConsoleHelper.TitleRule($":calendar: {title}");
             StringBuilder sb = new();
 
+            if (table)
+            {
+                sb.AppendLine("| Time | Meeting | Participants | Objective |");
+                sb.AppendLine("| ---- | ------- | ------------ | --------- |");
+            }
+
             try
             {
                 if (events.Any())
                 {
                     bool found = false;
-                    foreach (var _ in events.Where(eventItem => DisplayEvent(eventItem, markdown, sb)).Select(eventItem => new { }))
+                    foreach (var _ in events.Where(eventItem => DisplayEvent(eventItem, markdown, table, sb)).Select(eventItem => new { }))
                     {
                         found = true;
                     }
 
                     if (found)
                     {
-                        if (markdown)
+                        if (markdown || table)
                         {
-                            TextCopy.ClipboardService.SetText(sb.ToString());
+                            await TextCopy.ClipboardService.SetTextAsync(sb.ToString());
                             AnsiConsole.WriteLine();
                             AnsiConsole.MarkupLine("[green]:green_circle: Copied to clipboard[/]");
                         }
@@ -175,7 +183,7 @@ internal class CalendarSkill(ICalendarService service) : ISkill
         }
     }
 
-    private static bool DisplayEvent(Core.Entities.Calendar.Event eventItem, bool markdown, StringBuilder markdownBuffer)
+    private static bool DisplayEvent(Core.Entities.Calendar.Event eventItem, bool markdown, bool table, StringBuilder markdownBuffer)
     {
         string start = eventItem.Start?.ToString("HH:mm");
         if (string.IsNullOrEmpty(start))
@@ -183,7 +191,14 @@ internal class CalendarSkill(ICalendarService service) : ISkill
             return false;
         }
         string end = eventItem.End?.ToString("-HH:mm") ?? "";
-        if (markdown)
+
+        if (table)
+        {
+            var line = $"| {eventItem.Start.GetEmoji()} **{start}{end}** | {TableLinkedSummary(eventItem)} | | |";
+            markdownBuffer.AppendLine(line);
+            AnsiConsole.WriteLine(line);
+        }
+        else if (markdown)
         {
             var line = $"- {eventItem.Start.GetEmoji()} **{start}{end}** {eventItem.Summary}{JoinLink(eventItem)}";
             markdownBuffer.AppendLine(line);
@@ -241,4 +256,7 @@ internal class CalendarSkill(ICalendarService service) : ISkill
 
     private static string JoinLink(Core.Entities.Calendar.Event eventItem) =>
         string.IsNullOrEmpty(eventItem.MeetingUrl) ? "" : $" [Join]({eventItem.MeetingUrl})";
+
+    private static string TableLinkedSummary(Core.Entities.Calendar.Event eventItem) =>
+        string.IsNullOrEmpty(eventItem.MeetingUrl) ? eventItem.Summary : $"[{eventItem.Summary}]({eventItem.MeetingUrl})";
 }

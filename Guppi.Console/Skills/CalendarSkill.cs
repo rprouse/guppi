@@ -139,8 +139,9 @@ internal class CalendarSkill(ICalendarService service) : ISkill
 
             if (table)
             {
-                sb.AppendLine("| Time | Meeting | Participants | Objective |");
-                sb.AppendLine("| ---- | ------- | ------------ | --------- |");
+                sb.AppendLine("| Time | Meeting |");
+                sb.AppendLine("| ---- | ------- |");
+                AnsiConsole.Write(sb.ToString());
             }
 
             try
@@ -194,7 +195,7 @@ internal class CalendarSkill(ICalendarService service) : ISkill
 
         if (table)
         {
-            var line = $"| {eventItem.Start.GetEmoji()} **{start}{end}** | {TableLinkedSummary(eventItem)} | | |";
+            var line = $"| {eventItem.Start.GetEmoji()} **{start}{end}** | {TableLinkedSummary(eventItem)} |";
             markdownBuffer.AppendLine(line);
             AnsiConsole.WriteLine(line);
         }

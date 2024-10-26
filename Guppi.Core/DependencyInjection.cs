@@ -45,6 +45,7 @@ public static class DependencyInjection
             // Add the services
             .AddTransient<IAdventOfCodeService, AdventOfCodeService>()
             .AddTransient<IAsciiService, AsciiService>()
+            .AddTransient<IBillService, BillService>()
             .AddTransient<ICalendarService, CalendarService>()
             .AddTransient<IDictionaryService, DictionaryService>()
             .AddTransient<IGitService, GitService>()

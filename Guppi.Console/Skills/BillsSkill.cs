@@ -16,10 +16,20 @@ internal class BillsSkill(IBillService service) : ISkill
 
     public IEnumerable<Command> GetCommands()
     {
+        var all = new Command("all", "Download bills from all providers")
+        {
+        };
+        all.Handler = CommandHandler.Create(async () => await DownloadAllBills());
+
         var alectra = new Command("alectra", "Download bills from Alectra")
         {
         };
         alectra.Handler = CommandHandler.Create(async () => await DownloadAlectraBills());
+
+        var enbridge = new Command("enbridge", "Download bills from Enbridge")
+        {
+        };
+        enbridge.Handler = CommandHandler.Create(async () => await DownloadEnbridgeBills());
 
         var configure = new Command("configure", "Configures the Bill provider");
         configure.AddAlias("config");
@@ -27,7 +37,9 @@ internal class BillsSkill(IBillService service) : ISkill
 
         var command = new Command("bills", "Download bills from online")
         {
+            all,
             alectra,
+            enbridge,
             configure
         };
         command.AddAlias("billing");
@@ -36,13 +48,22 @@ internal class BillsSkill(IBillService service) : ISkill
         return new List<Command> { command };
     }
 
-    private async Task DownloadAlectraBills()
-    {
+    private async Task DownloadAllBills() =>
+        await DownloadBills(":spiral_notepad: Download Bills", _service.DownloadAllBills);
+
+    private async Task DownloadAlectraBills() =>
+        await DownloadBills(":high_voltage: Alectra Bills", _service.DownloadAlectraBills);
+
+    private async Task DownloadEnbridgeBills() =>
+        await DownloadBills(":chart_increasing: Enbridge Bills", _service.DownloadEnbridgeBills);
+
+    private static async Task DownloadBills(string title, Func<Task> downloader)
+    { 
         try
         {
-            AnsiConsoleHelper.TitleRule(":high_voltage: Alectra Bills");
+            AnsiConsoleHelper.TitleRule(title);
 
-            await _service.DownloadAlectraBills();
+            await downloader();
 
             AnsiConsoleHelper.Rule("white");
         }

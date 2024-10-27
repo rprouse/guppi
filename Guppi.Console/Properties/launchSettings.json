@@ -2,7 +2,7 @@
   "profiles": {
     "Guppi.Console": {
       "commandName": "Project",
-      "commandLineArgs": "bills alectra"
+      "commandLineArgs": "bills enbridge"
     }
   }
 }

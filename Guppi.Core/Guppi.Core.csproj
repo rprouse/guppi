@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.104.1" />
     <PackageReference Include="Google.Apis.Tasks.v1" Version="1.68.0.3468" />
     <PackageReference Include="Google.Apis.Calendar.v3" Version="1.68.0.3557" />
     <PackageReference Include="Ical.Net" Version="4.3.1" />

@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using ClosedXML.Excel;
 using Guppi.Core.Configurations;
 using Guppi.Core.Exceptions;
 using Guppi.Core.Interfaces.Services;
@@ -12,6 +13,11 @@ internal class BillService : IBillService
 {
     private readonly BillConfiguration _configuration = Configuration.Load<BillConfiguration>("billing");
 
+    readonly static string _downloadsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads", "bills");
+
+    int _row = 2;
+    IXLWorksheet _worksheet;
+
     private bool Configured => _configuration.Configured;
 
     public async Task DownloadAlectraBills()
@@ -20,6 +26,19 @@ internal class BillService : IBillService
         {
             throw new UnconfiguredException("Please configure the Billing provider");
         }
+
+        // Create an Excel spreadsheet to store the billing data
+        string path = Path.Combine(_downloadsPath, "Bills.xlsx");
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
+        var workbook = new ClosedXML.Excel.XLWorkbook();
+        _worksheet = workbook.Worksheets.Add("Bills");
+
+        _worksheet.Cell(1, 1).Value = "Account";
+        _worksheet.Cell(1, 2).Value = "Date";
+        _worksheet.Cell(1, 3).Value = "Amount";
 
         using var playwright = await Playwright.CreateAsync();
         var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });
@@ -40,9 +59,11 @@ internal class BillService : IBillService
         await DownloadBillsForAccount(page, "7076520332");
 
         await Task.Delay(5000);
+
+        workbook.SaveAs(path);
     }
 
-    private static async Task DownloadBillsForAccount(IPage page, string account)
+    private async Task DownloadBillsForAccount(IPage page, string account)
     {
         // Navigate to Billing History
         await page.GotoAsync("https://myalectra.alectrautilities.com/portal/#/billinghistory");
@@ -79,13 +100,18 @@ internal class BillService : IBillService
                 amount = a.ToString("N2");
             }
 
+            _worksheet.Cell(_row, 1).Value = account;
+            _worksheet.Cell(_row, 2).Value = date;
+            _worksheet.Cell(_row, 3).Value = amount;
+            _row++;
+
             Console.WriteLine($"{account} {date} {amount}");
 
             await DownloadBill(page, account, $"{date} {amount}");
         }
     }
 
-    private static async Task DownloadBill(IPage page, string account, string bill)
+    private async Task DownloadBill(IPage page, string account, string bill)
     {
         // Open the billing page in a new tab
         var billingPage = await page.RunAndWaitForPopupAsync(async () =>
@@ -96,12 +122,10 @@ internal class BillService : IBillService
         // Listen for download events so we can specify the 
         billingPage.Download += async (_, download) =>
         {
-            string downloadsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads", "bills");
-
             // Ensure the directory exists
-            Directory.CreateDirectory(downloadsPath);
+            Directory.CreateDirectory(_downloadsPath);
 
-            var filePath = Path.Combine(downloadsPath, $"{account} {bill}.pdf");
+            var filePath = Path.Combine(_downloadsPath, $"{account} {bill}.pdf");
             await download.SaveAsAsync(filePath);
 
             await billingPage.CloseAsync();
@@ -117,7 +141,7 @@ internal class BillService : IBillService
         billingPage.Dialog += billingPage_Dialog_EventHandler;
 
         // Click the download button
-        var download = await billingPage.RunAndWaitForDownloadAsync(async () =>
+        await billingPage.RunAndWaitForDownloadAsync(async () =>
         {
             await billingPage.GetByRole(AriaRole.Img, new() { Name = "Download PDF" }).ClickAsync();
         });

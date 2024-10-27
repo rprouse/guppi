@@ -40,11 +40,15 @@ internal class BillsSkill(IBillService service) : ISkill
         configure.AddAlias("config");
         configure.Handler = CommandHandler.Create(() => Configure());
 
+        var install = new Command("install", "Installs Playwright for the Bill provider");
+        install.Handler = CommandHandler.Create(() => _service.InstallPlaywright());
+
         var command = new Command("bills", "Download bills from online")
         {
             all,
             alectra,
             enbridge,
+            install,
             configure
         };
         command.AddAlias("billing");

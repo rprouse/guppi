@@ -7,5 +7,6 @@ public interface IBillService
     Task DownloadAllBills(int months);
     Task DownloadAlectraBills(int months);
     Task DownloadEnbridgeBills(int months);
+    void InstallPlaywright();
     void Configure();
 }

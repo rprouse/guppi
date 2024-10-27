@@ -21,6 +21,10 @@ internal class BillService : IBillService
     const string WORKSHEET = "Bills";
 
     private bool Configured => _configuration.Configured;
+    public void InstallPlaywright()
+    {
+        Program.Main([ "install" ]);
+    }
 
     public async Task DownloadAllBills(int months)
     {

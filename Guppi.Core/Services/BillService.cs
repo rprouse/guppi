@@ -238,7 +238,7 @@ internal class BillService : IBillService
             // Ensure the directory exists
             Directory.CreateDirectory(DOWNLOAD_PATH);
 
-            var filePath = Path.Combine(DOWNLOAD_PATH, $"{account} {date}.pdf");
+            var filePath = Path.Combine(DOWNLOAD_PATH, $"{account} {date.Replace('/', '-')}.pdf");
             await download.SaveAsAsync(filePath);
 
             await billingPage.CloseAsync();

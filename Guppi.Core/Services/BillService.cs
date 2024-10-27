@@ -69,6 +69,16 @@ internal class BillService : IBillService
             var date = await cells[0].InnerTextAsync();
             var amount = await cells[1].InnerTextAsync();
 
+            if (DateTime.TryParse(date, out DateTime d))
+            {
+                date = d.ToShortDateString();
+            }
+
+            if (double.TryParse(amount.Substring(1), out double a))
+            {
+                amount = a.ToString("N2");
+            }
+
             Console.WriteLine($"{account} {date} {amount}");
 
             await DownloadBill(page, account, $"{date} {amount}");

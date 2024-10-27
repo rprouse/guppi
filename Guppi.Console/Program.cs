@@ -13,6 +13,7 @@ static IServiceProvider ConfigureServices() =>
         .AddTransient<IApplication, Application>()
         .AddTransient<ISkill, AdventOfCodeSkill>()
         .AddTransient<ISkill, AsciiSkill>()
+        .AddTransient<ISkill, BillsSkill>()
         .AddTransient<ISkill, CalendarSkill>()
         .AddTransient<ISkill, DictionarySkill>()
         .AddTransient<ISkill, GitSkill>()

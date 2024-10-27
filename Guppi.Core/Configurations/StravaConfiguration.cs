@@ -1,17 +1,15 @@
-using Guppi.Core;
 using Guppi.Core.Attributes;
 
-namespace Guppi.Core.Configurations
+namespace Guppi.Core.Configurations;
+
+public class StravaConfiguration : Configuration
 {
-    public class StravaConfiguration : Configuration
-    {
-        [Display("Client Id")]
-        public string ClientId { get; set; }
+    [Display("Client Id")]
+    public string ClientId { get; set; }
 
-        [Display("Client Secret")]
-        public string ClientSecret { get; set; }
+    [Display("Client Secret")]
+    public string ClientSecret { get; set; }
 
-        [Hide]
-        public string RefreshToken { get; set; }
-    }
+    [Hide]
+    public string RefreshToken { get; set; }
 }

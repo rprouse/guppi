@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Guppi.Core.Configurations;
 using Guppi.Core.Exceptions;
@@ -21,33 +22,33 @@ internal class BillService : IBillService
 
     private bool Configured => _configuration.Configured;
 
-    public async Task DownloadAllBills()
+    public async Task DownloadAllBills(int months)
     {
         EnsureConfigured();
         CreateWorkbook("Bills.xlsx");
 
-        await DownloadAlectraBillsInternal();
-        await DownloadEnbridgeBillsInternal();
+        await DownloadAlectraBillsInternal(months);
+        await DownloadEnbridgeBillsInternal(months);
 
         _workbook.Save();
     }
 
-    public async Task DownloadAlectraBills()
+    public async Task DownloadAlectraBills(int months)
     {
         EnsureConfigured();
         CreateWorkbook("Alectra.xlsx");
 
-        await DownloadAlectraBillsInternal();
+        await DownloadAlectraBillsInternal(months);
 
         _workbook.Save();
     }
 
-    public async Task DownloadEnbridgeBills()
+    public async Task DownloadEnbridgeBills(int months)
     {
         EnsureConfigured();
         CreateWorkbook("Enbridge.xlsx");
 
-        await DownloadEnbridgeBillsInternal();
+        await DownloadEnbridgeBillsInternal(months);
 
         _workbook.Save();
     }
@@ -66,7 +67,7 @@ internal class BillService : IBillService
         _workbook = new WorkbookProvider(path, WORKSHEET, HEADERS);
     }
 
-    private async Task DownloadAlectraBillsInternal()
+    private async Task DownloadAlectraBillsInternal(int months)
     {
         using var playwright = await Playwright.CreateAsync();
         var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });
@@ -81,17 +82,17 @@ internal class BillService : IBillService
 
         await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
-        await DownloadAlectraBillsForAccount(page, "8501783878");
-        await DownloadAlectraBillsForAccount(page, "7030931444");
-        await DownloadAlectraBillsForAccount(page, "9676981145");
-        await DownloadAlectraBillsForAccount(page, "7076520332");
+        await DownloadAlectraBillsForAccount(page, months, "8501783878");
+        await DownloadAlectraBillsForAccount(page, months, "7030931444");
+        await DownloadAlectraBillsForAccount(page, months, "9676981145");
+        await DownloadAlectraBillsForAccount(page, months, "7076520332");
 
         await Task.Delay(5000);
 
         await browser.CloseAsync();
     }
 
-    private async Task DownloadEnbridgeBillsInternal()
+    private async Task DownloadEnbridgeBillsInternal(int months)
     {
         using var playwright = await Playwright.CreateAsync();
         var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });
@@ -111,15 +112,15 @@ internal class BillService : IBillService
 
         await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
-        await DownloadEnbridgeBillsForAccount(page, "201 VICTORIA AVE N UNIT 1");
-        await DownloadEnbridgeBillsForAccount(page, "201 VICTORIA AVE N UNIT 2");
+        await DownloadEnbridgeBillsForAccount(page, months, "201 VICTORIA AVE N UNIT 1");
+        await DownloadEnbridgeBillsForAccount(page, months, "201 VICTORIA AVE N UNIT 2");
 
         await Task.Delay(5000);
 
         await browser.CloseAsync();
     }
 
-    private async Task DownloadAlectraBillsForAccount(IPage page, string account)
+    private async Task DownloadAlectraBillsForAccount(IPage page, int months, string account)
     {
         // Navigate to Billing History
         await page.GotoAsync("https://myalectra.alectrautilities.com/portal/#/billinghistory");
@@ -140,7 +141,7 @@ internal class BillService : IBillService
 
         // Download each bill
         var rows = await page.QuerySelectorAllAsync("tr.billing-history-row");
-        foreach (var row in rows)
+        foreach (var row in rows.Take(months))
         {
             var cells = await row.QuerySelectorAllAsync("td");
             var date = await cells[0].InnerTextAsync();
@@ -154,7 +155,7 @@ internal class BillService : IBillService
         }
     }
 
-    private async Task DownloadEnbridgeBillsForAccount(IPage page, string account)
+    private async Task DownloadEnbridgeBillsForAccount(IPage page, int months, string account)
     {
         // Navigate to Billing History
         await page.GotoAsync("https://myaccount.enbridgegas.com/my-account/account-activity?activityType=Bills&periodFilter=PAST1YR");
@@ -177,7 +178,7 @@ internal class BillService : IBillService
         var dateCells = await page.QuerySelectorAllAsync("p.down-date-list");
         var billLinks = await page.QuerySelectorAllAsync("div.td.download-details-list p a");
 
-        for (int i = 0; i < dateCells.Count && i < billLinks.Count; i++)
+        for (int i = 0; i < months&&  i < dateCells.Count && i < billLinks.Count; i++)
         {
             var date = await dateCells[i].InnerTextAsync();
             var billLink = billLinks[i];

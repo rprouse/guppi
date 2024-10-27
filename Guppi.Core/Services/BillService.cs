@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -151,11 +152,13 @@ internal class BillService : IBillService
             var date = await cells[0].InnerTextAsync();
             var amount = await cells[1].InnerTextAsync();
 
-            Console.WriteLine($"{account} {date} {amount}");
+            var cleanDate =  DateTime.TryParse(date, out DateTime d) ? d.ToString("yyyy-MM-dd") : date;
 
-            await DownloadAlectraBill(page, account, $"{date} {amount}");
+            Console.WriteLine($"{cleanDate} {account} {amount}");
 
-            _workbook.AddRow([account, date, amount]);
+            await DownloadAlectraBill(page, account, cleanDate, $"{date} {amount}");
+
+            _workbook.AddRow([account, cleanDate, amount.Replace("$", "")]);
         }
     }
 
@@ -187,13 +190,15 @@ internal class BillService : IBillService
             var date = await dateCells[i].InnerTextAsync();
             var billLink = billLinks[i];
 
-            Console.WriteLine($"{account} {date} --");
+            var cleanDate = DateTime.TryParseExact(date, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime d) ? d.ToString("yyyy-MM-dd") : date;
+
+            Console.WriteLine($"{cleanDate} {account} $--");
             await DownloadEnbridgeBill(page, billLink, account, date);
-            _workbook.AddRow([account, date, "0"]);
+            _workbook.AddRow([account, cleanDate, "0"]);
         }
     }
 
-    private async Task DownloadAlectraBill(IPage page, string account, string bill)
+    private async Task DownloadAlectraBill(IPage page, string account, string date, string bill)
     {
         // Open the billing page in a new tab
         var billingPage = await page.RunAndWaitForPopupAsync(async () =>
@@ -207,7 +212,7 @@ internal class BillService : IBillService
             // Ensure the directory exists
             Directory.CreateDirectory(DOWNLOAD_PATH);
 
-            var filePath = Path.Combine(DOWNLOAD_PATH, $"{account} {bill}.pdf");
+            var filePath = Path.Combine(DOWNLOAD_PATH, $"{date} {account}.pdf");
             await download.SaveAsAsync(filePath);
 
             await billingPage.CloseAsync();

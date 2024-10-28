@@ -95,7 +95,16 @@ public class TodoService(IMediator mediator, ITaskConfiguration configuration) :
             .ToList();
         foreach (var task in notLocal)
         {
-            string taskStr = $"{task.Updated.GetRfc3339Date().ToString("yyyy-MM-dd")} {task.Title}";
+            // Pull the priority out of the title
+            string priority = string.Empty;
+            string title = task.Title;
+            if (title.Length >= 3 && title[0] == '(' && title[2] == ')' && title[3] == ' ')
+            {
+                priority = title.Substring(0, 4);
+                title = title.Substring(3).Trim();
+            }
+
+            string taskStr = $"{priority}{task.Updated.GetRfc3339Date().ToString("yyyy-MM-dd")} {title}";
             if (!string.IsNullOrEmpty(task.Due))
             {
                 taskStr += $" due:{task.Due}";

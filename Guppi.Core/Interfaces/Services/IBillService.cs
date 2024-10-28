@@ -4,6 +4,9 @@ namespace Guppi.Core.Interfaces.Services;
 
 public interface IBillService
 {
-    Task DownloadAlectraBills();
+    Task DownloadAllBills(int months);
+    Task DownloadAlectraBills(int months);
+    Task DownloadEnbridgeBills(int months);
+    void InstallPlaywright();
     void Configure();
 }

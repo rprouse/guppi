@@ -25,6 +25,17 @@ To configure:
 4. In the browser dev tools, copy the session cookie minus the `session=`
 5. Set the `src` directory for the Visual Studio AoC solution
 
+### Bills
+
+Downloads the last years worth of bills from Alectra and Enbridge. The account numbers for each utility
+are hard coded at the moment.
+
+You will need to install [Playwright](https://playwright.dev/dotnet/) to use this skill. To install, run
+
+```sh
+guppi bills install
+```
+
 ### Sync Todo.txt to Google Tasks
 
 Syncs the [Todo.txt](https://github.com/rprouse/dotnet-todo) tasks to/from Google Tasks.

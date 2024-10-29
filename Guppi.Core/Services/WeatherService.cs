@@ -36,7 +36,7 @@ internal sealed class WeatherService(IHttpRestProvider restService) : IWeatherSe
             throw new UnconfiguredException("Please configure the weather provider");
         }
 
-        var weather = await _restService.GetData<WeatherResponse>($"https://api.openweathermap.org/data/2.5/onecall?lat={latitude}&lon={longitude}&appid={_configuration.ApiKey}");
+        var weather = await _restService.GetData<WeatherResponse>($"https://api.openweathermap.org/data/3.0/onecall?lat={latitude}&lon={longitude}&appid={_configuration.ApiKey}");
         return weather.GetWeather();
     }
 

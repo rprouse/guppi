@@ -5,6 +5,7 @@ using System.CommandLine.NamingConventionBinder;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Google.Apis.Calendar.v3.Data;
 using Guppi.Core.Exceptions;
 using Guppi.Core.Extensions;
 using Guppi.Core.Interfaces.Services;
@@ -43,6 +44,13 @@ internal class CalendarSkill(ICalendarService service) : ISkill
             await Agenda(midnight, "Tomorrow's agenda", markdown, table);
         }, markdown, table);
 
+        var month = new Command("month", "Displays this month's calendar") { markdown };
+        month.SetHandler(async (bool markdown) =>
+        {
+            if (markdown) await MonthMarkdown();
+            else Month();
+        }, markdown);
+
         var free = new Command("free", "Displays free time for a given day");
         free.AddArgument(new Argument<DateTime>("date", "The date to check"));
         free.Handler = CommandHandler.Create<DateTime>(FreeTime);
@@ -59,6 +67,7 @@ internal class CalendarSkill(ICalendarService service) : ISkill
             next,
             today,
             tomorrow,
+            month,
             free,
             logout,
             configure
@@ -260,4 +269,72 @@ internal class CalendarSkill(ICalendarService service) : ISkill
 
     private static string TableLinkedSummary(Core.Entities.Calendar.Event eventItem) =>
         string.IsNullOrEmpty(eventItem.MeetingUrl) ? eventItem.Summary : $"[{eventItem.Summary}]({eventItem.MeetingUrl})";
+
+    private static void Month()
+    {
+        (DateOnly start, DateOnly end) = GetMonthRange();
+
+        AnsiConsoleHelper.TitleRule($":calendar: {start:MMMM yyyy}");
+
+        var table = new Table();
+        table.Border(TableBorder.Rounded);
+
+        table.AddColumn(new TableColumn(new Markup("[yellow]Sun[/]")).RightAligned());
+        table.AddColumn(new TableColumn(new Markup("[yellow]Mon[/]")).RightAligned());
+        table.AddColumn(new TableColumn(new Markup("[yellow]Tue[/]")).RightAligned());
+        table.AddColumn(new TableColumn(new Markup("[yellow]Wed[/]")).RightAligned());
+        table.AddColumn(new TableColumn(new Markup("[yellow]Thu[/]")).RightAligned());
+        table.AddColumn(new TableColumn(new Markup("[yellow]Fri[/]")).RightAligned());
+        table.AddColumn(new TableColumn(new Markup("[yellow]Sat[/]")).RightAligned());
+
+        // Add empty cells for the last days of the previous month
+        var row = Enumerable.Range(0, 7).Select(_ => "").ToArray();
+        for (var day = start; day <= end; day = day.AddDays(1))
+        {
+            row[(int)day.DayOfWeek] = day.Day.ToString();
+            if (day.DayOfWeek == DayOfWeek.Saturday)
+            {
+                table.AddRow(row);
+                row = Enumerable.Range(0, 7).Select(_ => "").ToArray();
+            }
+        }
+        if (end.DayOfWeek != DayOfWeek.Saturday)
+            table.AddRow(row);
+
+        AnsiConsole.Write(table);
+
+        AnsiConsole.WriteLine();
+        AnsiConsoleHelper.Rule("white");
+    }
+
+    private static async Task MonthMarkdown()
+    {
+        (DateOnly start, DateOnly end) = GetMonthRange();
+        StringBuilder cal = new();
+        cal.AppendLine("| Day | Date | Habits | Notes |");
+        cal.AppendLine("| --- | ---- | ------ | ----- |");
+        for (var day = start; day <= end; day = day.AddDays(1))
+        {
+            cal.AppendLine($"| **{day:ddd}** | [[{day:yyyy-MM-dd}]] | | |");
+        }
+
+        AnsiConsoleHelper.TitleRule($":calendar: {start:MMMM yyyy}");
+
+        AnsiConsole.WriteLine();
+        AnsiConsole.WriteLine(cal.ToString());
+        await TextCopy.ClipboardService.SetTextAsync(cal.ToString());
+        AnsiConsole.WriteLine();
+        AnsiConsole.MarkupLine("[green]:green_circle: Copied to clipboard[/]");
+
+        AnsiConsole.WriteLine();
+        AnsiConsoleHelper.Rule("white");
+    }
+
+    private static (DateOnly start, DateOnly end) GetMonthRange()
+    {
+        var now = DateTime.Now;
+        var start = new DateOnly(now.Year, now.Month, 1);
+        var end = new DateOnly(now.Year, now.Month, DateTime.DaysInMonth(now.Year, now.Month));
+        return (start, end);
+    }
 }

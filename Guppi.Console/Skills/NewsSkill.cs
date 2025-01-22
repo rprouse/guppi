@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.CommandLine;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Guppi.Core;
 using Guppi.Core.Configurations;
@@ -38,20 +39,24 @@ internal class NewsSkill(IRssService service) : ISkill
         return [cmd];
     }
 
-    private async Task Today(bool markdown)
+    private async Task<string> Today(bool markdown)
     {
+        StringBuilder sb = new();
         try
         {
+
             var configuration = Configuration.Load<RssConfiguration>("Rss");
             if (!configuration.Enabled)
                 throw new UnconfiguredException("Please configure RSS feeds");
 
             if (!markdown)
+            {
                 AnsiConsoleHelper.TitleRule($":newspaper: Latest news");
+                AnsiConsole.WriteLine();
+            }
             else
-                AnsiConsole.MarkupLine($"## :newspaper: Latest news");
+                sb.AppendLine($"## 📰 Latest news");
 
-            AnsiConsole.WriteLine();
             foreach (var feed in configuration.Feeds)
             {
                 try
@@ -61,9 +66,8 @@ internal class NewsSkill(IRssService service) : ISkill
 
                     if (markdown)
                     {
-                        AnsiConsole.WriteLine($"### {newsFeed.Title}");
-                        DisplayNewsAsMarkdown(items);
-                        AnsiConsole.WriteLine();
+                        sb.AppendLine($"### {newsFeed.Title}");
+                        sb.AppendLine(DisplayNewsAsMarkdown(items));
                     }
                     else
                     {
@@ -85,6 +89,7 @@ internal class NewsSkill(IRssService service) : ISkill
                     AnsiConsole.MarkupLine($"[red]:cross_mark: Error reading {feed.Name}:[/] {ex.Message}");
                 }
             }
+            System.Console.Write(sb.ToString());
         }
         catch (UnconfiguredException ue)
         {
@@ -95,25 +100,28 @@ internal class NewsSkill(IRssService service) : ISkill
             if (!markdown)
                 AnsiConsoleHelper.Rule("white");
         }
+        return sb.ToString();
     }
 
-    private void DisplayNewsAsMarkdown(IEnumerable<NewsItem> items)
+    private string DisplayNewsAsMarkdown(IEnumerable<NewsItem> items)
     {
+        StringBuilder sb = new ();
         foreach (var item in items)
         {
-            AnsiConsole.WriteLine();
+            sb.AppendLine();
             if (string.IsNullOrEmpty(item.Link))
-                AnsiConsole.WriteLine($"#### {item.Title}");
+                sb.AppendLine($"#### {item.Title}");
             else
-                AnsiConsole.WriteLine($"#### [{item.Title}]({item.Link})");
+                sb.AppendLine($"#### [{item.Title}]({item.Link})");
 
-            AnsiConsole.WriteLine(item.Description);
+            sb.AppendLine(item.Description);
             if (!string.IsNullOrWhiteSpace(item.Content))
             {
-                AnsiConsole.WriteLine();
-                AnsiConsole.WriteLine(item.Content);
+                sb.AppendLine();
+                sb.AppendLine(item.Content);
             }
         }
+        return sb.ToString();
     }
 
     private void DisplayNewsAsConsole(IEnumerable<NewsItem> items)

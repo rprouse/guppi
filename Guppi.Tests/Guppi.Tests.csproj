@@ -27,4 +27,16 @@
     <ProjectReference Include="..\Guppi.Console\Guppi.Console.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Rss\bbc_world_rss.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Rss\lifehacker_rss.rss">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Rss\QCRSS.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

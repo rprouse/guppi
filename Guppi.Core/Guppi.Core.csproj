@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.104.1" />
+    <PackageReference Include="Edi.SyndicationFeed.ReaderWriter" Version="2.4.0" />
     <PackageReference Include="Google.Apis.Tasks.v1" Version="1.68.0.3468" />
     <PackageReference Include="Google.Apis.Calendar.v3" Version="1.68.0.3557" />
     <PackageReference Include="Ical.Net" Version="4.3.1" />
@@ -28,6 +29,7 @@
     <PackageReference Include="System.Text.Json" Version="8.0.5" />
     <PackageReference Include="Q42.HueApi" Version="3.23.1" />
     <PackageReference Include="Q42.HueApi.ColorConverters" Version="3.23.1" />
+    <PackageReference Include="UnDotNet.HtmlToText" Version="1.1.0" />
   </ItemGroup>
 
     <ItemGroup>

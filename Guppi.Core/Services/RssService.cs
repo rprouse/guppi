@@ -1,15 +1,24 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 using Edi.SyndicationFeed.ReaderWriter;
 using Edi.SyndicationFeed.ReaderWriter.Rss;
+using Guppi.Core.Configurations;
 using Guppi.Core.Entities.Rss;
+using Guppi.Core.Exceptions;
 using Guppi.Core.Interfaces.Services;
 
 namespace Guppi.Core.Services;
 
 public class RssService : IRssService
 {
+    public void Configure()
+    {
+        var configuration = Configuration.Load<RssConfiguration>("Rss");
+        configuration.RunConfiguration("Rss", "Configure your RSS feeds.");
+    }
+
     public async Task<NewsFeed> ReadRssFeed(string inputUri)
     {
         NewsFeed feed = new ();

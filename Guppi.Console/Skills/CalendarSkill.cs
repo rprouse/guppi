@@ -5,11 +5,9 @@ using System.CommandLine.NamingConventionBinder;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Google.Apis.Calendar.v3.Data;
 using Guppi.Core.Exceptions;
 using Guppi.Core.Extensions;
 using Guppi.Core.Interfaces.Services;
-using Guppi.Core.Services.Dictionary;
 using Spectre.Console;
 
 namespace Guppi.Console.Skills;
@@ -73,7 +71,7 @@ internal class CalendarSkill(ICalendarService service) : ISkill
             configure
         };
         cmd.AddAlias("cal");
-        return new[] { cmd };
+        return [cmd];
     }
 
     private void Configure() => _service.Configure();

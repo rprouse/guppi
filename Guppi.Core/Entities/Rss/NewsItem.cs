@@ -16,5 +16,5 @@ public class NewsItem
 
     public string Link { get; set; } = string.Empty;
 
-    public DateTimeOffset PublishDate { get; set; } = DateTime.MinValue;
+    public DateTimeOffset Published { get; set; } = DateTime.MinValue;
 }

@@ -9,26 +9,27 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ClosedXML" Version="0.104.1" />
+    <PackageReference Include="ClosedXML" Version="0.104.2" />
     <PackageReference Include="Edi.SyndicationFeed.ReaderWriter" Version="2.4.0" />
-    <PackageReference Include="Google.Apis.Tasks.v1" Version="1.68.0.3468" />
-    <PackageReference Include="Google.Apis.Calendar.v3" Version="1.68.0.3557" />
+    <PackageReference Include="Google.Apis.Tasks.v1" Version="1.68.0.3657" />
+    <PackageReference Include="Google.Apis.Calendar.v3" Version="1.68.0.3592" />
     <PackageReference Include="Ical.Net" Version="4.3.1" />
-    <PackageReference Include="LibGit2Sharp" Version="0.30.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
-    <PackageReference Include="Microsoft.Playwright" Version="1.48.0" />
-    <PackageReference Include="OpenAI" Version="2.0.0" />
+    <PackageReference Include="LibGit2Sharp" Version="0.31.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.1" />
+    <PackageReference Include="Microsoft.Playwright" Version="1.49.0" />
+    <PackageReference Include="OpenAI" Version="2.1.0" />
     <PackageReference Include="Spectre.Console" Version="0.49.1" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
     <PackageReference Include="System.CommandLine.NamingConventionBinder" Version="2.0.0-beta4.22272.1" />
-    <PackageReference Include="System.IO.Ports" Version="8.0.0" />
+    <PackageReference Include="System.IO.Ports" Version="9.0.1" />
     <PackageReference Include="System.Linq" Version="4.3.0" />
-    <PackageReference Include="System.Management" Version="8.0.0" />
-    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
-    <PackageReference Include="System.Speech" Version="8.0.0" />
-    <PackageReference Include="System.Text.Json" Version="8.0.5" />
-    <PackageReference Include="Q42.HueApi" Version="3.23.1" />
-    <PackageReference Include="Q42.HueApi.ColorConverters" Version="3.23.1" />
+    <PackageReference Include="System.Management" Version="9.0.1" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="9.0.1" />
+    <PackageReference Include="System.Speech" Version="9.0.1" />
+    <PackageReference Include="System.Text.Json" Version="9.0.1" />
+    <PackageReference Include="Q42.HueApi" Version="3.23.2" />
+    <PackageReference Include="Q42.HueApi.ColorConverters" Version="3.23.2" />
     <PackageReference Include="UnDotNet.HtmlToText" Version="1.1.0" />
   </ItemGroup>
 

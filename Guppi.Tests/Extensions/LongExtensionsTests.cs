@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 
 using Guppi.Core.Extensions;
+using Shouldly;
 
 namespace Guppi.Tests.Extensions
 {
@@ -11,7 +12,7 @@ namespace Guppi.Tests.Extensions
         [TestCaseSource(nameof(UnixTimestampData))]
         public void CanConvertUnixTimestampToDateTime(long timestamp, DateTime expected)
         {
-            Assert.That(timestamp.UnixTimeStampToDateTime(), Is.EqualTo(expected));
+            timestamp.UnixTimeStampToDateTime().ShouldBe(expected);
         }
 
         public static IEnumerable<TestCaseData> UnixTimestampData => new []

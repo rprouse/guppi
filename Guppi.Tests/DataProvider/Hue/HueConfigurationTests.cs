@@ -1,5 +1,6 @@
 using Guppi.Core.Configurations;
 using NUnit.Framework;
+using Shouldly;
 
 namespace Guppi.Tests.ActionProvider.Hue
 {
@@ -17,7 +18,7 @@ namespace Guppi.Tests.ActionProvider.Hue
         public void ConvertsDefaultLight(string str, uint expected)
         {
             var config = new HueConfiguration { DefaultLight = str };
-            Assert.That(config.GetDefaultLight(), Is.EqualTo(expected));
+            config.GetDefaultLight().ShouldBe(expected);
         }
     }
 }

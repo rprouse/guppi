@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Guppi.Core.Configurations;
 using NUnit.Framework;
 
@@ -16,7 +16,7 @@ namespace Guppi.Tests.Application.Configuration
         {
             var config = new AdventOfCodeConfiguration();
             config.LoginToken = value;
-            config.LoginToken.Should().Be(expected);
+            config.LoginToken.ShouldBe(expected);
         }
     }
 }

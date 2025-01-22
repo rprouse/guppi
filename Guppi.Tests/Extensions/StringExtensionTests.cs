@@ -1,6 +1,6 @@
-using FluentAssertions;
 using Guppi.Core.Extensions;
 using NUnit.Framework;
+using Shouldly;
 
 namespace Guppi.Tests.Extensions
 {
@@ -18,7 +18,7 @@ namespace Guppi.Tests.Extensions
         [TestCase("No :white_exclamation_mark: not quite", "No not quite")]
         public void StripsEmoji(string str, string expected)
         {
-            str.StripEmoji().Should().Be(expected);
+            str.StripEmoji().ShouldBe(expected);
         }
     }
 }

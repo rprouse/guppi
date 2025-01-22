@@ -1,6 +1,7 @@
 using System;
 using Guppi.Core.Extensions;
 using NUnit.Framework;
+using Shouldly;
 using Spectre.Console;
 
 namespace Guppi.Tests.Extensions
@@ -58,7 +59,7 @@ namespace Guppi.Tests.Extensions
         [TestCase("2021-01-01 23:59:59", Emoji.Known.ElevenThirty)]
         public void CanConvertTimeToEmoji(DateTime time, string emoji)
         {
-            Assert.That(time.GetEmoji(), Is.EqualTo(emoji));
+            time.GetEmoji().ShouldBe(emoji);
         }
 
         [TestCase("2021-01-01 00:12:00", Emoji.Known.TwelveOClock)]
@@ -112,7 +113,7 @@ namespace Guppi.Tests.Extensions
         [TestCase(null, Emoji.Known.TwelveOClock)]
         public void CanConvertNullableTimeToEmoji(DateTime? time, string emoji)
         {
-            Assert.That(time.GetEmoji(), Is.EqualTo(emoji));
+            time.GetEmoji().ShouldBe(emoji);
         }
     }
 }

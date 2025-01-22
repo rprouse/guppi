@@ -2,6 +2,7 @@ using System;
 using NUnit.Framework;
 
 using Guppi.Core.Extensions;
+using Shouldly;
 
 namespace Guppi.Tests.Extensions
 {
@@ -13,7 +14,7 @@ namespace Guppi.Tests.Extensions
         [TestCase(287.49f, 14)]
         public void CanConvertUnixTimestampToDateTime(float kalvin, int expected)
         {
-            Assert.That(kalvin.KalvinToCelcius(), Is.EqualTo(expected));
+            kalvin.KalvinToCelcius().ShouldBe(expected);
         }
     }
 }

@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Guppi.Core.Services;
 using NUnit.Framework;
 
@@ -19,7 +19,8 @@ namespace Guppi.Tests.Application.Queries.Ascii
         public void AsciiQueryHandler_Handle_Returns128Items()
         {
             var result = service.GetAsciiTable();
-            result.Should().NotBeNull().And.HaveCount(128);
+            result.ShouldNotBeNull();
+            result.Length.ShouldBe(128);
         }
 
         [Test]
@@ -28,7 +29,7 @@ namespace Guppi.Tests.Application.Queries.Ascii
             var result = service.GetAsciiTable();
             for (int i = 0; i < 128; i++)
             {
-                result.Should().Contain(a => a.Value == i);
+                result.ShouldContain(a => a.Value == i);
             }
         }
     }

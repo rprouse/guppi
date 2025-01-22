@@ -53,6 +53,7 @@ public static class DependencyInjection
             .AddTransient<IIPService, IPService>()
             .AddTransient<INoteService, NoteService>()
             .AddTransient<IOpenAIService, OpenAIService>()
+            .AddTransient<IRssService, RssService>()
             .AddTransient<ISerialPortService, SerialPortService>()
             .AddTransient<IStravaService, StravaService>()
             .AddSingleton<ITodoService, TodoService>()

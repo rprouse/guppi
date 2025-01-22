@@ -4,10 +4,11 @@ using System.Xml;
 using Edi.SyndicationFeed.ReaderWriter;
 using Edi.SyndicationFeed.ReaderWriter.Rss;
 using Guppi.Core.Entities.Rss;
+using Guppi.Core.Interfaces.Services;
 
 namespace Guppi.Core.Services;
 
-public class RssService
+public class RssService : IRssService
 {
     public async Task<NewsFeed> ReadRssFeed(string inputUri)
     {

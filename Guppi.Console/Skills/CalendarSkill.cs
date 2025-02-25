@@ -14,9 +14,14 @@ using Spectre.Console;
 
 namespace Guppi.Console.Skills;
 
-internal class CalendarSkill(ICalendarService service) : ISkill
+internal class CalendarSkill : ISkill
 {
-    private readonly ICalendarService _service = service;
+    private readonly ICalendarService _service;
+
+    public CalendarSkill(ICalendarService service)
+    {
+        _service = service;
+    }
 
     public IEnumerable<Command> GetCommands()
     {

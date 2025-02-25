@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -13,7 +13,7 @@
     <PackageProjectUrl>https://github.com/rprouse/guppi</PackageProjectUrl>
     <RepositoryUrl>https://github.com/rprouse/guppi</RepositoryUrl>
     <PackageId>dotnet-guppi</PackageId>
-    <Version>6.4.0</Version>
+    <Version>6.5.0</Version>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>guppi</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>

@@ -44,12 +44,13 @@ internal class CalendarSkill(ICalendarService service) : ISkill
             await Agenda(midnight, "Tomorrow's agenda", markdown, table);
         }, markdown, table);
 
-        var month = new Command("month", "Displays this month's calendar") { markdown };
-        month.SetHandler(async (bool markdown) =>
+        var nextMonth = new Option<bool>(["--next", "-n"], "Display next month's calendar");
+        var month = new Command("month", "Displays this month's calendar") { markdown, nextMonth };
+        month.SetHandler(async (bool markdown, bool nextMonth) =>
         {
-            if (markdown) await MonthMarkdown();
-            else Month();
-        }, markdown);
+            if (markdown) await MonthMarkdown(nextMonth);
+            else Month(nextMonth);
+        }, markdown, nextMonth);
 
         var free = new Command("free", "Displays free time for a given day");
         free.AddArgument(new Argument<DateTime>("date", "The date to check"));
@@ -270,9 +271,9 @@ internal class CalendarSkill(ICalendarService service) : ISkill
     private static string TableLinkedSummary(Core.Entities.Calendar.Event eventItem) =>
         string.IsNullOrEmpty(eventItem.MeetingUrl) ? eventItem.Summary : $"[{eventItem.Summary}]({eventItem.MeetingUrl})";
 
-    private static void Month()
+    private static void Month(bool nextMonth)
     {
-        (DateOnly start, DateOnly end) = GetMonthRange();
+        (DateOnly start, DateOnly end) = GetMonthRange(nextMonth);
 
         AnsiConsoleHelper.TitleRule($":calendar: {start:MMMM yyyy}");
 
@@ -307,9 +308,9 @@ internal class CalendarSkill(ICalendarService service) : ISkill
         AnsiConsoleHelper.Rule("white");
     }
 
-    private static async Task MonthMarkdown()
+    private static async Task MonthMarkdown(bool nextMonth)
     {
-        (DateOnly start, DateOnly end) = GetMonthRange();
+        (DateOnly start, DateOnly end) = GetMonthRange(nextMonth);
         StringBuilder cal = new();
         cal.AppendLine("| Day | Date | Habits | Notes |");
         cal.AppendLine("| --- | ---- | ------ | ----- |");
@@ -330,9 +331,9 @@ internal class CalendarSkill(ICalendarService service) : ISkill
         AnsiConsoleHelper.Rule("white");
     }
 
-    private static (DateOnly start, DateOnly end) GetMonthRange()
+    private static (DateOnly start, DateOnly end) GetMonthRange(bool nextMonth)
     {
-        var now = DateTime.Now;
+        var now = nextMonth ? DateTime.Now.AddMonths(1) : DateTime.Now;
         var start = new DateOnly(now.Year, now.Month, 1);
         var end = new DateOnly(now.Year, now.Month, DateTime.DaysInMonth(now.Year, now.Month));
         return (start, end);

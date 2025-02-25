@@ -17,6 +17,14 @@ jobs:
         submodules: true   # Fetch and checkout submodules
         fetch-depth: 0     # Ensure the full history is fetched, useful when dealing with submodules
 
+    - name: 📦 Cache NuGet packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
     - name: 💉 Install dependencies
       run: dotnet restore
 
@@ -24,7 +32,15 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: ✅ Test
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test --no-restore --verbosity normal --logger "trx;LogFileName=TestResults.trx"
+
+    - name: ⬆️ Publish Test Results
+      uses: actions/upload-artifact@v4
+      if: success() || failure()    # run this step even if previous step failed
+      with:
+        name: test-results
+        path: '**/TestResults/*.trx'
+        retention-days: 30
 
     - name: 📦 Package NuGet
       run: dotnet pack --no-build --configuration Release
@@ -34,6 +50,8 @@ jobs:
       with:
         name: nupkg
         path: Guppi.Console/nupkg/*.nupkg
+        retention-days: 5
+        if-no-files-found: error
 
   publish:
     runs-on: ubuntu-latest

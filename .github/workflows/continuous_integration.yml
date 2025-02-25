@@ -12,7 +12,7 @@ jobs:
 
     steps:
     - name: 📥 Checkout Code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules: true   # Fetch and checkout submodules
         fetch-depth: 0     # Ensure the full history is fetched, useful when dealing with submodules
@@ -30,7 +30,7 @@ jobs:
       run: dotnet pack --no-build --configuration Release
 
     - name: 📤 Upload Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: nupkg
         path: Guppi.Console/nupkg/*.nupkg
@@ -43,7 +43,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
       - name: 📥 Download Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: nupkg
 

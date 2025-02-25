@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.CommandLine;
+using System.CommandLine.Invocation;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Guppi.Core;
 using Guppi.Core.Configurations;
@@ -14,9 +16,10 @@ using Spectre.Console;
 
 namespace Guppi.Console.Skills;
 
-internal class NewsSkill(IRssService service) : ISkill
+internal class NewsSkill(IRssService service, CalendarSkill calendar) : ISkill
 {
     private readonly IRssService _service = service;
+    private readonly CalendarSkill _calendar = calendar;
 
     public IEnumerable<Command> GetCommands()
     {
@@ -25,6 +28,9 @@ internal class NewsSkill(IRssService service) : ISkill
         var today = new Command("today", "Displays the latest news.") { markdown };
         today.AddAlias("latest");
         today.SetHandler(Today, markdown);
+
+        var remarkable = new Command("remarkable", "Creates a PDF newspaper that is uploaded to a Remarkable tablet.");
+        remarkable.SetHandler(Remarkable);
 
         var configure = new Command("configure", "Configure calendars");
         configure.AddAlias("config");
@@ -37,6 +43,20 @@ internal class NewsSkill(IRssService service) : ISkill
         };
         cmd.AddAlias("rss");
         return [cmd];
+    }
+
+    private async Task Remarkable(InvocationContext context)
+    {
+        StringBuilder sb = new();
+
+        var now = DateTime.Now;
+        var midnight = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0, DateTimeKind.Local);
+
+        sb.AppendLine($"# {now.ToLongDateString()}");
+        sb.AppendLine($"## Today's agenda");
+        sb.AppendLine(await _calendar.Agenda(midnight, "Today's agenda", true, true));
+
+        sb.AppendLine(await Today(true));
     }
 
     private async Task<string> Today(bool markdown)

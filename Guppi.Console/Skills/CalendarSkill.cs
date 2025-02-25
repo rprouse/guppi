@@ -135,14 +135,14 @@ internal class CalendarSkill(ICalendarService service) : ISkill
         }
     }
 
-    private async Task Agenda(DateTime now, string title, bool markdown, bool table)
+    internal async Task<string> Agenda(DateTime now, string title, bool markdown, bool table)
     {
+        StringBuilder sb = new();
         try
         {
             var max = new DateTime(now.Year, now.Month, now.Day, 23, 59, 59, DateTimeKind.Local);
             var events = await _service.GetCalendarEvents(now, max);
             AnsiConsoleHelper.TitleRule($":calendar: {title}");
-            StringBuilder sb = new();
 
             if (table)
             {
@@ -169,7 +169,7 @@ internal class CalendarSkill(ICalendarService service) : ISkill
                             AnsiConsole.WriteLine();
                             AnsiConsole.MarkupLine("[green]:green_circle: Copied to clipboard[/]");
                         }
-                        return;
+                        return sb.ToString();
                     }
                 }
                 AnsiConsole.MarkupLine("[white][[No upcoming events found.]][/]");
@@ -183,12 +183,12 @@ internal class CalendarSkill(ICalendarService service) : ISkill
         catch (UnauthorizedException ue)
         {
             AnsiConsole.MarkupLine($"[red][[:cross_mark: ${ue.Message}]][/]");
-            return;
         }
         catch (UnconfiguredException ue)
         {
             AnsiConsole.MarkupLine($"[yellow][[:yellow_circle: ${ue.Message}]][/]");
         }
+        return sb.ToString();
     }
 
     private static bool DisplayEvent(Core.Entities.Calendar.Event eventItem, bool markdown, bool table, StringBuilder markdownBuffer)

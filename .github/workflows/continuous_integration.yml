@@ -39,7 +39,7 @@ jobs:
       if: success() || failure()    # run this step even if previous step failed
       with:
         name: test-results
-        path: '**/TestResults/*.trx'
+        path: '**/TestResults/*'
         retention-days: 30
 
     - name: 📦 Package NuGet

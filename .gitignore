@@ -358,3 +358,8 @@ MigrationBackup/
 
 # Code coverage
 coverage.json
+
+# AI Tools
+.aider*
+repomix-output.txt
+

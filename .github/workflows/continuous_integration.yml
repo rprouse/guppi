@@ -32,14 +32,14 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: ✅ Test
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test --no-restore --verbosity normal --logger "trx;LogFileName=TestResults.trx"
 
     - name: ⬆️ Publish Test Results
       uses: actions/upload-artifact@v4
       if: success() || failure()    # run this step even if previous step failed
       with:
         name: test-results
-        path: '**/TestResults/*'
+        path: '**/TestResults/*.trx'
         retention-days: 30
 
     - name: 📦 Package NuGet

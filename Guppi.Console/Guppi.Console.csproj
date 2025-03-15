@@ -8,12 +8,12 @@
     <Authors>Rob Prouse</Authors>
     <Company>Alteridem Consulting</Company>
     <Product>Guppi command line utility</Product>
-    <Copyright>Copyright (c) 2024 Rob Prouse</Copyright>
+    <Copyright>Copyright (c) 2025 Rob Prouse</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/rprouse/guppi</PackageProjectUrl>
     <RepositoryUrl>https://github.com/rprouse/guppi</RepositoryUrl>
     <PackageId>dotnet-guppi</PackageId>
-    <Version>6.5.1</Version>
+    <Version>6.5.2</Version>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>guppi</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>

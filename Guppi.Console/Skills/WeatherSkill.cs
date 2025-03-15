@@ -11,6 +11,9 @@ using Guppi.Core.Entities.Weather;
 using Spectre.Console;
 using Location = Guppi.Core.Entities.Weather.Location;
 using Guppi.Core.Interfaces.Services;
+using Guppi.Core.Services;
+using Guppi.Core.Configurations;
+using Guppi.Core;
 
 namespace Guppi.Console.Skills;
 
@@ -33,6 +36,9 @@ internal class WeatherSkill(IWeatherService service) : ISkill
         var daily = new Command("daily", "Views the daily weather") { location };
         daily.Handler = CommandHandler.Create(async (string location) => await Daily(location));
 
+        var sunrise = new Command("sunrise", "Views sunrise and sunset times") { location };
+        sunrise.Handler = CommandHandler.Create(async (string location) => await Sunrise(location));
+
         var configure = new Command("configure", "Configures the weather provider");
         configure.AddAlias("config");
         configure.Handler = CommandHandler.Create(() => Configure());
@@ -44,6 +50,7 @@ internal class WeatherSkill(IWeatherService service) : ISkill
                view,
                hourly,
                daily,
+               sunrise,
                configure
             }
         };
@@ -55,6 +62,16 @@ internal class WeatherSkill(IWeatherService service) : ISkill
         if (string.IsNullOrWhiteSpace(location))
             return await _service.GetWeather();
 
+        Location selected = await GetLocation(location);
+
+        AnsiConsole.MarkupLine($":round_pushpin: [cyan]{selected}[/]");
+        AnsiConsole.WriteLine();
+
+        return await _service.GetWeather(selected.Latitude.ToString(), selected.Longitude.ToString());
+    }
+
+    private async Task<Location> GetLocation(string location)
+    {
         var locations = await _service.GetLocations(location);
 
         if (!locations.Any())
@@ -75,10 +92,7 @@ internal class WeatherSkill(IWeatherService service) : ISkill
                     .AddChoices(locations));
         }
 
-        AnsiConsole.MarkupLine($":round_pushpin: [cyan]{selected}[/]");
-        AnsiConsole.WriteLine();
-
-        return await _service.GetWeather(selected.Latitude.ToString(), selected.Longitude.ToString());
+        return selected;
     }
 
     private async Task Daily(string location)
@@ -159,6 +173,70 @@ internal class WeatherSkill(IWeatherService service) : ISkill
                 DisplayLong(weather);
             else
                 DisplayShort(weather);
+            AnsiConsoleHelper.Rule("white");
+        }
+        catch (UnconfiguredException ue)
+        {
+            AnsiConsole.MarkupLine($"[yellow][[:yellow_circle: {ue.Message}]][/]");
+        }
+    }
+
+    private async Task Sunrise(string location)
+    {
+        try
+        {
+            Location? selected = null;
+            if (string.IsNullOrWhiteSpace(location))
+            {
+                WeatherConfiguration configuration = Configuration.Load<WeatherConfiguration>("weather");
+                selected = new Location
+                {
+                    Name = "Default",
+                    Latitude = configuration.Latitude,
+                    Longitude = configuration.Longitude
+                };
+            }
+            else
+            {
+                selected = await GetLocation(location);
+            }
+
+            AnsiConsoleHelper.TitleRule(":sun: Sunrise and Sunset");
+            AnsiConsoleHelper.TitleRule("Today's daylight", "cyan");
+
+            DateTimeOffset now = DateTimeOffset.Now;
+            double latitude = selected.Latitude.ToDouble();
+            double longitude = selected.Longitude.ToDouble();
+            double elevation = 0;
+            TimeZoneInfo timeZone = TimeZoneInfo.Local;
+
+            SunriseResult today = SunriseService.Calculate(now, latitude, longitude, elevation, timeZone);
+
+            // Display sunrise/sunset information from the weather forecast
+            AnsiConsole.MarkupLine($"  :sunrise: [yellow]Sunrise:[/] [silver]{today.Sunrise:HH:mm zzz}[/]");
+            AnsiConsole.MarkupLine($"  :sunset: [orange3]Sunset:[/]  [silver]{today.Sunset:HH:mm zzz}[/]");
+            AnsiConsole.MarkupLine($"  :eight_o_clock: [aqua]Length:[/]  [silver]{today.DayLength.Hours:00} hrs, {today.DayLength.Minutes:00} mins[/]");
+
+            AnsiConsole.WriteLine();
+            AnsiConsoleHelper.TitleRule("Ten day projection", "cyan");
+
+            var table = new Table();
+            table.BorderColor(Color.Blue);            
+            table.Border(TableBorder.Rounded);
+            table.AddColumn("[blue]Date[/]");
+            table.AddColumn(new TableColumn("[blue]Sunrise[/]").Centered());
+            table.AddColumn(new TableColumn("[blue]Sunset[/]").Centered());
+            table.AddColumn("[blue]Length[/]");
+
+            for (int i = 1; i <= 10; i++)
+            {
+                DateTimeOffset day = now.AddDays(i);
+                SunriseResult result = SunriseService.Calculate(day, latitude, longitude, elevation, timeZone);
+                table.AddRow(day.ToString("ddd MMM dd"), result.Sunrise.ToString("HH:mm"), result.Sunset.ToString("HH:mm"), $"{result.DayLength.Hours:00} hrs, {result.DayLength.Minutes:00} mins");
+            }
+            AnsiConsole.Write(table);
+            AnsiConsole.WriteLine();
+
             AnsiConsoleHelper.Rule("white");
         }
         catch (UnconfiguredException ue)

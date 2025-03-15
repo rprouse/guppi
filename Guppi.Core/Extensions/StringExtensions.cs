@@ -18,6 +18,9 @@ namespace Guppi.Core.Extensions
             return str;
         }
 
+        public static double ToDouble(this string str) =>
+            double.TryParse(str, out double result) ? result : 0;
+
         [GeneratedRegex(@"(:[a-z_]+:)", RegexOptions.Compiled)]
         private static partial Regex EmojiRegex();
     }

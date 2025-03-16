@@ -115,6 +115,17 @@ public class TodoService(IMediator mediator, ITaskConfiguration configuration) :
             AnsiConsole.WriteLine($"Added task {task.Id} to todo.txt");
         }
 
+        // Tasks in the local list with an ID that are not in Google need to be marked as done in the local list
+        var doneOnGoogle = todo.Where(t => t.SpecialTags.ContainsKey(IdTag) && 
+                                      !done.Any(l => l.SpecialTags.ContainsKey(IdTag) && 
+                                                     l.SpecialTags[IdTag] == t.SpecialTags[IdTag]))
+            .Select(t => t.LineNumber)
+            .ToArray();
+
+        var doneCommand = new DoTasksCommand { ItemNumbers = doneOnGoogle };
+        await Mediator.Send(doneCommand);
+        AnsiConsole.WriteLine($"{doneOnGoogle.Length} tasks marked as done in todo.txt");
+
         // Local tasks that are newer than the Google tasks need to be updated in Google
 
         // Google tasks that are newer than the local tasks need to be updated in the local tasks

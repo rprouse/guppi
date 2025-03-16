@@ -1,8 +1,12 @@
 {
-  "profiles": {
-    "Guppi.Console": {
-      "commandName": "Project",
-      "commandLineArgs": "weather sunrise"
+    "profiles": {
+        "Guppi weather sunrise": {
+            "commandName": "Project",
+            "commandLineArgs": "weather sunrise"
+        },
+        "Guppi todo sync": {
+            "commandName": "Project",
+            "commandLineArgs": "todo sync"
+        }
     }
-  }
 }

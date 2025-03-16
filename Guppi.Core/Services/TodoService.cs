@@ -88,6 +88,15 @@ public class TodoService(IMediator mediator, ITaskConfiguration configuration) :
             googleTasks.Remove(gTask);
         }
 
+        // Tasks in the local list with an ID that are not in Google need to be marked as done in the local list
+        var doneOnGoogleIds = todo.Where(t => t.SpecialTags.ContainsKey(IdTag) && !googleTasks.Any(g => t.SpecialTags[IdTag] == g.Id))
+            .Select(t => t.LineNumber)
+            .ToArray();
+
+        var doneCommand = new DoTasksCommand { ItemNumbers = doneOnGoogleIds };
+        await Mediator.Send(doneCommand);
+        AnsiConsole.WriteLine($"{doneOnGoogleIds.Length} tasks marked as done in todo.txt");
+
         // Tasks in Google that are not in the local list need to be added to the local list
         var notLocal = googleTasks
             .Where(t => string.IsNullOrEmpty(t.Completed))

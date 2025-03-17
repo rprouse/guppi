@@ -38,6 +38,8 @@ internal class WeatherSkill(IWeatherService service) : ISkill
 
         var sunrise = new Command("sunrise", "Views sunrise and sunset times") { location };
         sunrise.Handler = CommandHandler.Create(async (string location) => await Sunrise(location));
+        sunrise.AddAlias("sunset");
+        sunrise.AddAlias("sun");
 
         var configure = new Command("configure", "Configures the weather provider");
         configure.AddAlias("config");
@@ -154,7 +156,7 @@ internal class WeatherSkill(IWeatherService service) : ISkill
     private static IEnumerable<Markup> WeatherLineFour(DailyWeather[] daily)
     {
         for (int i = 0; i < 4 && i < daily.Length; i++)
-            yield return new Markup($"{daily[i].AsciiIcon[3]} [skyblue2]:droplet:{daily[i].Rain}mm[/] [grey89]:snowflake:{daily[i].Snow}mm[/]");
+            yield return new Markup($"{daily[i].AsciiIcon[3]} [skyblue2]:droplet:{daily[i].Rain}mm[/] [grey89]:snowflake: {daily[i].Snow}mm[/]");
     }
 
     private static IEnumerable<Markup> WeatherLineFive(DailyWeather[] daily)

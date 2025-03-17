@@ -4,6 +4,10 @@
             "commandName": "Project",
             "commandLineArgs": "weather sunrise"
         },
+        "Guppi weather daily": {
+            "commandName": "Project",
+            "commandLineArgs": "weather daily"
+        },
         "Guppi todo sync": {
             "commandName": "Project",
             "commandLineArgs": "todo sync"

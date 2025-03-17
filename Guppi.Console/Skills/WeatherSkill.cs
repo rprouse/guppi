@@ -187,7 +187,7 @@ internal class WeatherSkill(IWeatherService service) : ISkill
     {
         try
         {
-            Location? selected = null;
+            Location selected = null;
             if (string.IsNullOrWhiteSpace(location))
             {
                 WeatherConfiguration configuration = Configuration.Load<WeatherConfiguration>("weather");

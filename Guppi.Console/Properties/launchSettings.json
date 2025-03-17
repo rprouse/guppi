@@ -1,5 +1,13 @@
 {
     "profiles": {
+        "Guppi calendar agenda": {
+            "commandName": "Project",
+            "commandLineArgs": "calendar agenda"
+        },
+        "Guppi todo sync": {
+            "commandName": "Project",
+            "commandLineArgs": "todo sync"
+        },
         "Guppi weather sunrise": {
             "commandName": "Project",
             "commandLineArgs": "weather sunrise"
@@ -7,10 +15,6 @@
         "Guppi weather daily": {
             "commandName": "Project",
             "commandLineArgs": "weather daily"
-        },
-        "Guppi todo sync": {
-            "commandName": "Project",
-            "commandLineArgs": "todo sync"
         }
     }
 }

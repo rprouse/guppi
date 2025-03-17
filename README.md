@@ -140,7 +140,7 @@ To get the information to configure;
 ## Installation
 
 This program is a [dotnet tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) and requires the latest version of
-the [.NET SDK](https://dotnet.microsoft.com/download) to be installed. .NET 5.0 or newer is recommended.
+the [.NET SDK](https://dotnet.microsoft.com/download) to be installed. .NET 9.0 or newer is recommended.
 
 ### Testing Locally
 

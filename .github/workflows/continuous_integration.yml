@@ -16,6 +16,11 @@ jobs:
       with:
         submodules: true   # Fetch and checkout submodules
         fetch-depth: 0     # Ensure the full history is fetched, useful when dealing with submodules
+    
+    - name: 🔧 Setup .NET 9.0 SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '9.0.x'    # Install .NET 9.0 SDK
 
     - name: 📦 Cache NuGet packages
       uses: actions/cache@v4

@@ -1,0 +1,27 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/.github/" />
+  <Folder Name="/.github/workflows/">
+    <File Path=".github/workflows/continuous_integration.yml" />
+  </Folder>
+  <Folder Name="/dotnet-todo/">
+    <Project Path="dotnet-todo/src/todo.application/todo.application.csproj" />
+    <Project Path="dotnet-todo/src/todo.domain/todo.domain.csproj" />
+    <Project Path="dotnet-todo/src/todo.infrastructure/todo.infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="CODE_OF_CONDUCT.md" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="Guppi.Console/Guppi.Console.csproj" />
+  <Project Path="Guppi.Core/Guppi.Core.csproj" />
+  <Project Path="Guppi.Tests/Guppi.Tests.csproj" />
+</Solution>

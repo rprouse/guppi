@@ -4,6 +4,10 @@
             "commandName": "Project",
             "commandLineArgs": "calendar agenda"
         },
+        "Guppi calendar month": {
+            "commandName": "Project",
+            "commandLineArgs": "calendar month -m --offset 3"
+        },
         "Guppi todo sync": {
             "commandName": "Project",
             "commandLineArgs": "todo sync"

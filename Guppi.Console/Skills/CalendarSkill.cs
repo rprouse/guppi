@@ -50,12 +50,17 @@ internal class CalendarSkill : ISkill
         }, markdown, table);
 
         var nextMonth = new Option<bool>(["--next", "-n"], "Display next month's calendar");
-        var month = new Command("month", "Displays this month's calendar") { markdown, nextMonth };
-        month.SetHandler(async (bool markdown, bool nextMonth) =>
+        var offset = new Option<int>(["--offset", "-o"], "Offset the month by a number of months, e.g. -1 for last month, 0 for this month, 1 for next month");
+        nextMonth.SetDefaultValue(false);
+        offset.SetDefaultValue(0);
+        var month = new Command("month", "Displays this month's calendar") { markdown, nextMonth, offset };
+        month.SetHandler(async (bool markdown, bool nextMonth, int offset) =>
         {
-            if (markdown) await MonthMarkdown(nextMonth);
-            else Month(nextMonth);
-        }, markdown, nextMonth);
+            int monthOffset = nextMonth ? 1 : offset;
+            (DateOnly start, DateOnly end) = GetMonthRange(monthOffset);
+            if (markdown) await MonthMarkdown(start, end);
+            else Month(start, end);
+        }, markdown, nextMonth, offset);
 
         var free = new Command("free", "Displays free time for a given day");
         free.AddArgument(new Argument<DateTime>("date", "The date to check"));
@@ -276,10 +281,8 @@ internal class CalendarSkill : ISkill
     private static string TableLinkedSummary(Core.Entities.Calendar.Event eventItem) =>
         string.IsNullOrEmpty(eventItem.MeetingUrl) ? eventItem.Summary : $"[{eventItem.Summary}]({eventItem.MeetingUrl})";
 
-    private static void Month(bool nextMonth)
+    private static void Month(DateOnly start, DateOnly end)
     {
-        (DateOnly start, DateOnly end) = GetMonthRange(nextMonth);
-
         AnsiConsoleHelper.TitleRule($":calendar: {start:MMMM yyyy}");
 
         var table = new Table();
@@ -313,9 +316,8 @@ internal class CalendarSkill : ISkill
         AnsiConsoleHelper.Rule("white");
     }
 
-    private static async Task MonthMarkdown(bool nextMonth)
+    private static async Task MonthMarkdown(DateOnly start, DateOnly end)
     {
-        (DateOnly start, DateOnly end) = GetMonthRange(nextMonth);
         StringBuilder cal = new();
         cal.AppendLine("| Day | Date | Habits | Notes |");
         cal.AppendLine("| --- | ---- | ------ | ----- |");
@@ -336,9 +338,9 @@ internal class CalendarSkill : ISkill
         AnsiConsoleHelper.Rule("white");
     }
 
-    private static (DateOnly start, DateOnly end) GetMonthRange(bool nextMonth)
+    private static (DateOnly start, DateOnly end) GetMonthRange(int addMonths)
     {
-        var now = nextMonth ? DateTime.Now.AddMonths(1) : DateTime.Now;
+        var now = DateTime.Now.AddMonths(addMonths);
         var start = new DateOnly(now.Year, now.Month, 1);
         var end = new DateOnly(now.Year, now.Month, DateTime.DaysInMonth(now.Year, now.Month));
         return (start, end);

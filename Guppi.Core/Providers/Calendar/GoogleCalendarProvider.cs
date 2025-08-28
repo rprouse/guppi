@@ -55,8 +55,35 @@ internal sealed class GoogleCalendarProvider : ICalendarProvider
             ApplicationName = ApplicationName,
         });
 
+        // Get events from the primary calendar
+        Events events = await GetCalendarEvents("primary", minDate, maxDate, service);
+        var allEvents = events.Items.ToList();
+
+        // Get events from my work calendar
+        var calendarList = await service.CalendarList.List().ExecuteAsync();
+        var workCalendar = calendarList.Items.FirstOrDefault(c => c.Summary == "Work");
+
+        if (workCalendar != null)
+        {
+            Events workEvents = await GetCalendarEvents(workCalendar.Id, minDate, maxDate, service);
+            allEvents.AddRange(workEvents.Items);
+        }
+
+        return allEvents
+            .Select(e => new Core.Entities.Calendar.Event
+            {
+                Start = e.Start.DateTimeDateTimeOffset?.LocalDateTime,
+                End = e.End.DateTimeDateTimeOffset?.LocalDateTime,
+                Summary = e.Summary,
+                MeetingUrl = e.ConferenceData?.EntryPoints?.FirstOrDefault()?.Uri
+            })
+            .ToList();
+    }
+
+    private static async Task<Events> GetCalendarEvents(string calendarId, DateTime? minDate, DateTime? maxDate, CalendarService service)
+    {
         // Define parameters of request.
-        EventsResource.ListRequest request = service.Events.List("primary");
+        EventsResource.ListRequest request = service.Events.List(calendarId);
         request.TimeMinDateTimeOffset = minDate;
         request.TimeMaxDateTimeOffset = maxDate;
         request.ShowHiddenInvitations = false;
@@ -66,16 +93,7 @@ internal sealed class GoogleCalendarProvider : ICalendarProvider
 
         // List events.
         Events events = await request.ExecuteAsync();
-
-        return events.Items
-            .Select(e => new Core.Entities.Calendar.Event 
-            { 
-                Start = e.Start.DateTimeDateTimeOffset?.LocalDateTime, 
-                End = e.End.DateTimeDateTimeOffset?.LocalDateTime, 
-                Summary = e.Summary,
-                MeetingUrl = e.ConferenceData?.EntryPoints?.FirstOrDefault()?.Uri
-            })
-            .ToList();
+        return events;
     }
 
     public Task<string> Logout()

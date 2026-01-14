@@ -7,8 +7,8 @@ namespace Guppi.Core.Services.Strava
     {
         internal static Dictionary<string, string> Icons { get; } = new Dictionary<string, string>
         {
-            { "AlpineSki", Emoji.Known.Skis },
-            { "BackcountrySki", Emoji.Known.Skis },
+            { "AlpineSki", Emoji.Known.Skier },
+            { "BackcountrySki", Emoji.Known.MountFuji },
             { "Canoeing", Emoji.Known.Canoe },
             { "Crossfit", Emoji.Known.PersonLiftingWeights },
             { "EBikeRide", Emoji.Known.Bicycle },

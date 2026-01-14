@@ -107,7 +107,7 @@ Lists the available serial ports and allows you to send data to them.
 
 ### Strava
 
-Displays Strava fitness activities.
+Displays Strava fitness activities and a summary of my ski season.
 
 1. Get the [client id and secret](https://www.strava.com/settings/api) for the api.
 

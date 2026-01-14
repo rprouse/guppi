@@ -29,7 +29,17 @@ internal sealed class StravaService(IHttpRestProvider restService, IProcessProvi
         configuration.RunConfiguration("Strava", "Enter the Strava Client Id and Secret");
     }
 
-    public async Task<IEnumerable<Activity>> GetActivities()
+    public async Task<IEnumerable<Activity>> GetActivities(int days)
+    {
+        await SetAccessToken();
+
+        TimeSpan t = DateTime.UtcNow.AddDays(-1 - days) - DateTime.UnixEpoch;
+        int epoch = (int)t.TotalSeconds;
+        var activities = await _restService.GetData<List<StravaActivity>>($"https://www.strava.com/api/v3/athlete/activities?after={epoch}&per_page=200");
+        return activities.Select(a => a.GetActivity());
+    }
+
+    private async Task SetAccessToken()
     {
         if (!Configured)
         {
@@ -47,11 +57,6 @@ internal sealed class StravaService(IHttpRestProvider restService, IProcessProvi
         }
 
         _restService.AddHeader("Authorization", $"Bearer {access_token}");
-
-        TimeSpan t = DateTime.UtcNow.AddDays(-90) - DateTime.UnixEpoch;
-        int epoch = (int)t.TotalSeconds;
-        var activities = await _restService.GetData<List<StravaActivity>>($"https://www.strava.com/api/v3/athlete/activities?after={epoch}&per_page=200");
-        return activities.Select(a => a.GetActivity());
     }
 
     private async Task<string> Authorize()

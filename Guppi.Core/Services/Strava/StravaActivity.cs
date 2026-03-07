@@ -55,12 +55,13 @@ namespace Guppi.Core.Services.Strava
                 Name = name,
                 Type = type,
                 Distance = distance ?? 0,
+                MaxSpeed = max_speed ?? 0,
                 MovingTime = TimeSpan.FromSeconds(moving_time ?? 0),
                 ElapsedTime = TimeSpan.FromSeconds(elapsed_time ?? 0),
                 Elevation = total_elevation_gain ?? 0,
                 StartDate = start_date,
                 Kudos = kudos_count ?? 0,
-                SufferScore = suffer_score,
+                SufferScore = suffer_score ?? 0,
                 Icon = FitnessIcon.Icons[type]
             };
     }

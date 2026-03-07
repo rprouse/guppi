@@ -1,0 +1,49 @@
+openapi: 3.0.0
+info:
+  title: OpenAI CLI Model Params
+  version: 1.0.0
+paths:
+  /openai:
+    post:
+      summary: Invoke OpenAI skill with model and parameters
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                model:
+                  type: string
+                  description: OpenAI model name
+                temperature:
+                  type: number
+                  minimum: 0.0
+                  maximum: 2.0
+                  default: 1.0
+                max_tokens:
+                  type: integer
+                  minimum: 1
+                  maximum: 4096
+                  default: 1024
+              required:
+                - model
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+        '400':
+          description: Invalid arguments
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string

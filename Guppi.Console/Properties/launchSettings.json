@@ -4,6 +4,18 @@
             "commandName": "Project",
             "commandLineArgs": "calendar agenda"
         },
+        "Guppi calendar month": {
+            "commandName": "Project",
+            "commandLineArgs": "calendar month -m --offset 3"
+        },
+        "Guppi strava skiing": {
+            "commandName": "Project",
+            "commandLineArgs": "strava skiing"
+        },
+        "Guppi strava view": {
+            "commandName": "Project",
+            "commandLineArgs": "strava view"
+        },
         "Guppi todo sync": {
             "commandName": "Project",
             "commandLineArgs": "todo sync"

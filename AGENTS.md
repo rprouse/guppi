@@ -84,7 +84,7 @@ Per-skill configuration files are stored as JSON in:
 ## Gotchas
 
 - The `dotnet-todo` directory is a **git submodule** — clone with `--recurse-submodules` or run `git submodule update --init`
-  - **AGENTS:** Do not make changes to the todo sub-module without explicit user approval. It is maintained separately from the main Guppi project.
+  - **AGENTS:** Do not make changes to the todo submodule without explicit user approval. It is maintained separately from the main Guppi project.
 - System.CommandLine is a **pre-release beta** — avoid using APIs not already in the codebase
 - `Guppi.Core` exposes internals to `Guppi.Tests` via `InternalsVisibleTo`
 - CI runs on `ubuntu-latest` but the app targets Windows features (System.Speech, System.Management)

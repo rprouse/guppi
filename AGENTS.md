@@ -55,7 +55,7 @@ Services and providers are registered in `Guppi.Core/DependencyInjection.cs`.
 
 ## Key Dependencies
 
-- **.NET 9.0** — target framework
+- **.NET 10.0 (net10.0)** — target framework
 - **System.CommandLine** (2.0.0-beta4) — CLI framework (beta, some APIs may be unstable)
 - **Spectre.Console** — rich terminal output
 - **Microsoft.Extensions.DependencyInjection** — DI container

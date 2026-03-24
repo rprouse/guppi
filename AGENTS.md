@@ -61,6 +61,7 @@ Services and providers are registered in `Guppi.Core/DependencyInjection.cs`.
 - **Microsoft.Extensions.DependencyInjection** — DI container
 - **NUnit 4** + **FluentAssertions 8** — testing
 - **dotnet-todo** — git submodule, must be checked out (`git submodule update --init`)
+- **Notable Core dependencies:** LibGit2Sharp (Git operations), Google.Apis.Calendar/Tasks (Google integration), Q42.HueApi (Philips Hue), OpenAI (AI features), Microsoft.Playwright (web scraping), ClosedXML (Excel), System.IO.Ports (serial)
 
 ## Code Style
 

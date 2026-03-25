@@ -1,20 +1,36 @@
 # Guppi MCP Server Implementation Plan
 
-**Status:** Completed (2026-03-24) — with deviation from original packaging approach (see below).
+> **HISTORICAL DOCUMENT** — This plan was executed on 2026-03-24 but the packaging
+> approach changed during implementation. **Do not follow these steps.** The final
+> implementation is documented in the
+> [design spec](../specs/2026-03-24-mcp-server-design.md) and the
+> `feature/mcp-server` branch commits.
+
+**Status:** Completed (2026-03-24) — with significant deviation from original packaging approach.
 
 **Goal:** Add a STDIO MCP server to the Guppi project, distributed as a separate dotnet tool package (`dotnet-guppi-mcp`).
 
-**Architecture:** Guppi.MCP is a second "head" alongside Guppi.Console, both sharing Guppi.Core. Each project uses `PackAsTool` independently. Version is centralized in Directory.Build.props.
-
 **Tech Stack:** .NET 10.0, ModelContextProtocol 1.1.0, Microsoft.Extensions.Hosting 10.0.0
 
-**Spec:** `docs/superpowers/specs/2026-03-24-mcp-server-design.md`
+## What Changed From This Plan
 
-## Implementation Deviation
+Tasks 1-2 were executed as written. Tasks 3-11 below describe a `.nuspec`-based
+`Guppi.Package` approach that **failed** during Task 7 — `dotnet tool install`
+does not support multiple commands per package. The final implementation:
 
-The original plan (Tasks 5-7) called for a `Guppi.Package` project using a `.nuspec` manifest and `DotnetToolSettings.xml` to ship both tools in a single NuGet package. During Task 7 (local installation testing), `dotnet tool install` rejected the package with: "More than one command is defined for the tool." This is a fundamental limitation of the .NET tool infrastructure.
+- Uses `PackAsTool` on each project instead of a shared `.nuspec` manifest
+- Ships two packages: `dotnet-guppi` (CLI) and `dotnet-guppi-mcp` (MCP server)
+- Has no `Guppi.Package` project, no `.nuspec`, no `DotnetToolSettings.xml`
+- Does not use `CopyLocalLockFileAssemblies` (not needed with `PackAsTool`)
 
-**Resolution:** Removed `Guppi.Package` entirely. Each project uses `PackAsTool` to produce its own package: `dotnet-guppi` (CLI) and `dotnet-guppi-mcp` (MCP server). This is cleaner — users can install just the tools they need.
+See the [updated spec](../specs/2026-03-24-mcp-server-design.md) for the final architecture.
+
+---
+
+## Original Plan (for historical reference)
+
+The tasks below are preserved as-is to document what was originally planned.
+Checkboxes are left unchecked intentionally — they do not reflect the actual work done.
 
 ---
 

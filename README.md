@@ -160,6 +160,14 @@ Add the following to your Claude Code MCP settings:
 The MCP server currently exposes:
 - **GetDateTime** — Returns the current date and time
 - **GetGuid** — Generates a new GUID
+- **ListHueBridges** — Lists Philips Hue bridges on the local network
+- **ListHueLights** — Lists all Hue lights and their current state
+- **TurnOnHueLight** — Turns on a Hue light with optional brightness and color
+- **TurnOffHueLight** — Turns off a Hue light
+- **AlertHueLight** — Triggers an alert flash on a Hue light
+- **SetHueLight** — Sets brightness and/or color without changing on/off state
+- **GetWanIpAddress** — Gets the public (WAN) IP address
+- **GetLocalIpAddresses** — Lists local network interfaces and their IPv4 addresses
 
 More tools will be added progressively.
 

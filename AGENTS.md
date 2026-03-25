@@ -127,6 +127,7 @@ Per-skill configuration files are stored as JSON in:
 ## Workflow
 
 - **Always work on a branch** — never commit directly to `main`. Create a feature branch (e.g., `feature/hue-mcp-tools`) before making changes.
+- **Always commit specs and plans** — design specs (`docs/superpowers/specs/`) and implementation plans (`docs/superpowers/plans/`) are project artifacts. Always include them in a commit on the feature branch.
 - **Version updates** — update the version in `Directory.Build.props` using semantic versioning:
   - **Major** (X.0.0): breaking changes to existing commands, services, or MCP tool contracts
   - **Minor** (x.Y.0): new features — new skills, MCP tools, services, or commands

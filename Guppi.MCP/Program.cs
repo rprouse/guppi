@@ -15,6 +15,7 @@ builder.Services
     .AddMcpServer()
     .WithStdioServerTransport()
     .WithTools<UtilitiesTools>()
-    .WithTools<HueLightsTools>();
+    .WithTools<HueLightsTools>()
+    .WithTools<IPTools>();
 
 await builder.Build().RunAsync();

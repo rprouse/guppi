@@ -74,6 +74,17 @@ Services and providers are registered in `Guppi.Core/DependencyInjection.cs`.
 - **ModelContextProtocol** (1.1.0) — MCP server SDK (STDIO + HTTP transports)
 - **Notable Core dependencies:** LibGit2Sharp (Git operations), Google.Apis.Calendar/Tasks (Google integration), Q42.HueApi (Philips Hue), OpenAI (AI features), Microsoft.Playwright (web scraping), ClosedXML (Excel), System.IO.Ports (serial)
 
+## MCP Tool Return Types
+
+The `[McpServerTool]` method return type determines how the MCP SDK serializes the response:
+
+- `string` → returned as a `TextContentBlock`
+- Any other object → auto-serialized to JSON as text content
+- `IEnumerable<ContentBlock>` → returned directly as content blocks
+- `CallToolResult` → returned as-is for full control over the response
+
+For tools that can return either structured data (success) or an error message (failure), use `Task<object>` as the return type. Return domain entities on success (auto-serialized to JSON) and a descriptive `string` on error.
+
 ## Code Style
 
 Conventions from `.editorconfig` (follows NUnit coding standards):

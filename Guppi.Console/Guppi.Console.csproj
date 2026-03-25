@@ -8,13 +8,26 @@
     <Product>Guppi command line utility</Product>
     <Description>GUPPI (or General Unit Primary Peripheral Interface) Is a semi-sentient software being that helps Replicants interact with the many systems they have at their disposal. This is an early implementation of the interface and as this is not the year 2133 in the fictional Bobverse, GUPPI is not actually semi-sentient and is only a command line utility to provide me with the information I need.</Description>
     <ApplicationIcon>guppi.ico</ApplicationIcon>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <PackageId>dotnet-guppi</PackageId>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>guppi</ToolCommandName>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/rprouse/guppi</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/rprouse/guppi</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageIcon>ackbar.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="nupkg\**" />
     <EmbeddedResource Remove="nupkg\**" />
     <None Remove="nupkg\**" />
+    <None Include="..\img\ackbar.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

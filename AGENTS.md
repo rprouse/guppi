@@ -60,6 +60,7 @@ Each feature follows a consistent pattern:
 - Optional: `Guppi.Core/Configurations/` for per-skill settings
 
 Skills are registered in `Program.cs` via DI as `ISkill` implementations.
+MCP tools are registered in `Guppi.MCP/Program.cs` via `.WithTools<T>()` on the MCP server builder.
 Services and providers are registered in `Guppi.Core/DependencyInjection.cs`.
 
 ## Key Dependencies
@@ -92,6 +93,15 @@ Per-skill configuration files are stored as JSON in:
 - Windows: `%LOCALAPPDATA%\Guppi\`
 - Pattern: `Configuration.Load<T>(name)` / `Configuration.Save()`
 
+## Adding a New Feature
+
+1. Create `Guppi.Core/Interfaces/Services/I{Name}Service.cs` — service contract
+2. Create `Guppi.Core/Services/{Name}Service.cs` — implements the service
+3. Register the service in `Guppi.Core/DependencyInjection.cs`
+4. **For CLI:** Create `Guppi.Console/Skills/{Name}Skill.cs` implementing `ISkill`, register in `Guppi.Console/Program.cs`
+5. **For MCP:** Create `Guppi.MCP/Tools/{Name}Tools.cs` with `[McpServerTool]` attributes, register via `.WithTools<{Name}Tools>()` in `Guppi.MCP/Program.cs`
+6. Optional: Add `Guppi.Core/Providers/` for external integrations, `Guppi.Core/Configurations/` for settings
+
 ## Gotchas
 
 - The `dotnet-todo` directory is a **git submodule** — clone with `--recurse-submodules` or run `git submodule update --init`
@@ -101,3 +111,4 @@ Per-skill configuration files are stored as JSON in:
 - CI runs on `ubuntu-latest` but the app targets Windows features (System.Speech, System.Management)
 - NuGet packages are published to **GitHub Packages** on merge to main — two packages: `dotnet-guppi` (CLI) and `dotnet-guppi-mcp` (MCP server)
 - The solution uses the new `.slnx` format (not `.sln`)
+- **MCP STDIO transport:** Never log to stdout in `Guppi.MCP` — it corrupts the JSON-RPC protocol. All logging must go to stderr (configured via `LogToStandardErrorThreshold`)

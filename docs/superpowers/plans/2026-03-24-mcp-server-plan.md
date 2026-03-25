@@ -614,7 +614,6 @@ the [.NET SDK](https://dotnet.microsoft.com/download) to be installed. .NET 10.0
 
 Insert a new section:
 
-```markdown
 ## MCP Server
 
 Guppi includes an MCP (Model Context Protocol) server that exposes Guppi skills as tools
@@ -639,7 +638,6 @@ The MCP server currently exposes:
 - **GetGuid** — Generates a new GUID
 
 More tools will be added progressively.
-```
 
 - [ ] **Step 3: Update local testing install commands (lines 152, 158)**
 

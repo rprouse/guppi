@@ -27,7 +27,7 @@ The original design proposed a single NuGet package containing both tools via a 
 
 ## Solution Structure
 
-```
+```text
 Directory.Build.props     # Shared version (9.0.0) and metadata
 Guppi.Console/            # CLI entry point (PackAsTool → dotnet-guppi)
 Guppi.Core/               # Shared business logic (unchanged)
@@ -176,6 +176,7 @@ File: `.github/workflows/continuous_integration.yml`
 ## Files Changed Summary
 
 ### New Files
+
 | File | Purpose |
 |---|---|
 | `Directory.Build.props` | Shared version (9.0.0) and metadata |
@@ -184,6 +185,7 @@ File: `.github/workflows/continuous_integration.yml`
 | `Guppi.MCP/Tools/UtilitiesTools.cs` | Stub tool: date/time, GUID |
 
 ### Modified Files
+
 | File | Change |
 |---|---|
 | `Guppi.slnx` | Add Guppi.MCP project |

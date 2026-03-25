@@ -123,3 +123,11 @@ Per-skill configuration files are stored as JSON in:
 - NuGet packages are published to **GitHub Packages** on merge to main — two packages: `dotnet-guppi` (CLI) and `dotnet-guppi-mcp` (MCP server)
 - The solution uses the new `.slnx` format (not `.sln`)
 - **MCP STDIO transport:** Never log to stdout in `Guppi.MCP` — it corrupts the JSON-RPC protocol. All logging must go to stderr (configured via `LogToStandardErrorThreshold`)
+
+## Workflow
+
+- **Always work on a branch** — never commit directly to `main`. Create a feature branch (e.g., `feature/hue-mcp-tools`) before making changes.
+- **Version updates** — update the version in `Directory.Build.props` using semantic versioning:
+  - **Major** (X.0.0): breaking changes to existing commands, services, or MCP tool contracts
+  - **Minor** (x.Y.0): new features — new skills, MCP tools, services, or commands
+  - **Patch** (x.y.Z): bug fixes, documentation updates, refactoring with no behavior change

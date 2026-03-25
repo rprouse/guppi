@@ -38,5 +38,27 @@ namespace Guppi.MCP.Tools
                 return $"Error: {ex.Message}";
             }
         }
+
+        [McpServerTool, Description("Lists all Philips Hue lights and their current state (on/off, brightness, color)")]
+        public async Task<object> ListHueLights(
+            [Description("IP address of the Hue Bridge. Leave empty to auto-discover.")] string ip = null)
+        {
+            try
+            {
+                return await _service.ListLights(ip, _ => { });
+            }
+            catch (ArgumentException)
+            {
+                return "Error: Hue Bridge not found";
+            }
+            catch (InvalidOperationException)
+            {
+                return "Error: Not registered with bridge. Run 'guppi hue register' from the CLI first.";
+            }
+            catch (Exception ex)
+            {
+                return $"Error: {ex.Message}";
+            }
+        }
     }
 }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DotNetCliTool Version="1">
+  <Commands>
+    <Command Name="guppi" EntryPoint="guppi/guppi.dll" Runner="dotnet" />
+    <Command Name="guppi.mcp" EntryPoint="guppi.mcp/guppi.mcp.dll" Runner="dotnet" />
+  </Commands>
+</DotNetCliTool>

@@ -137,10 +137,36 @@ To get the information to configure;
 2. Use [Google Maps](https://google.ca/maps) to get your Latitude and Longitude.
 3. Once you've configured an initial location, you can use the `--location` option to find the weather for additional locations and to use their latitude and longitude for the configuration.
 
+## MCP Server
+
+Guppi includes an MCP (Model Context Protocol) server that exposes Guppi skills as tools
+for AI assistants like Claude. The MCP server uses STDIO transport and is distributed as
+a separate dotnet tool (`dotnet-guppi-mcp`).
+
+### Configuring in Claude Code
+
+Add the following to your Claude Code MCP settings:
+
+```json
+{
+  "mcpServers": {
+    "guppi": {
+      "command": "guppi.mcp"
+    }
+  }
+}
+```
+
+The MCP server currently exposes:
+- **GetDateTime** — Returns the current date and time
+- **GetGuid** — Generates a new GUID
+
+More tools will be added progressively.
+
 ## Installation
 
 This program is a [dotnet tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) and requires the latest version of
-the [.NET SDK](https://dotnet.microsoft.com/download) to be installed. .NET 9.0 or newer is recommended.
+the [.NET SDK](https://dotnet.microsoft.com/download) to be installed. .NET 10.0 or newer is required.
 
 ### Testing Locally
 
@@ -150,17 +176,19 @@ command line from the solution root;
 
 ```sh
 dotnet tool install -g --add-source ./Guppi.Console/nupkg dotnet-guppi
+dotnet tool install -g --add-source ./Guppi.MCP/nupkg dotnet-guppi-mcp
 ```
 
 To update from a previous version,
 
 ```sh
 dotnet tool update -g --add-source ./Guppi.Console/nupkg dotnet-guppi
+dotnet tool update -g --add-source ./Guppi.MCP/nupkg dotnet-guppi-mcp
 ```
 
 ### Installing from GitHub Packages
 
-Whenever the version is updated in `Guppi/Guppi.csproj`, a merge to master will publish the NuGet package
+Whenever the version is updated in `Directory.Build.props`, a merge to main will publish the NuGet packages
 to [GitHub Packages](https://github.com/rprouse?tab=packages). You can install or update from there.
 
 First you must update your global NuGet configuration to add the package registry and include the GitHub Personal
@@ -189,12 +217,14 @@ Once that is done, to install,
 
 ```sh
 dotnet tool install -g dotnet-guppi
+dotnet tool install -g dotnet-guppi-mcp
 ```
 
 And to update from a previous version,
 
 ```sh
 dotnet tool update -g dotnet-guppi
+dotnet tool update -g dotnet-guppi-mcp
 ```
 
 ## Enabling Tab Completion

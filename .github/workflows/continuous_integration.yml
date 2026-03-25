@@ -48,13 +48,17 @@ jobs:
         retention-days: 30
 
     - name: 📦 Package NuGet
-      run: dotnet pack --no-build --configuration Release
+      run: |
+        dotnet pack Guppi.Console/Guppi.Console.csproj --no-build --configuration Release
+        dotnet pack Guppi.MCP/Guppi.MCP.csproj --no-build --configuration Release
 
     - name: 📤 Upload Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: nupkg
-        path: Guppi.Console/nupkg/*.nupkg
+        path: |
+          Guppi.Console/nupkg/*.nupkg
+          Guppi.MCP/nupkg/*.nupkg
         retention-days: 5
         if-no-files-found: error
 
@@ -74,4 +78,4 @@ jobs:
         run: dotnet nuget add source --username rprouse --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/rprouse/index.json"
 
       - name: 📤 Publish NuGet to GitHub Packages
-        run: dotnet nuget push "**/dotnet-guppi.*.nupkg" -k ${{ secrets.GITHUB_TOKEN }} --source "github" --skip-duplicate --no-symbols
+        run: dotnet nuget push "**/*.nupkg" -k ${{ secrets.GITHUB_TOKEN }} --source "github" --skip-duplicate --no-symbols

@@ -6,7 +6,7 @@ Add Philips Hue light control tools to the Guppi MCP server (`Guppi.MCP`), expos
 
 ## Tools
 
-Six tools in a single `HueLightsTools` class:
+Six **non-static instance methods** in a single `HueLightsTools` class (unlike `UtilitiesTools` which uses static methods, because constructor injection is required):
 
 | Tool | Parameters | Returns | Description |
 |------|-----------|---------|-------------|
@@ -20,18 +20,23 @@ Six tools in a single `HueLightsTools` class:
 ### Parameters
 
 - **`ip`** (`string?`): IP address of the Hue Bridge. Defaults to auto-discovering the first bridge on the network.
-- **`light`** (`uint`): The light ID to target. Defaults to the user's configured default light. `0` targets all lights.
+- **`light`** (`uint`): The light ID to target. `0` targets all lights. The C# parameter defaults to `0`, but inside each tool method body, if `light == 0`, call `_service.GetDefaultLight()` to resolve the user's configured default. This mirrors the CLI skill's behavior where the default is resolved at runtime, not as a compile-time constant.
 - **`brightness`** (`byte?`): Brightness as a percentage, 0–100.
 - **`color`** (`string?`): Color as hex (`FF0000` or `#FF0000`) or a named color (`red`, `blue`).
 
 ### Return Values
 
-- **Success:** Returns domain entity objects (`HueBridge`, `HueLight`) which the MCP SDK auto-serializes to JSON.
-- **Action tools** (on/off/alert/set): After executing the action, call `ListLights` to return the updated light states as confirmation.
+Tool method signatures return `Task<object>` to accommodate both success and error cases:
+
+- **Success:** Returns domain entity objects (`IEnumerable<HueBridge>`, `IEnumerable<HueLight>`) which the MCP SDK auto-serializes to JSON.
+- **Action tools** (on/off/alert/set): After executing the action, call `_service.ListLights()` to return the updated light states as confirmation.
+- **Error:** Returns a `string` with a descriptive message (rendered as text content by the SDK).
+
+The MCP SDK handles both cases — objects are serialized to JSON, strings become text content.
 
 ### Error Handling
 
-All exceptions are caught and returned as descriptive `string` values (rendered as text content by the SDK):
+All exceptions are caught and returned as descriptive `string` values:
 
 - Bridge not found: `"Error: Hue Bridge not found"`
 - Not registered: `"Error: Not registered with bridge. Run 'guppi hue register' from the CLI first."`
@@ -45,7 +50,12 @@ If a tool is called and the bridge is not registered, the error message directs 
 
 ## WaitForUserInput Handling
 
-The `IHueLightService.ListLights()` and `SetLight()` methods accept an `Action<string>` callback used during auto-registration. MCP tools pass a no-op lambda `(_ => { })`. If registration is actually needed, the provider throws `InvalidOperationException`, which is caught and returned as the registration error message.
+The `IHueLightService.ListLights()` and `SetLight()` methods accept an `Action<string>` callback used during auto-registration. MCP tools pass a no-op lambda `(_ => { })` to every service call that requires it:
+
+- `_service.ListLights(ip, _ => { })` — the second parameter is the callback
+- `SetLightCommand.WaitForUserInput = _ => { }` — must be set on the command object
+
+If registration is actually needed during these calls, the provider will throw `InvalidOperationException`, which is caught and returned as the registration error message.
 
 ## DI & Wiring
 

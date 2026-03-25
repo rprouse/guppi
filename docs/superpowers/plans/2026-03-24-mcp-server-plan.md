@@ -1,14 +1,20 @@
-# Guppi MCP Server & Multi-Tool Packaging Implementation Plan
+# Guppi MCP Server Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+**Status:** Completed (2026-03-24) — with deviation from original packaging approach (see below).
 
-**Goal:** Add a STDIO MCP server to the Guppi project and switch to multi-tool NuGet packaging so both `guppi` and `guppi.mcp` ship in a single `dotnet-guppi` package.
+**Goal:** Add a STDIO MCP server to the Guppi project, distributed as a separate dotnet tool package (`dotnet-guppi-mcp`).
 
-**Architecture:** Guppi.MCP is a second "head" alongside Guppi.Console, both sharing Guppi.Core. A new Guppi.Package project uses a `.nuspec` manifest with `dotnet pack` to produce a single NuGet tool package containing both executables. Version is centralized in Directory.Build.props.
+**Architecture:** Guppi.MCP is a second "head" alongside Guppi.Console, both sharing Guppi.Core. Each project uses `PackAsTool` independently. Version is centralized in Directory.Build.props.
 
-**Tech Stack:** .NET 10.0, ModelContextProtocol 1.1.0, Microsoft.Extensions.Hosting 10.0.0, NuSpec packaging
+**Tech Stack:** .NET 10.0, ModelContextProtocol 1.1.0, Microsoft.Extensions.Hosting 10.0.0
 
 **Spec:** `docs/superpowers/specs/2026-03-24-mcp-server-design.md`
+
+## Implementation Deviation
+
+The original plan (Tasks 5-7) called for a `Guppi.Package` project using a `.nuspec` manifest and `DotnetToolSettings.xml` to ship both tools in a single NuGet package. During Task 7 (local installation testing), `dotnet tool install` rejected the package with: "More than one command is defined for the tool." This is a fundamental limitation of the .NET tool infrastructure.
+
+**Resolution:** Removed `Guppi.Package` entirely. Each project uses `PackAsTool` to produce its own package: `dotnet-guppi` (CLI) and `dotnet-guppi-mcp` (MCP server). This is cleaner — users can install just the tools they need.
 
 ---
 

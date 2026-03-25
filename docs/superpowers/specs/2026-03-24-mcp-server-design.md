@@ -1,46 +1,46 @@
-# Guppi MCP Server & Multi-Tool Packaging
+# Guppi MCP Server & Two-Package Distribution
 
 **Date:** 2026-03-24
 **Version:** 9.0.0 (major bump from 8.0.0)
+**Status:** Implemented
 
 ## Overview
 
-Add a STDIO MCP server (`guppi.mcp`) to the Guppi project, sharing Guppi.Core's services. Switch from single-project `PackAsTool` packaging to a `.nuspec`-based multi-tool NuGet package so both `guppi` and `guppi.mcp` are distributed in the existing `dotnet-guppi` package.
+Add a STDIO MCP server (`guppi.mcp`) to the Guppi project, sharing Guppi.Core's services. Distributed as a second dotnet tool package (`dotnet-guppi-mcp`) alongside the existing CLI package (`dotnet-guppi`). Version and shared metadata centralized in `Directory.Build.props`.
+
+## Design History
+
+The original design proposed a single NuGet package containing both tools via a `.nuspec` manifest and `DotnetToolSettings.xml` with multiple `<Command>` entries. During implementation, we discovered that `dotnet tool install` does not support multiple commands per package ("More than one command is defined for the tool"). The design was revised to use two separate packages, each with `PackAsTool`.
 
 ## Goals
 
-- Ship an MCP server alongside the existing CLI in a single NuGet tool package
+- Ship an MCP server alongside the existing CLI as separate dotnet tool packages
 - Establish the pattern for progressively exposing Guppi skills as MCP tools
 - Start with a stub (Utilities: date/time, GUID) to validate the architecture
-- Keep the build/CI pipeline simple using `dotnet pack` with a `.nuspec` hybrid
+- Centralize version and metadata across projects
 
 ## Non-Goals
 
-- HTTP/SSE transport (future — SDK supports it, no code changes needed)
+- HTTP/SSE transport (future — SDK supports it via `ModelContextProtocol.AspNetCore`)
 - Exposing all skills as MCP tools (incremental, one service at a time)
 - Refactoring existing services to remove Spectre.Console output (will happen incrementally as tools are added)
 
 ## Solution Structure
 
 ```
-Directory.Build.props     # NEW — shared version (9.0.0) and metadata
-Guppi.Console/            # Existing CLI (packaging metadata removed from csproj)
-Guppi.Core/               # Existing shared business logic (unchanged)
-Guppi.Tests/              # Existing tests (unchanged)
-Guppi.MCP/                # NEW — STDIO MCP server
+Directory.Build.props     # Shared version (9.0.0) and metadata
+Guppi.Console/            # CLI entry point (PackAsTool → dotnet-guppi)
+Guppi.Core/               # Shared business logic (unchanged)
+Guppi.Tests/              # NUnit tests (unchanged)
+Guppi.MCP/                # STDIO MCP server (PackAsTool → dotnet-guppi-mcp)
   Tools/                  # MCP tool classes (attribute-based)
   Program.cs              # Host builder with DI + STDIO transport
-  Guppi.MCP.csproj        # Project file
-Guppi.Package/            # NEW — Packaging-only project
-  Guppi.Package.csproj    # References Console + MCP, uses NuspecFile
-  dotnet-guppi.nuspec     # Manifest defining both tool commands
-  DotnetToolSettings.xml  # Registers both tool commands
-dotnet-todo/              # Existing submodule (unchanged)
+dotnet-todo/              # Git submodule (unchanged)
 ```
 
 **Layer flow:**
-- `Skill` (Console) -> `IService` -> `IProvider` (Core)
-- `Tool` (MCP) -> `IService` -> `IProvider` (Core)
+- `Skill` (Console) → `IService` → `IProvider` (Core)
+- `Tool` (MCP) → `IService` → `IProvider` (Core)
 
 Both Console and MCP are "heads" on top of Guppi.Core.
 
@@ -55,18 +55,17 @@ Placed at solution root. MSBuild automatically imports it into every project.
     <Authors>Rob Prouse</Authors>
     <Company>Alteridem Consulting</Company>
     <Copyright>Copyright (c) 2025-2026 Rob Prouse</Copyright>
+    <NeutralLanguage>en-CA</NeutralLanguage>
   </PropertyGroup>
 </Project>
 ```
-
-All projects inherit version and metadata. Each executable can access its version at runtime via `Assembly.GetEntryAssembly().GetName().Version`.
 
 ## Guppi.MCP Project
 
 **Target framework:** net10.0
 
 **Dependencies:**
-- `ModelContextProtocol` 1.1.0 (confirmed published 2026-03-06, targets net10.0)
+- `ModelContextProtocol` 1.1.0 (official C# MCP SDK, Apache-2.0, targets net10.0)
 - `Microsoft.Extensions.Hosting` 10.0.0
 - Project reference to Guppi.Core
 
@@ -78,23 +77,23 @@ All projects inherit version and metadata. Each executable can access its versio
     <TargetFramework>net10.0</TargetFramework>
     <AssemblyName>guppi.mcp</AssemblyName>
     <RootNamespace>Guppi.MCP</RootNamespace>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <Product>Guppi MCP Server</Product>
+    <Description>GUPPI MCP Server - exposes Guppi skills as Model Context Protocol tools for AI assistants.</Description>
+    <PackageId>dotnet-guppi-mcp</PackageId>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>guppi.mcp</ToolCommandName>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/rprouse/guppi</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/rprouse/guppi</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageIcon>ackbar.png</PackageIcon>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="ModelContextProtocol" Version="1.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Guppi.Core\Guppi.Core.csproj" />
-  </ItemGroup>
+  ...
 </Project>
 ```
 
-`AssemblyName` must be `guppi.mcp` to match the `EntryPoint` in `DotnetToolSettings.xml`. `CopyLocalLockFileAssemblies` ensures all transitive NuGet dependencies are copied to the build output directory, which is required because the `.nuspec` packages from `bin/` output rather than `publish/` output.
-
-**Program.cs:**
+**Program.cs** (top-level statements):
 ```csharp
 var builder = Host.CreateApplicationBuilder(args);
 
@@ -126,128 +125,53 @@ public class UtilitiesTools
 }
 ```
 
-The stub tools use `DateTime` and `Guid` directly — no service injection needed. The existing `IUtilitiesService` only has `RestartExplorer()`, and the date/time/GUID logic in `UtilitiesSkill` is already inline. As more tools are added that need real services, the MCP SDK resolves DI parameters automatically from the container.
+The stub tools use `DateTime` and `Guid` directly — no service injection needed. As more tools are added, the MCP SDK resolves DI parameters automatically from the container.
 
-**Note on Spectre.Console:** Existing services may write directly to the console. For the initial stub this is not an issue since the tools are self-contained. As more tools are added, services will be refactored to return data rather than writing output — moving Spectre.Console usage to the Console application layer where it belongs.
+## Packaging
 
-**Testing:** No new tests for the initial stub. Test coverage for MCP tools will be added as real service-backed tools are introduced. The stub is simple enough (two static methods with no dependencies) that it can be validated by running `guppi.mcp` and connecting an MCP client.
+Each project uses `PackAsTool` independently:
 
-## Packaging (Approach C: .nuspec + dotnet pack Hybrid)
+| Package | Project | Tool Command | Package ID |
+|---|---|---|---|
+| CLI | Guppi.Console | `guppi` | `dotnet-guppi` |
+| MCP Server | Guppi.MCP | `guppi.mcp` | `dotnet-guppi-mcp` |
 
-### Guppi.Package/Guppi.Package.csproj
-
-This is a packaging-only project — it produces no assembly of its own. Its sole purpose is to drive `dotnet pack` with the `.nuspec` file. The project references ensure both Console and MCP are built before packing.
-
-```xml
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <IsPackable>true</IsPackable>
-    <NuspecFile>dotnet-guppi.nuspec</NuspecFile>
-    <NuspecProperties>
-      version=$(Version);
-      configuration=$(Configuration);
-      consoleDir=$(MSBuildThisFileDirectory)..\Guppi.Console\bin\$(Configuration)\net10.0;
-      mcpDir=$(MSBuildThisFileDirectory)..\Guppi.MCP\bin\$(Configuration)\net10.0
-    </NuspecProperties>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <PackageOutputPath>./nupkg</PackageOutputPath>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Guppi.Console\Guppi.Console.csproj" />
-    <ProjectReference Include="..\Guppi.MCP\Guppi.MCP.csproj" />
-  </ItemGroup>
-</Project>
-```
-
-Note: CI runs `dotnet build --configuration Release` on the full solution before `dotnet pack --no-build`, so both Console and MCP will already be built when packing occurs.
-
-Configuration is parameterized — `dotnet pack` packs Debug, `dotnet pack --configuration Release` packs Release.
-
-### Guppi.Package/dotnet-guppi.nuspec
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
-  <metadata>
-    <id>dotnet-guppi</id>
-    <version>$version$</version>
-    <authors>Rob Prouse</authors>
-    <description>Guppi command line utility and MCP server</description>
-    <license type="file">LICENSE</license>
-    <icon>ackbar.png</icon>
-    <projectUrl>https://github.com/rprouse/guppi</projectUrl>
-    <repository type="git" url="https://github.com/rprouse/guppi" />
-    <packageTypes>
-      <packageType name="DotnetTool" />
-    </packageTypes>
-  </metadata>
-  <files>
-    <file src="$consoleDir$\**\*" target="tools/net10.0/any/guppi" />
-    <file src="$mcpDir$\**\*" target="tools/net10.0/any/guppi.mcp" />
-    <file src="DotnetToolSettings.xml" target="tools/net10.0/any" />
-    <file src="..\LICENSE" target="" />
-    <file src="..\img\ackbar.png" target="" />
-  </files>
-</package>
-```
-
-### Guppi.Package/DotnetToolSettings.xml
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<DotNetCliTool Version="1">
-  <Commands>
-    <Command Name="guppi" EntryPoint="guppi/guppi.dll" Runner="dotnet" />
-    <Command Name="guppi.mcp" EntryPoint="guppi.mcp/guppi.mcp.dll" Runner="dotnet" />
-  </Commands>
-</DotNetCliTool>
-```
+Both projects use `PackageLicenseExpression` (MIT) instead of file-based license. Version, authors, company, and copyright come from `Directory.Build.props`.
 
 ### Changes to Guppi.Console.csproj
 
-Remove the following properties (now handled by Directory.Build.props and Guppi.Package):
-- `PackAsTool`
-- `ToolCommandName`
-- `PackageId`
-- `PackageOutputPath`
-- `Version`
-- `Authors`, `Company`, `Copyright`
-- `PackageIcon`, `PackageLicenseFile`, `PackageProjectUrl`
-- `RepositoryUrl`, `RepositoryType`
-- `NeutralLanguage` (en-CA — move to Directory.Build.props if desired)
-- NuGet `<None Include>` items for LICENSE and ackbar.png
-
-Add:
-- `<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>` — ensures all transitive NuGet dependencies are copied to the build output directory for packaging
-
-Keep: `OutputType`, `TargetFramework`, `AssemblyName`, `ApplicationIcon`, `Product`, `Description`, project references, and package references.
-
-**Note on package description:** The existing Guppi.Console.csproj has a longer Bobverse-themed description. The `.nuspec` uses a shorter description: "Guppi command line utility and MCP server". This is intentional — the NuGet package description should be functional. The Bobverse lore stays in the README.
+- Version, Authors, Company, Copyright, NeutralLanguage → moved to Directory.Build.props
+- PackageLicenseFile → replaced with PackageLicenseExpression (MIT)
+- All other PackAsTool and NuGet metadata retained
 
 ## CI/CD Changes
 
 File: `.github/workflows/continuous_integration.yml`
 
-**Pack step:** Target Guppi.Package instead of the default project:
+**Pack step:** Explicitly pack both projects:
 ```yaml
 - name: Package NuGet
-  run: dotnet pack Guppi.Package/Guppi.Package.csproj --no-build --configuration Release
+  run: |
+    dotnet pack Guppi.Console/Guppi.Console.csproj --no-build --configuration Release
+    dotnet pack Guppi.MCP/Guppi.MCP.csproj --no-build --configuration Release
 ```
 
-**Artifact upload:** Update path to `Guppi.Package/nupkg`:
+**Artifact upload:** Both nupkg directories:
 ```yaml
 - name: Upload Artifacts
   uses: actions/upload-artifact@v4
   with:
     name: nupkg
-    path: Guppi.Package/nupkg
+    path: |
+      Guppi.Console/nupkg/*.nupkg
+      Guppi.MCP/nupkg/*.nupkg
 ```
 
-**Publish step:** No change — `**/dotnet-guppi.*.nupkg` glob still matches.
+**Publish step:** Glob matches both packages:
+```yaml
+- name: Publish NuGet to GitHub Packages
+  run: dotnet nuget push "**/*.nupkg" ...
+```
 
 ## Files Changed Summary
 
@@ -255,19 +179,16 @@ File: `.github/workflows/continuous_integration.yml`
 | File | Purpose |
 |---|---|
 | `Directory.Build.props` | Shared version (9.0.0) and metadata |
-| `Guppi.MCP/Guppi.MCP.csproj` | MCP server project |
+| `Guppi.MCP/Guppi.MCP.csproj` | MCP server project (PackAsTool) |
 | `Guppi.MCP/Program.cs` | Host builder with STDIO transport + DI |
 | `Guppi.MCP/Tools/UtilitiesTools.cs` | Stub tool: date/time, GUID |
-| `Guppi.Package/Guppi.Package.csproj` | Packaging project with NuspecFile |
-| `Guppi.Package/dotnet-guppi.nuspec` | Multi-tool package manifest |
-| `Guppi.Package/DotnetToolSettings.xml` | Registers both tool commands |
 
 ### Modified Files
 | File | Change |
 |---|---|
-| `Guppi.slnx` | Add Guppi.MCP and Guppi.Package projects |
-| `Guppi.Console/Guppi.Console.csproj` | Remove PackAsTool, NuGet metadata, version |
-| `.github/workflows/continuous_integration.yml` | Pack targets Guppi.Package, update artifact path |
+| `Guppi.slnx` | Add Guppi.MCP project |
+| `Guppi.Console/Guppi.Console.csproj` | Move shared metadata to Directory.Build.props, switch to MIT expression |
+| `.github/workflows/continuous_integration.yml` | Pack and publish both packages |
 | `AGENTS.md` | Architecture, commands, dependencies |
 | `README.md` | MCP server section, updated install commands |
 

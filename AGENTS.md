@@ -11,17 +11,21 @@ dotnet build --configuration Release
 dotnet test
 dotnet test --no-restore --verbosity normal
 
-# Pack as dotnet tool
-dotnet pack --configuration Release
+# Pack as dotnet tools
+dotnet pack Guppi.Console/Guppi.Console.csproj --configuration Release
+dotnet pack Guppi.MCP/Guppi.MCP.csproj --configuration Release
 
 # Install locally (from solution root)
 dotnet tool install -g --add-source ./Guppi.Console/nupkg dotnet-guppi
+dotnet tool install -g --add-source ./Guppi.MCP/nupkg dotnet-guppi-mcp
 
 # Update local install
 dotnet tool update -g --add-source ./Guppi.Console/nupkg dotnet-guppi
+dotnet tool update -g --add-source ./Guppi.MCP/nupkg dotnet-guppi-mcp
 
 # Run
 guppi <skill> <command> [options]
+guppi.mcp  # Starts the MCP server (STDIO)
 ```
 
 ## Architecture
@@ -37,11 +41,16 @@ Guppi.Core/             # Business logic, no CLI dependencies
   Configurations/       # Per-skill configuration classes
   Entities/             # Domain models
   Extensions/           # Helper extension methods
+Guppi.MCP/              # MCP server entry point (STDIO transport)
+  Tools/                # MCP tool classes (attribute-based)
+  Program.cs            # DI composition root
 Guppi.Tests/            # NUnit tests
 dotnet-todo/            # Git submodule - todo.txt library
 ```
 
-**Layer flow:** `Skill` (Console) -> `IService` -> `IProvider` (Core)
+**Layer flow:**
+- `Skill` (Console) -> `IService` -> `IProvider` (Core)
+- `Tool` (MCP) -> `IService` -> `IProvider` (Core)
 
 Each feature follows a consistent pattern:
 - `Guppi.Console/Skills/{Name}Skill.cs` — defines CLI commands via `ISkill.GetCommands()`
@@ -61,6 +70,7 @@ Services and providers are registered in `Guppi.Core/DependencyInjection.cs`.
 - **Microsoft.Extensions.DependencyInjection** — DI container
 - **NUnit 4** + **FluentAssertions 8** — testing
 - **dotnet-todo** — git submodule, must be checked out (`git submodule update --init`)
+- **ModelContextProtocol** (1.1.0) — MCP server SDK (STDIO + HTTP transports)
 - **Notable Core dependencies:** LibGit2Sharp (Git operations), Google.Apis.Calendar/Tasks (Google integration), Q42.HueApi (Philips Hue), OpenAI (AI features), Microsoft.Playwright (web scraping), ClosedXML (Excel), System.IO.Ports (serial)
 
 ## Code Style
@@ -89,5 +99,5 @@ Per-skill configuration files are stored as JSON in:
 - System.CommandLine is a **pre-release beta** — avoid using APIs not already in the codebase
 - `Guppi.Core` exposes internals to `Guppi.Tests` via `InternalsVisibleTo`
 - CI runs on `ubuntu-latest` but the app targets Windows features (System.Speech, System.Management)
-- NuGet packages are published to **GitHub Packages** on merge to main
+- NuGet packages are published to **GitHub Packages** on merge to main — two packages: `dotnet-guppi` (CLI) and `dotnet-guppi-mcp` (MCP server)
 - The solution uses the new `.slnx` format (not `.sln`)

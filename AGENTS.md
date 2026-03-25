@@ -74,6 +74,17 @@ Services and providers are registered in `Guppi.Core/DependencyInjection.cs`.
 - **ModelContextProtocol** (1.1.0) — MCP server SDK (STDIO + HTTP transports)
 - **Notable Core dependencies:** LibGit2Sharp (Git operations), Google.Apis.Calendar/Tasks (Google integration), Q42.HueApi (Philips Hue), OpenAI (AI features), Microsoft.Playwright (web scraping), ClosedXML (Excel), System.IO.Ports (serial)
 
+## MCP Tool Return Types
+
+The `[McpServerTool]` method return type determines how the MCP SDK serializes the response:
+
+- `string` → returned as a `TextContentBlock`
+- Any other object → auto-serialized to JSON as text content
+- `IEnumerable<ContentBlock>` → returned directly as content blocks
+- `CallToolResult` → returned as-is for full control over the response
+
+For tools that can return either structured data (success) or an error message (failure), use `Task<object>` as the return type. Return domain entities on success (auto-serialized to JSON) and a descriptive `string` on error.
+
 ## Code Style
 
 Conventions from `.editorconfig` (follows NUnit coding standards):
@@ -112,3 +123,11 @@ Per-skill configuration files are stored as JSON in:
 - NuGet packages are published to **GitHub Packages** on merge to main — two packages: `dotnet-guppi` (CLI) and `dotnet-guppi-mcp` (MCP server)
 - The solution uses the new `.slnx` format (not `.sln`)
 - **MCP STDIO transport:** Never log to stdout in `Guppi.MCP` — it corrupts the JSON-RPC protocol. All logging must go to stderr (configured via `LogToStandardErrorThreshold`)
+
+## Workflow
+
+- **Always work on a branch** — never commit directly to `main`. Create a feature branch (e.g., `feature/hue-mcp-tools`) before making changes.
+- **Version updates** — update the version in `Directory.Build.props` using semantic versioning:
+  - **Major** (X.0.0): breaking changes to existing commands, services, or MCP tool contracts
+  - **Minor** (x.Y.0): new features — new skills, MCP tools, services, or commands
+  - **Patch** (x.y.Z): bug fixes, documentation updates, refactoring with no behavior change

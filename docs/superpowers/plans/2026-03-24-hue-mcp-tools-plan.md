@@ -95,7 +95,7 @@ git commit -m "feat: add HueLightsTools with ListHueBridges MCP tool"
 
 - [ ] **Step 1: Add ListHueLights method**
 
-Add this method to the `HueLightsTools` class. Note the `light == 0` default resolution and the no-op `WaitForUserInput` lambda:
+Add this method to the `HueLightsTools` class. Note the no-op `WaitForUserInput` lambda passed as the second argument to `ListLights`:
 
 ```csharp
 [McpServerTool, Description("Lists all Philips Hue lights and their current state (on/off, brightness, color)")]

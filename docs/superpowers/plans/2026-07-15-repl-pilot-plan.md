@@ -73,3 +73,13 @@
 - [x] Release build, full tests, CLI, REPL, MCP, completion, and package smoke tests.
 - [x] Format and analyzers, `git diff --check`, security and scope review.
 - [x] Push `agent/repl-pilot` and open a verified draft PR to `rprouse/guppi:main` with exact evidence.
+
+## Task 13: Post-review hardening
+
+- [x] Replace context-prefix MCP exposure with an exact seven-command allow-list.
+- [x] Resolve a fresh Hue service/provider per invocation and cover the lifetime with a regression test.
+- [x] Prioritize numeric Hue IDs and reject duplicate case-insensitive names with candidate IDs.
+- [x] Model brightness as an integer percentage, validate 0–100, and assert its live MCP schema.
+- [x] Mark Hue mutations explicitly destructive and assert their MCP annotations.
+- [x] Automate MCP STDIO initialize, exact tool listing, schema validation, tool call, and JSON-only stdout.
+- [x] Propagate cancellation through Core and Hue discovery without `WaitAsync` around non-cancellable Q42 mutations.

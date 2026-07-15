@@ -32,10 +32,7 @@ namespace Guppi.Repl
             {
                 options.ServerName = "Guppi";
                 options.ServerVersion = typeof(GuppiReplApp).Assembly.GetName().Version?.ToString() ?? "0.0.0";
-                options.CommandFilter = static command =>
-                    command.Path.StartsWith("utilities ", StringComparison.Ordinal)
-                    || command.Path.StartsWith("ip ", StringComparison.Ordinal)
-                    || command.Path.StartsWith("hue ", StringComparison.Ordinal);
+                options.CommandFilter = static command => IsMcpCommandAllowed(command.Path);
             });
 
             app.Context("utilities", utilities => utilities.MapModule<UtilitiesModule>());
@@ -44,5 +41,14 @@ namespace Guppi.Repl
 
             return app;
         }
+
+        private static bool IsMcpCommandAllowed(string path) =>
+            path is "utilities date"
+                or "utilities guid"
+                or "ip local"
+                or "hue bridges"
+                or "hue lights"
+                or "hue {light} on"
+                or "hue {light} off";
     }
 }

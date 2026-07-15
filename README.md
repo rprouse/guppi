@@ -153,6 +153,9 @@ The pilot currently includes:
 - `hue {light} on [--ip|-i] [--brightness|-b] [--color|-c]`
 - `hue {light} off [--ip|-i]`
 
+Hue brightness is a percentage from 0 to 100. Numeric light arguments match IDs
+first; names are case-insensitive and must be unique.
+
 Use it as a one-shot CLI:
 
 ```sh
@@ -166,7 +169,7 @@ Or enter a persistent context:
 $ guppi.repl
 > hue
 [hue]> lights
-[hue]> kitchen on --brightness 128 --color red
+[hue]> kitchen on --brightness 80 --color red
 [hue]> ..
 > utilities guid
 ```

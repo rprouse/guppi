@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using Guppi.Core.Entities.Hue;
 using Guppi.Core.Interfaces.Services;
 using Guppi.Core.Services.Hue;
 using Guppi.Repl.Results;
+using Microsoft.Extensions.DependencyInjection;
 using Repl;
 using Repl.Mcp;
 using Repl.Parameters;
@@ -14,13 +16,15 @@ using Repl.Parameters;
 namespace Guppi.Repl.Skills
 {
 
-    public sealed class HueModule(IHueLightService hue) : IReplModule
+    public sealed class HueModule(IServiceScopeFactory scopeFactory) : IReplModule
     {
         public void Map(IReplMap map)
         {
             map.Map("bridges", async (CancellationToken cancellationToken) =>
                 {
-                    var bridges = await hue.ListBridges().WaitAsync(cancellationToken).ConfigureAwait(false);
+                    using var scope = scopeFactory.CreateScope();
+                    var hue = scope.ServiceProvider.GetRequiredService<IHueLightService>();
+                    var bridges = await hue.ListBridges(cancellationToken).ConfigureAwait(false);
                     return bridges
                         .Select(bridge => new HueBridgeResult(bridge.BridgeId, bridge.IpAddress))
                         .ToArray();
@@ -34,8 +38,9 @@ namespace Guppi.Repl.Skills
                     [ReplOption(Aliases = ["-i"])] string ip = null,
                     CancellationToken cancellationToken = default) =>
                 {
-                    var lights = await hue.ListLights(ip, RejectInteractiveRegistration)
-                        .WaitAsync(cancellationToken)
+                    using var scope = scopeFactory.CreateScope();
+                    var hue = scope.ServiceProvider.GetRequiredService<IHueLightService>();
+                    var lights = await hue.ListLights(ip, RejectInteractiveRegistration, cancellationToken)
                         .ConfigureAwait(false);
                     return lights.Select(ToResult).ToArray();
                 })
@@ -47,26 +52,30 @@ namespace Guppi.Repl.Skills
             map.Map("{light} on", async (
                     string light,
                     [ReplOption(Aliases = ["-i"])] string ip = null,
-                    [ReplOption(Aliases = ["-b"])] byte? brightness = null,
+                    [Description("Brightness percentage from 0 to 100.")]
+                    [ReplOption(Aliases = ["-b"])] int brightness = -1,
                     [ReplOption(Aliases = ["-c"])] string color = null,
                     CancellationToken cancellationToken = default) =>
                 {
-                    var (target, lightId) = await ResolveLight(light, ip, cancellationToken).ConfigureAwait(false);
+                    var normalizedBrightness = NormalizeBrightness(brightness);
+                    using var scope = scopeFactory.CreateScope();
+                    var hue = scope.ServiceProvider.GetRequiredService<IHueLightService>();
+                    var (target, lightId) = await ResolveLight(hue, light, ip, cancellationToken).ConfigureAwait(false);
                     await hue.SetLight(new SetLightCommand
                     {
                         IpAddress = ip,
                         Light = lightId,
                         On = true,
-                        Brightness = brightness,
+                        Brightness = normalizedBrightness,
                         Color = color,
                         WaitForUserInput = RejectInteractiveRegistration,
-                    })
-                        .WaitAsync(cancellationToken)
+                    }, cancellationToken)
                         .ConfigureAwait(false);
-                    return new HueActionResult(target.Id, target.Name, true, brightness, color, ip);
+                    return new HueActionResult(target.Id, target.Name, true, normalizedBrightness, color, ip);
                 })
                 .WithDescription("Turn on a Philips Hue light by ID or name")
                 .WithCompletion("light", CompleteLightsAsync)
+                .Destructive()
                 .OpenWorld()
                 .Idempotent()
                 .LongRunning();
@@ -76,20 +85,22 @@ namespace Guppi.Repl.Skills
                     [ReplOption(Aliases = ["-i"])] string ip = null,
                     CancellationToken cancellationToken = default) =>
                 {
-                    var (target, lightId) = await ResolveLight(light, ip, cancellationToken).ConfigureAwait(false);
+                    using var scope = scopeFactory.CreateScope();
+                    var hue = scope.ServiceProvider.GetRequiredService<IHueLightService>();
+                    var (target, lightId) = await ResolveLight(hue, light, ip, cancellationToken).ConfigureAwait(false);
                     await hue.SetLight(new SetLightCommand
                     {
                         IpAddress = ip,
                         Light = lightId,
                         Off = true,
                         WaitForUserInput = RejectInteractiveRegistration,
-                    })
-                        .WaitAsync(cancellationToken)
+                    }, cancellationToken)
                         .ConfigureAwait(false);
                     return new HueActionResult(target.Id, target.Name, false, null, null, ip);
                 })
                 .WithDescription("Turn off a Philips Hue light by ID or name")
                 .WithCompletion("light", CompleteLightsAsync)
+                .Destructive()
                 .OpenWorld()
                 .Idempotent()
                 .LongRunning();
@@ -100,8 +111,9 @@ namespace Guppi.Repl.Skills
             string input,
             CancellationToken cancellationToken)
         {
-            var lights = await hue.ListLights(null, RejectInteractiveRegistration)
-                .WaitAsync(cancellationToken)
+            using var scope = scopeFactory.CreateScope();
+            var hue = scope.ServiceProvider.GetRequiredService<IHueLightService>();
+            var lights = await hue.ListLights(null, RejectInteractiveRegistration, cancellationToken)
                 .ConfigureAwait(false);
             return lights
                 .SelectMany(light => new[] { light.Name, light.Id })
@@ -112,17 +124,40 @@ namespace Guppi.Repl.Skills
                 .ToArray();
         }
 
-        private async Task<(HueLight Light, uint Id)> ResolveLight(
+        private static async Task<(HueLight Light, uint Id)> ResolveLight(
+            IHueLightService hue,
             string light,
             string ip,
             CancellationToken cancellationToken)
         {
-            var lights = await hue.ListLights(ip, RejectInteractiveRegistration)
-                .WaitAsync(cancellationToken)
+            var lights = await hue.ListLights(ip, RejectInteractiveRegistration, cancellationToken)
                 .ConfigureAwait(false);
-            var target = lights.FirstOrDefault(candidate =>
-                string.Equals(candidate.Id, light, StringComparison.OrdinalIgnoreCase)
-                || string.Equals(candidate.Name, light, StringComparison.OrdinalIgnoreCase));
+            HueLight target;
+            if (uint.TryParse(light, out _))
+            {
+                target = lights.SingleOrDefault(candidate =>
+                    string.Equals(candidate.Id, light, StringComparison.Ordinal));
+            }
+            else
+            {
+                var matches = lights
+                    .Where(candidate => string.Equals(
+                        candidate.Name,
+                        light,
+                        StringComparison.OrdinalIgnoreCase))
+                    .ToArray();
+                if (matches.Length > 1)
+                {
+                    var candidateIds = string.Join(", ", matches
+                        .Select(candidate => candidate.Id)
+                        .OrderBy(id => id, StringComparer.Ordinal));
+                    throw new InvalidOperationException(
+                        $"Hue light name {light} is ambiguous. Use one of these IDs: {candidateIds}.");
+                }
+
+                target = matches.SingleOrDefault();
+            }
+
             if (target is null)
             {
                 throw new InvalidOperationException($"Hue light {light} was not found.");
@@ -136,7 +171,22 @@ namespace Guppi.Repl.Skills
             return (target, lightId);
         }
 
-        private static HueLightResult ToResult(Guppi.Core.Entities.Hue.HueLight light) =>
+        private static byte? NormalizeBrightness(int brightness)
+        {
+            if (brightness == -1)
+            {
+                return null;
+            }
+
+            if (brightness is < 0 or > 100)
+            {
+                throw new InvalidOperationException("Brightness must be between 0 and 100 percent.");
+            }
+
+            return (byte)brightness;
+        }
+
+        private static HueLightResult ToResult(HueLight light) =>
             new(light.Id, light.Name, light.On, light.Brightness, light.Color, light.Type);
 
         private static void RejectInteractiveRegistration(string message) =>

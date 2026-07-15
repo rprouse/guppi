@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Guppi.Core;
 using Guppi.Core.Entities.Hue;
@@ -19,45 +20,57 @@ internal partial class HueProvider : IHueProvider
 {
     string _key;
     ILocalHueClient _client;
-    readonly RGBColor _black = new ("000000");
+    readonly RGBColor _black = new("000000");
 
     public Action<string> WaitForUserInput { get; set; } = null;
 
-    public async Task<IEnumerable<HueBridge>> ListBridges()
+    public async Task<IEnumerable<HueBridge>> ListBridges(CancellationToken cancellationToken = default)
     {
-        var locator = new HttpBridgeLocator();
-        IEnumerable<LocatedBridge> bridges = await locator.LocateBridgesAsync(TimeSpan.FromSeconds(5));
+        IEnumerable<LocatedBridge> bridges = await LocateBridges(cancellationToken);
         return bridges.Select(b => new HueBridge { BridgeId = b.BridgeId, IpAddress = b.IpAddress });
     }
 
-    public async Task<IEnumerable<HueLight>> ListLights(string ip)
+    public async Task<IEnumerable<HueLight>> ListLights(string ip, CancellationToken cancellationToken = default)
     {
-        if (await ConnectToBridge(ip) == false)
+        if (await ConnectToBridge(ip, cancellationToken: cancellationToken) == false)
             return Enumerable.Empty<HueLight>();
 
+        cancellationToken.ThrowIfCancellationRequested();
         var lights = await _client.GetLightsAsync();
+        cancellationToken.ThrowIfCancellationRequested();
         return lights.Select(l => new HueLight { Id = l.Id, Name = l.Name, On = l.State.On, Brightness = l.State.Brightness, Color = l.ToHex(), Type = l.Type });
     }
 
-    public async Task Set(string ip, bool on, bool off, bool alert, byte? brightness, string color, uint light)
+    public async Task Set(
+        string ip,
+        bool on,
+        bool off,
+        bool alert,
+        byte? brightness,
+        string color,
+        uint light,
+        CancellationToken cancellationToken = default)
     {
-        if (await ConnectToBridge(ip) == false)
+        if (await ConnectToBridge(ip, cancellationToken: cancellationToken) == false)
             return;
 
+        cancellationToken.ThrowIfCancellationRequested();
         var cmd = GetCommand(on, off, alert, brightness, color);
         var lts = GetLights(light);
         await SendCommand(cmd, lts);
     }
 
-    public async Task<bool> Register(string ip = null)
+    public async Task<bool> Register(string ip = null, CancellationToken cancellationToken = default)
     {
-        return await ConnectToBridge(ip, false);
+        return await ConnectToBridge(ip, false, cancellationToken);
     }
 
-    public async Task<bool> ConnectToBridge(string ip = null, bool loadKey = true)
+    public async Task<bool> ConnectToBridge(
+        string ip = null,
+        bool loadKey = true,
+        CancellationToken cancellationToken = default)
     {
-        var locator = new HttpBridgeLocator();
-        IEnumerable<LocatedBridge> bridges = await locator.LocateBridgesAsync(TimeSpan.FromSeconds(5));
+        IEnumerable<LocatedBridge> bridges = await LocateBridges(cancellationToken);
         LocatedBridge bridge = null;
         if (ip == null)
             bridge = bridges.FirstOrDefault();
@@ -76,7 +89,7 @@ internal partial class HueProvider : IHueProvider
 
         if (_key == null)
         {
-            _key = await Register(bridge);
+            _key = await Register(bridge, cancellationToken);
             if (_key == null)
                 return false;
 
@@ -88,20 +101,38 @@ internal partial class HueProvider : IHueProvider
         return true;
     }
 
-    async Task<string> Register(LocatedBridge bridge)
+    async Task<string> Register(LocatedBridge bridge, CancellationToken cancellationToken)
     {
         if (WaitForUserInput == null)
             throw new InvalidOperationException("You must set WaitForUserInput");
 
+        cancellationToken.ThrowIfCancellationRequested();
         WaitForUserInput("Press the button on your bridge then press ENTER");
+        cancellationToken.ThrowIfCancellationRequested();
         try
         {
             var client = new LocalHueClient(bridge.IpAddress);
             return await client.RegisterAsync("Alteridem.Hue.CLI", Environment.MachineName);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             throw new InvalidOperationException(e.Message, e);
+        }
+    }
+
+    private static async Task<IEnumerable<LocatedBridge>> LocateBridges(
+        CancellationToken cancellationToken)
+    {
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeout.CancelAfter(TimeSpan.FromSeconds(5));
+        try
+        {
+            var locator = new HttpBridgeLocator();
+            return await locator.LocateBridgesAsync(timeout.Token);
+        }
+        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+        {
+            return [];
         }
     }
 

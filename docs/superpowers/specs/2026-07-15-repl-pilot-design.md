@@ -87,7 +87,7 @@ Guppi.Repl/
     HueResults.cs
 ```
 
-Modules are resolved through `MapModule<T>()` and receive their dependencies through constructor injection. Handlers remain thin and return serializable records. This preserves deterministic `Repl.Testing` coverage despite `ReplTestHost` 0.11.0-dev.181 using its session provider rather than `app.Services` for handler-parameter DI. Failures surface as semantic Repl validation errors rather than successful strings beginning with `Error:`.
+Modules are resolved through `MapModule<T>()` and receive their dependencies through constructor injection. Because `MapModule<T>()` activates a module once, `HueModule` captures only `IServiceScopeFactory` and resolves a fresh transient `IHueLightService` for each handler and completion invocation. This isolates the mutable Hue provider during concurrent MCP calls. Handlers remain thin and return serializable records. This preserves deterministic `Repl.Testing` coverage despite `ReplTestHost` 0.11.0-dev.181 using its session provider rather than `app.Services` for handler-parameter DI. Failures surface as semantic Repl validation errors rather than successful strings beginning with `Error:`.
 
 The pilot does not add Hue registration. It avoids synchronous `Console.ReadLine()` in MCP or test sessions and points users to the existing `guppi hue register` flow when registration is required.
 
@@ -95,11 +95,11 @@ The pilot does not add Hue registration. It avoids synchronous `Console.ReadLine
 
 ## Testing
 
-A new `Guppi.Repl.Tests` project uses NUnit, FluentAssertions, and `Repl.Testing`. Graph tests use injected fakes for typed utility, IP, and Hue results, Hue name resolution, semantic errors, and completion. Because `ReplTestHost` runs each command as a hosted invocation rather than preserving interactive context scope, persistent navigation is tested through one real redirected interactive loop. Final smoke validation launches `mcp serve` over STDIO, verifies `initialize`, `tools/list`, a real tool call, and JSON-only stdout.
+A new `Guppi.Repl.Tests` project uses NUnit, FluentAssertions, and `Repl.Testing`. Graph tests use injected fakes for typed utility, IP, and Hue results, Hue name resolution, ambiguity handling, per-invocation service lifetime, cancellation propagation, semantic errors, and completion. Because `ReplTestHost` runs each command as a hosted invocation rather than preserving interactive context scope, persistent navigation is tested through one real redirected interactive loop. An automated process-level test launches `mcp serve` over STDIO, parses every stdout line as JSON, verifies `initialize`, the exact `tools/list` contract and annotations, and a real `utilities_date` call.
 
 ## Packaging and CI
 
-`Guppi.Repl` is locally packable as `dotnet-guppi-repl` with tool command `guppi.repl`. The package includes the repository README and suppresses `NU5111` only for Playwright runtime `.ps1` payload files that are not NuGet install scripts. It is added to `Guppi.slnx` for build and test coverage, but existing CI publication remains unchanged. MCP uses an explicit allow-list for `utilities`, `ip`, and `hue` paths.
+`Guppi.Repl` is locally packable as `dotnet-guppi-repl` with tool command `guppi.repl`. The package includes the repository README and suppresses `NU5111` only for Playwright runtime `.ps1` payload files that are not NuGet install scripts. It is added to `Guppi.slnx` for build and test coverage, but existing CI publication remains unchanged. MCP uses an exact allow-list containing only the seven approved command paths; future commands under `utilities`, `ip`, or `hue` are not exposed implicitly.
 
 ## Acceptance Criteria
 
@@ -115,9 +115,10 @@ A new `Guppi.Repl.Tests` project uses NUnit, FluentAssertions, and `Repl.Testing
 ## Validation Notes
 
 - Release build succeeds with warnings treated as errors.
-- 128 historical tests and 11 pilot tests pass.
+- 128 historical tests and 18 pilot tests pass.
 - One-shot CLI JSON, interactive context navigation, Hue fake-backed mutations, and interactive completion are exercised.
-- MCP STDIO advertises exactly seven pilot tools and successfully executes `utilities_date` without non-JSON stdout.
-- Repl `0.11.0-dev.181` emits the optional `utc` MCP schema default as the string `"False"` while declaring a Boolean type; binding works, but clients should not rely on that prerelease default representation.
+- An automated MCP STDIO test advertises exactly seven pilot tools, validates representative schemas and mutation annotations, successfully executes `utilities_date`, and rejects non-JSON stdout.
+- Repl `0.11.0-dev.181` does not unwrap nullable numeric types when generating MCP schemas and serializes parameter defaults as strings. The pilot therefore models optional brightness as an integer percentage with an internal `-1` omission sentinel and validates 0–100 before discovery. Repl still emits defaults such as `utc: "False"` and `brightness: "-1"`; binding works, but clients should not rely on those prerelease default representations.
+- Cancellation flows from Repl through Core into Hue discovery. Q42.HueApi does not expose cancellation for light reads or command sends, so Guppi checks cancellation before starting those calls and does not use `WaitAsync` to report cancellation while an already-started mutation continues.
 - The locally packed tool installs and runs from an isolated tool path.
 - Global `dotnet format` currently reports unrelated historical line-ending, import, and encoding debt; both new projects pass isolated `dotnet format --verify-no-changes`.

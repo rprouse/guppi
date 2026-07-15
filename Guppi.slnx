@@ -25,4 +25,6 @@
   <Project Path="Guppi.Core/Guppi.Core.csproj" />
   <Project Path="Guppi.Tests/Guppi.Tests.csproj" />
   <Project Path="Guppi.MCP/Guppi.MCP.csproj" />
+  <Project Path="Guppi.Repl/Guppi.Repl.csproj" />
+  <Project Path="Guppi.Repl.Tests/Guppi.Repl.Tests.csproj" />
 </Solution>

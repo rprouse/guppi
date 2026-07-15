@@ -137,6 +137,60 @@ To get the information to configure;
 2. Use [Google Maps](https://google.ca/maps) to get your Latitude and Longitude.
 3. Once you've configured an initial location, you can use the `--location` option to find the weather for additional locations and to use their latitude and longitude for the configuration.
 
+## Experimental Repl Pilot
+
+`Guppi.Repl` is an additive pilot built with Repl Toolkit `0.11.0-dev.181`. It maps a
+small command graph once and exposes it as a one-shot CLI, an interactive REPL, and an
+MCP server. It does not replace or change the existing `guppi` or `guppi.mcp` tools.
+
+The pilot currently includes:
+
+- `utilities date [--utc|-u]`
+- `utilities guid`
+- `ip local`
+- `hue bridges`
+- `hue lights [--ip|-i]`
+- `hue {light} on [--ip|-i] [--brightness|-b] [--color|-c]`
+- `hue {light} off [--ip|-i]`
+
+Use it as a one-shot CLI:
+
+```sh
+guppi.repl utilities date --utc --json
+guppi.repl ip local --yaml
+```
+
+Or enter a persistent context:
+
+```text
+$ guppi.repl
+> hue
+[hue]> lights
+[hue]> kitchen on --brightness 128 --color red
+[hue]> ..
+> utilities guid
+```
+
+Hue accepts either a numeric light ID or a case-insensitive name. Dynamic Hue completion
+is enabled in the interactive REPL only. If bridge registration is required, use the
+existing interactive flow first: `guppi hue register --ip <address>`.
+
+The same graph is available over MCP STDIO:
+
+```json
+{
+  "mcpServers": {
+    "guppi-repl": {
+      "command": "guppi.repl",
+      "args": ["mcp", "serve"]
+    }
+  }
+}
+```
+
+MCP exposure is deliberately allow-listed to the pilot commands. The experimental
+`dotnet-guppi-repl` package is locally packable but is not published by the existing CI.
+
 ## MCP Server
 
 Guppi includes an MCP (Model Context Protocol) server that exposes Guppi skills as tools
@@ -185,6 +239,7 @@ command line from the solution root;
 ```sh
 dotnet tool install -g --add-source ./Guppi.Console/nupkg dotnet-guppi
 dotnet tool install -g --add-source ./Guppi.MCP/nupkg dotnet-guppi-mcp
+dotnet tool install -g --add-source ./Guppi.Repl/nupkg dotnet-guppi-repl
 ```
 
 To update from a previous version,
@@ -192,6 +247,7 @@ To update from a previous version,
 ```sh
 dotnet tool update -g --add-source ./Guppi.Console/nupkg dotnet-guppi
 dotnet tool update -g --add-source ./Guppi.MCP/nupkg dotnet-guppi-mcp
+dotnet tool update -g --add-source ./Guppi.Repl/nupkg dotnet-guppi-repl
 ```
 
 ### Installing from GitHub Packages

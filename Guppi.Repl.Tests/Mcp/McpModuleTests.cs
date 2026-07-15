@@ -1,33 +1,35 @@
 using System.IO;
 using FluentAssertions;
 
-namespace Guppi.Repl.Tests.Mcp;
-
-[TestFixture]
-public sealed class McpModuleTests
+namespace Guppi.Repl.Tests.Mcp
 {
-    [Test]
-    [NonParallelizable]
-    public void McpServeCommandIsPresentOnCliGraph()
+
+    [TestFixture]
+    public sealed class McpModuleTests
     {
-        var originalOutput = Console.Out;
-        var originalError = Console.Error;
-        using var output = new StringWriter();
-
-        int exitCode;
-        try
+        [Test]
+        [NonParallelizable]
+        public void McpServeCommandIsPresentOnCliGraph()
         {
-            Console.SetOut(output);
-            Console.SetError(output);
-            exitCode = GuppiReplApp.Create().Run(["mcp", "--help", "--no-logo"]);
-        }
-        finally
-        {
-            Console.SetOut(originalOutput);
-            Console.SetError(originalError);
-        }
+            var originalOutput = Console.Out;
+            var originalError = Console.Error;
+            using var output = new StringWriter();
 
-        exitCode.Should().Be(0, output.ToString());
-        output.ToString().Should().Contain("serve");
+            int exitCode;
+            try
+            {
+                Console.SetOut(output);
+                Console.SetError(output);
+                exitCode = GuppiReplApp.Create().Run(["mcp", "--help", "--no-logo"]);
+            }
+            finally
+            {
+                Console.SetOut(originalOutput);
+                Console.SetError(originalError);
+            }
+
+            exitCode.Should().Be(0, output.ToString());
+            output.ToString().Should().Contain("serve");
+        }
     }
 }

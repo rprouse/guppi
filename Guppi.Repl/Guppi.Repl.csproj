@@ -16,6 +16,9 @@
     <RepositoryUrl>https://github.com/rprouse/guppi</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageIcon>ackbar.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <!-- Playwright runtime PowerShell files are payload, not NuGet install scripts. -->
+    <NoWarn>$(NoWarn);NU5111</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,6 +30,7 @@
       <PackagePath></PackagePath>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="..\README.md" Pack="True" PackagePath="" />
   </ItemGroup>
 
   <ItemGroup>

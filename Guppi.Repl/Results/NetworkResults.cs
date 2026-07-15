@@ -1,3 +1,5 @@
-namespace Guppi.Repl.Results;
+namespace Guppi.Repl.Results
+{
 
-public sealed record LocalIpAddressResult(string InterfaceName, string IpAddress);
+    public sealed record LocalIpAddressResult(string InterfaceName, string IpAddress);
+}

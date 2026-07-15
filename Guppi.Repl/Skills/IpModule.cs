@@ -1,14 +1,16 @@
 using Repl;
 using Repl.Mcp;
 
-namespace Guppi.Repl.Skills;
-
-public sealed class IpModule(ILocalIpAddressProvider addresses) : IReplModule
+namespace Guppi.Repl.Skills
 {
-    public void Map(IReplMap map)
+
+    public sealed class IpModule(ILocalIpAddressProvider addresses) : IReplModule
     {
-        map.Map("local", () => addresses.GetLocalAddresses())
-            .WithDescription("List active local IPv4 addresses")
-            .ReadOnly();
+        public void Map(IReplMap map)
+        {
+            map.Map("local", () => addresses.GetLocalAddresses())
+                .WithDescription("List active local IPv4 addresses")
+                .ReadOnly();
+        }
     }
 }

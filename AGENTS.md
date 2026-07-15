@@ -14,18 +14,24 @@ dotnet test --no-restore --verbosity normal
 # Pack as dotnet tools
 dotnet pack Guppi.Console/Guppi.Console.csproj --configuration Release
 dotnet pack Guppi.MCP/Guppi.MCP.csproj --configuration Release
+dotnet pack Guppi.Repl/Guppi.Repl.csproj --configuration Release
 
 # Install locally (from solution root)
 dotnet tool install -g --add-source ./Guppi.Console/nupkg dotnet-guppi
 dotnet tool install -g --add-source ./Guppi.MCP/nupkg dotnet-guppi-mcp
+dotnet tool install -g --add-source ./Guppi.Repl/nupkg dotnet-guppi-repl
 
 # Update local install
 dotnet tool update -g --add-source ./Guppi.Console/nupkg dotnet-guppi
 dotnet tool update -g --add-source ./Guppi.MCP/nupkg dotnet-guppi-mcp
+dotnet tool update -g --add-source ./Guppi.Repl/nupkg dotnet-guppi-repl
 
 # Run
 guppi <skill> <command> [options]
-guppi.mcp  # Starts the MCP server (STDIO)
+guppi.mcp  # Starts the existing MCP server (STDIO)
+guppi.repl <context> <command> [options]  # Experimental one-shot CLI
+guppi.repl                              # Experimental interactive REPL
+guppi.repl mcp serve                    # Experimental graph over MCP STDIO
 ```
 
 ## Architecture
@@ -41,16 +47,22 @@ Guppi.Core/             # Business logic, no CLI dependencies
   Configurations/       # Per-skill configuration classes
   Entities/             # Domain models
   Extensions/           # Helper extension methods
-Guppi.MCP/              # MCP server entry point (STDIO transport)
+Guppi.MCP/              # Existing MCP server entry point (STDIO transport)
   Tools/                # MCP tool classes (attribute-based)
   Program.cs            # DI composition root
-Guppi.Tests/            # NUnit tests
+Guppi.Repl/             # Experimental shared Repl graph (CLI + REPL + MCP)
+  Skills/               # IReplModule definitions for pilot contexts
+  Results/              # Stable typed result records
+  GuppiReplApp.cs       # Shared composition root and MCP allow-list
+Guppi.Repl.Tests/       # Repl.Testing graph tests and interactive integration tests
+Guppi.Tests/            # Existing NUnit tests
 dotnet-todo/            # Git submodule - todo.txt library
 ```
 
 **Layer flow:**
 - `Skill` (Console) -> `IService` -> `IProvider` (Core)
 - `Tool` (MCP) -> `IService` -> `IProvider` (Core)
+- `IReplModule` (pilot) -> `IService`/injected adapter -> `IProvider` (Core), exposed through one graph
 
 Each feature follows a consistent pattern:
 - `Guppi.Console/Skills/{Name}Skill.cs` — defines CLI commands via `ISkill.GetCommands()`
@@ -71,7 +83,8 @@ Services and providers are registered in `Guppi.Core/DependencyInjection.cs`.
 - **Microsoft.Extensions.DependencyInjection** — DI container
 - **NUnit 4** + **FluentAssertions 8** — testing
 - **dotnet-todo** — git submodule, must be checked out (`git submodule update --init`)
-- **ModelContextProtocol** (1.1.0) — MCP server SDK (STDIO + HTTP transports)
+- **ModelContextProtocol** (1.1.0) — existing MCP server SDK (STDIO + HTTP transports)
+- **Repl / Repl.Mcp / Repl.Spectre / Repl.Testing** (0.11.0-dev.181, pinned prerelease) — experimental shared graph
 - **Notable Core dependencies:** LibGit2Sharp (Git operations), Google.Apis.Calendar/Tasks (Google integration), Q42.HueApi (Philips Hue), OpenAI (AI features), Microsoft.Playwright (web scraping), ClosedXML (Excel), System.IO.Ports (serial)
 
 ## MCP Tool Return Types
@@ -111,7 +124,8 @@ Per-skill configuration files are stored as JSON in:
 3. Register the service in `Guppi.Core/DependencyInjection.cs`
 4. **For CLI:** Create `Guppi.Console/Skills/{Name}Skill.cs` implementing `ISkill`, register in `Guppi.Console/Program.cs`
 5. **For MCP:** Create `Guppi.MCP/Tools/{Name}Tools.cs` with `[McpServerTool]` attributes, register via `.WithTools<{Name}Tools>()` in `Guppi.MCP/Program.cs`
-6. Optional: Add `Guppi.Core/Providers/` for external integrations, `Guppi.Core/Configurations/` for settings
+6. **For the experimental shared graph:** Add an `IReplModule` under `Guppi.Repl/Skills`, mount it in `GuppiReplApp`, return typed records, annotate MCP behavior, and explicitly allow-list its paths before exposing them
+7. Optional: Add `Guppi.Core/Providers/` for external integrations, `Guppi.Core/Configurations/` for settings
 
 ## Gotchas
 
@@ -120,9 +134,11 @@ Per-skill configuration files are stored as JSON in:
 - System.CommandLine is a **pre-release beta** — avoid using APIs not already in the codebase
 - `Guppi.Core` exposes internals to `Guppi.Tests` via `InternalsVisibleTo`
 - CI runs on `ubuntu-latest` but the app targets Windows features (System.Speech, System.Management)
-- NuGet packages are published to **GitHub Packages** on merge to main — two packages: `dotnet-guppi` (CLI) and `dotnet-guppi-mcp` (MCP server)
+- CI publishes two packages on merge to main: `dotnet-guppi` and `dotnet-guppi-mcp`; `dotnet-guppi-repl` is experimental and intentionally not in publication workflows
 - The solution uses the new `.slnx` format (not `.sln`)
-- **MCP STDIO transport:** Never log to stdout in `Guppi.MCP` — it corrupts the JSON-RPC protocol. All logging must go to stderr (configured via `LogToStandardErrorThreshold`)
+- **MCP STDIO transport:** Never log to stdout in `Guppi.MCP` or `guppi.repl mcp serve` — it corrupts JSON-RPC; protocol smoke tests must parse every stdout line as JSON
+- Repl.Testing `0.11.0-dev.181` executes handlers with a session provider that does not include `app.Services`; inject pilot dependencies into `IReplModule` constructors, and use a real redirected interactive loop to test context navigation
+- `dotnet format Guppi.slnx --verify-no-changes` currently reports historical line-ending/import/encoding debt; verify the new projects individually and do not reformat unrelated files
 
 ## Workflow
 

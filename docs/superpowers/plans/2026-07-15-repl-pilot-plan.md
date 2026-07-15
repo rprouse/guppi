@@ -72,4 +72,4 @@
 
 - [x] Release build, full tests, CLI, REPL, MCP, completion, and package smoke tests.
 - [x] Format and analyzers, `git diff --check`, security and scope review.
-- [ ] Push `agent/repl-pilot` and open a verified draft PR to `rprouse/guppi:main` with exact evidence.
+- [x] Push `agent/repl-pilot` and open a verified draft PR to `rprouse/guppi:main` with exact evidence.
